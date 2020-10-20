@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => ({
     card: {
@@ -94,16 +95,18 @@ function App() {
         return (
             <Grid item xs={item.header ? 12 : 6} xl={item.header ? 12 : 4} key={item.title}>
                 <Card variant="outlined" className={classes.card}>
-                    <CardActionArea href={item.destination}>
-                        <CardMedia className={classes.media}>
-                            <Typography align='center'>
-                                <Icon className={classes.largeIcon} style={{color: '#fff'}}>{item.icon}</Icon>
-                            </Typography>
-                        </CardMedia>
-                        <CardContent>
-                            <Typography variant="h6">{item.title}</Typography>
-                            <Typography color="textSecondary" noWrap>{item.subtitle}</Typography>
-                        </CardContent>
+                    <CardActionArea>
+                        <Link to={item.destination}>
+                            <CardMedia className={classes.media}>
+                                <Typography align='center'>
+                                    <Icon className={classes.largeIcon} style={{color: '#fff'}}>{item.icon}</Icon>
+                                </Typography>
+                            </CardMedia>
+                            <CardContent>
+                                <Typography variant="h6">{item.title}</Typography>
+                                <Typography color="textSecondary" noWrap>{item.subtitle}</Typography>
+                            </CardContent>
+                        </Link>
                     </CardActionArea>
                 </Card>
             </Grid>
@@ -115,7 +118,11 @@ function App() {
             <AppBar position="sticky">
                 <Toolbar>
                     <Typography variant="h6" className={classes.title}>GameOpSysApp</Typography>
-                    <Button color="inherit" href="/logout">Logout</Button>
+                    <Button color="inherit">
+                        <Link to='/logout'>
+                            Logout
+                        </Link>
+                    </Button>
                 </Toolbar>
             </AppBar>
             <Container component="main" maxWidth="lg" disableGutters className={classes.root}>

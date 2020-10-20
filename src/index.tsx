@@ -38,6 +38,7 @@ ReactDOM.render((
             <ThemeProvider theme={theme}>
                 <Router basename={process.env.PUBLIC_URL}>
                     <Switch>
+                        <PrivateRoute path="/" exact component={App}/>
                         <Route path="/login" component={Login}/>
                         <Route path="/verify" component={Verify}/>
                         <PrivateRoute path="/logout" component={Logout}/>
@@ -48,7 +49,7 @@ ReactDOM.render((
                         <PrivateRoute path="/archive" component={Archive}/>
                         <PrivateRoute path="/consumers" component={Consumers}/>
                         <PrivateRoute path="/behavior" component={Behavior}/>
-                        <PrivateRoute path="/" exact component={App}/>
+                        <Route component={() => (<div>404 Not found</div>)} />
                     </Switch>
                 </Router>
             </ThemeProvider>

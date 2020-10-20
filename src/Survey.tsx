@@ -15,7 +15,7 @@ import {
     Typography,
     WithStyles
 } from "@material-ui/core";
-import {RouteComponentProps} from 'react-router-dom';
+import {Link, RouteComponentProps} from 'react-router-dom';
 import Icon from "@material-ui/core/Icon";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import {withStyles} from "@material-ui/core/styles";
@@ -92,16 +92,18 @@ class Survey extends React.Component<Props, State> {
             return (
                 <Grid item xs={6} xl={4} key={item.destination}>
                     <Card variant="outlined" className={classes.card}>
-                        <CardActionArea href={item.destination}>
-                            <CardMedia className={classes.media}>
-                                <Typography align='center'>
-                                    <Icon className={classes.largeIcon} style={{color: '#fff'}}>assignment</Icon>
-                                </Typography>
-                            </CardMedia>
-                            <CardContent>
-                                <Typography variant="h6">{item.title}</Typography>
-                                <Typography color="textSecondary" noWrap>Please fill out this survey</Typography>
-                            </CardContent>
+                        <CardActionArea>
+                            <Link to={item.destination}>
+                                <CardMedia className={classes.media}>
+                                    <Typography align='center'>
+                                        <Icon className={classes.largeIcon} style={{color: '#fff'}}>assignment</Icon>
+                                    </Typography>
+                                </CardMedia>
+                                <CardContent>
+                                    <Typography variant="h6">{item.title}</Typography>
+                                    <Typography color="textSecondary" noWrap>Please fill out this survey</Typography>
+                                </CardContent>
+                            </Link>
                         </CardActionArea>
                     </Card>
                 </Grid>

@@ -12,7 +12,7 @@ import {
 import {withStyles} from "@material-ui/core/styles";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CloseIcon from '@material-ui/icons/Close';
-import {RouteComponentProps} from "react-router-dom";
+import {Link, RouteComponentProps} from "react-router-dom";
 import {apiClient} from "./ApiClient";
 
 const styles = (theme: Theme) => createStyles({
@@ -98,7 +98,10 @@ class Upload extends React.Component<Props, State> {
                             </Typography>
                             <List>
                                 {operators.map((op) => {
-                                    return (<ListItem key={op.name}><a href={op.link}>{op.name}</a></ListItem>)
+                                    return (
+                                        <ListItem key={op.name}>
+                                            <Link to={op.link}>{op.name}</Link>
+                                        </ListItem>)
                                 })}
                             </List>
                         </Grid>

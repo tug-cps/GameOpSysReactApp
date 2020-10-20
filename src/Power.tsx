@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import {RouteComponentProps} from "react-router-dom";
+import {Link, RouteComponentProps} from "react-router-dom";
 import {apiClient} from "./ApiClient";
 import {Chart, LineAdvance} from "bizcharts";
 
@@ -48,7 +48,7 @@ class PowerEntry extends React.Component<EntryProps, EntryState> {
                         return {
                             type: c.type,
                             time: idx,
-                            value : value
+                            value: value
                         }
                     })
                 }).flat()
@@ -127,11 +127,13 @@ class Power extends React.Component<Props, State> {
                     {this.state.dates.map((value, index) => {
                         return (
                             <Card variant="outlined" key={value} className={classes.card}>
-                                <CardActionArea href={'/power/' + value}>
-                                    <CardContent>
-                                        <Typography variant="h6">{value}</Typography>
-                                        <PowerEntry date={value}/>
-                                    </CardContent>
+                                <CardActionArea>
+                                    <Link to={'/power/' + value}>
+                                        <CardContent>
+                                            <Typography variant="h6">{value}</Typography>
+                                            <PowerEntry date={value}/>
+                                        </CardContent>
+                                    </Link>
                                 </CardActionArea>
                             </Card>
                         )
