@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/GameOpSysReactApp/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/GameOpSysReactApp/static/js/main.8f32efd1.chunk.js",
-    "main.js.map": "/GameOpSysReactApp/static/js/main.8f32efd1.chunk.js.map",
+    "main.js": "/GameOpSysReactApp/static/js/main.7da7a92d.chunk.js",
+    "main.js.map": "/GameOpSysReactApp/static/js/main.7da7a92d.chunk.js.map",
     "runtime-main.js": "/GameOpSysReactApp/static/js/runtime-main.faf33a2b.js",
     "runtime-main.js.map": "/GameOpSysReactApp/static/js/runtime-main.faf33a2b.js.map",
     "static/js/2.a018e603.chunk.js": "/GameOpSysReactApp/static/js/2.a018e603.chunk.js",
     "static/js/2.a018e603.chunk.js.map": "/GameOpSysReactApp/static/js/2.a018e603.chunk.js.map",
     "index.html": "/GameOpSysReactApp/index.html",
-    "precache-manifest.d0d851eb8cf37b15e20bd8b12a1a947b.js": "/GameOpSysReactApp/precache-manifest.d0d851eb8cf37b15e20bd8b12a1a947b.js",
+    "precache-manifest.2516becb2bf98223d08b37d43ea4b926.js": "/GameOpSysReactApp/precache-manifest.2516becb2bf98223d08b37d43ea4b926.js",
     "service-worker.js": "/GameOpSysReactApp/service-worker.js",
     "static/css/main.5ecd60fb.chunk.css.map": "/GameOpSysReactApp/static/css/main.5ecd60fb.chunk.css.map",
     "static/js/2.a018e603.chunk.js.LICENSE.txt": "/GameOpSysReactApp/static/js/2.a018e603.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.faf33a2b.js",
     "static/js/2.a018e603.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.8f32efd1.chunk.js"
+    "static/js/main.7da7a92d.chunk.js"
   ]
 }
