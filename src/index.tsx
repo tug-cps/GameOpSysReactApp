@@ -36,7 +36,7 @@ const theme = createMuiTheme({
 ReactDOM.render((
         <React.StrictMode>
             <ThemeProvider theme={theme}>
-                <Router>
+                <Router basename={process.env.PUBLIC_URL}>
                     <Switch>
                         <Route path="/login" component={Login}/>
                         <Route path="/verify" component={Verify}/>
