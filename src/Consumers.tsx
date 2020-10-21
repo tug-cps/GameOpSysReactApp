@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    AppBar,
     Button,
     Container,
     createStyles,
@@ -16,41 +15,22 @@ import {
     ListItemText,
     TextField,
     Theme,
-    Toolbar,
-    Typography,
     WithStyles
 } from "@material-ui/core";
-import {RouteComponentProps} from 'react-router-dom';
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import {withStyles} from "@material-ui/core/styles";
-import {apiClient, ConsumerModel} from "./ApiClient";
+import {apiClient, ConsumerModel} from "./common/ApiClient";
+import DefaultAppBar from "./common/DefaultAppBar";
 
-const styles = (theme: Theme) => createStyles({
-    card: {
-        borderColor: theme.palette.secondary.main,
-    },
+const styles = ({palette}: Theme) => createStyles({
     list: {
-        backgroundColor: theme.palette.background.paper,
-    },
-    media: {
-        minHeight: 120,
-        backgroundColor: theme.palette.secondary.main,
-    },
-    largeIcon: {
-        fontSize: "8em",
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        flexGrow: 1,
+        backgroundColor: palette.background.paper,
     },
 });
 
 
-interface Props extends WithStyles<typeof styles>, RouteComponentProps {
+interface Props extends WithStyles<typeof styles> {
 }
 
 interface State {
@@ -93,9 +73,9 @@ class Consumers extends React.Component<Props, State> {
         };
 
         const handleChangeName = () => {
-            const consumer = this.state.selectedConsumer;
-            if (consumer != null) {
-                apiClient.putConsumer({...consumer, name: this.state.consumerName}).then(this.refresh);
+            const {selectedConsumer} = this.state;
+            if (selectedConsumer != null) {
+                apiClient.putConsumer({...selectedConsumer, name: this.state.consumerName}).then(this.refresh);
                 handleClose();
             }
         }
@@ -117,29 +97,17 @@ class Consumers extends React.Component<Props, State> {
             )
         };
 
+        const {consumers, open, consumerName} = this.state;
         return (
             <React.Fragment>
-                <AppBar position="sticky">
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            className={classes.menuButton}
-                            color="inherit"
-                            aria-label="back"
-                            onClick={() => this.props.history.go(-1)}
-                        >
-                            <ArrowBackIcon/>
-                        </IconButton>
-                        <Typography variant="h6" className={classes.title}>Consumers</Typography>
-                    </Toolbar>
-                </AppBar>
+                <DefaultAppBar title='Consumers'/>
                 <Container maxWidth="sm" disableGutters>
                     <CssBaseline/>
                     <List className={classes.list}>
-                        {this.state.consumers.map(ConsumerCard)}
+                        {consumers.map(ConsumerCard)}
                     </List>
                 </Container>
-                <Dialog open={this.state.open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Change consumer</DialogTitle>
                     <DialogContent>
                         <TextField
@@ -148,7 +116,7 @@ class Consumers extends React.Component<Props, State> {
                             id="name"
                             label="Consumer name"
                             fullWidth
-                            value={this.state.consumerName}
+                            value={consumerName}
                             onChange={(e) => this.setState({consumerName: e.target.value})}
                         />
                     </DialogContent>

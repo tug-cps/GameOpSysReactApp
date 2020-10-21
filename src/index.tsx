@@ -7,7 +7,7 @@ import './index.css';
 import App from "./App";
 import Login from "./Login";
 import Logout from "./Logout"
-import PrivateRoute from "./PrivateRoute";
+import PrivateRoute from "./common/PrivateRoute";
 import Upload from "./Upload";
 import User from "./User";
 import Survey from "./Survey";

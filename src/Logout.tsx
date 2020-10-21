@@ -1,6 +1,6 @@
 import React from 'react';
 import {useHistory} from 'react-router-dom';
-import {apiClient} from "./ApiClient";
+import {apiClient} from "./common/ApiClient";
 
 
 function Logout() {

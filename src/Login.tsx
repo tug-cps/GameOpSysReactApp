@@ -11,7 +11,7 @@ import {
     WithStyles
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import {apiClient} from "./ApiClient";
+import {apiClient} from "./common/ApiClient";
 import {RouteComponentProps} from 'react-router-dom';
 
 const styles = ({palette, spacing}: Theme) => createStyles({

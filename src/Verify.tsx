@@ -11,7 +11,7 @@ import {
     WithStyles
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import {apiClient} from "./ApiClient";
+import {apiClient} from "./common/ApiClient";
 import {RouteComponentProps} from "react-router-dom";
 
 const styles = ({palette, spacing}: Theme) => createStyles({
@@ -37,11 +37,7 @@ const styles = ({palette, spacing}: Theme) => createStyles({
 interface Props extends WithStyles<typeof styles>, RouteComponentProps {
 }
 
-interface State {
-    password: string;
-}
-
-class Login extends React.Component<Props, State> {
+class Login extends React.Component<Props, { password: string }> {
     constructor(props: Props) {
         super(props);
         this.state = {

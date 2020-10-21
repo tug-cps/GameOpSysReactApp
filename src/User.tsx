@@ -1,26 +1,22 @@
 import React from 'react';
 import {
-    AppBar,
     Container,
     createStyles,
     Fab,
     Icon,
-    IconButton,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
     Theme,
-    Toolbar,
-    Typography,
     WithStyles
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import {RouteComponentProps, Link as RouterLink} from "react-router-dom";
-import {apiClient, UserModel} from "./ApiClient";
+import {Link as RouterLink} from "react-router-dom";
+import {apiClient, UserModel} from "./common/ApiClient";
+import DefaultAppBar from "./common/DefaultAppBar";
 
-const styles = ({palette, spacing}: Theme) => createStyles({
+const styles = ({spacing}: Theme) => createStyles({
     root: {
         flexGrow: 1,
     },
@@ -32,15 +28,9 @@ const styles = ({palette, spacing}: Theme) => createStyles({
     extendedIcon: {
         marginRight: spacing(1),
     },
-    menuButton: {
-        marginRight: spacing(2),
-    },
-    title: {
-        flexGrow: 1,
-    },
 });
 
-interface Props extends WithStyles<typeof styles>, RouteComponentProps {
+interface Props extends WithStyles<typeof styles> {
 }
 
 interface State {
@@ -73,20 +63,7 @@ class User extends React.Component<Props, State> {
         const {classes} = this.props;
         return (
             <div className={classes.root}>
-                <AppBar position="sticky">
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            className={classes.menuButton}
-                            color="inherit"
-                            aria-label="back"
-                            onClick={() => this.props.history.go(-1)}
-                        >
-                            <ArrowBackIcon/>
-                        </IconButton>
-                        <Typography variant="h6" className={classes.title}>User</Typography>
-                    </Toolbar>
-                </AppBar>
+                <DefaultAppBar title='user'/>
                 <Container maxWidth="md">
                     <List>
                         <ListItem>

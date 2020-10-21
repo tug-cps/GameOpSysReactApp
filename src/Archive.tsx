@@ -1,32 +1,20 @@
 import React from 'react';
 import {
-    AppBar,
     Card,
     CardActionArea,
     CardContent,
     Container,
     createStyles,
-    IconButton,
     Theme,
-    Toolbar,
     Typography,
     WithStyles
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import {RouteComponentProps} from "react-router-dom";
-import {apiClient, UserPredictionModel} from "./ApiClient";
+import {apiClient, UserPredictionModel} from "./common/ApiClient";
+import DefaultAppBar from "./common/DefaultAppBar";
 
-interface EntryProps {
-    date: string;
-}
-
-interface EntryState {
-    predictions: UserPredictionModel[];
-}
-
-class ArchiveEntry extends React.Component<EntryProps, EntryState> {
-    constructor(props: Readonly<EntryProps>) {
+class ArchiveEntry extends React.Component<{ date: string }, { predictions: UserPredictionModel[] }> {
+    constructor(props: any) {
         super(props);
         this.state = {
             predictions: []
@@ -38,14 +26,16 @@ class ArchiveEntry extends React.Component<EntryProps, EntryState> {
     }
 
     render() {
+        const {date} = this.props;
+        const {predictions} = this.state;
         return (
             <Card variant="outlined">
                 <CardActionArea>
                     <CardContent>
-                        <Typography variant="h6">{this.props.date}</Typography>
-                        {this.state.predictions.map((prediction) => {
+                        <Typography variant="h6">{date}</Typography>
+                        {predictions.map((prediction) => {
                             return (
-                                <Typography variant="body1">
+                                <Typography variant="body1" key={prediction.consumerId}>
                                     {prediction.data.map((v) => v ? '█' : '░')}
                                 </Typography>
                             );
@@ -61,18 +51,13 @@ const styles = ({spacing}: Theme) => createStyles({
     root: {
         flexGrow: 1,
     },
-    menuButton: {
-        marginRight: spacing(2),
-    },
-    title: {
-        flexGrow: 1,
-    },
     card: {
         marginTop: spacing(2)
     },
 });
 
-interface Props extends WithStyles<typeof styles>, RouteComponentProps {
+
+interface Props extends WithStyles<typeof styles> {
 }
 
 interface State {
@@ -95,22 +80,9 @@ class Archive extends React.Component<Props, State> {
         const {classes} = this.props;
         return (
             <div className={classes.root}>
-                <AppBar position="sticky">
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            className={classes.menuButton}
-                            color="inherit"
-                            aria-label="back"
-                            onClick={() => this.props.history.go(-1)}
-                        >
-                            <ArrowBackIcon/>
-                        </IconButton>
-                        <Typography variant="h6" className={classes.title}>Predictions</Typography>
-                    </Toolbar>
-                </AppBar>
+                <DefaultAppBar title='Predictions'/>
                 <Container maxWidth="md">
-                    {this.state.dates.map((value, index) => {
+                    {this.state.dates.map((value) => {
                         return (<ArchiveEntry date={value} key={value}/>)
                     })}
                 </Container>

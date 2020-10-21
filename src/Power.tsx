@@ -1,22 +1,18 @@
 import React from 'react';
 import {
-    AppBar,
     Card,
     CardActionArea,
     CardContent,
     Container,
     createStyles,
-    IconButton,
     Theme,
-    Toolbar,
     Typography,
     WithStyles
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import {RouteComponentProps} from "react-router-dom";
-import {apiClient} from "./ApiClient";
+import {apiClient} from "./common/ApiClient";
 import {Chart, LineAdvance} from "bizcharts";
+import DefaultAppBar from "./common/DefaultAppBar";
 
 interface EntryProps {
     date: string;
@@ -45,11 +41,7 @@ class PowerEntry extends React.Component<EntryProps, EntryState> {
             this.setState({
                 data: consumptions.map((c) => {
                     return c.data.map((value, idx) => {
-                        return {
-                            type: c.type,
-                            time: idx,
-                            value : value
-                        }
+                        return {type: c.type, time: idx, value: value}
                     })
                 }).flat()
             })
@@ -57,8 +49,9 @@ class PowerEntry extends React.Component<EntryProps, EntryState> {
     }
 
     render() {
+        const {data} = this.state;
         return (
-            <Chart height={300} autoFit data={this.state.data}>
+            <Chart height={300} autoFit data={data}>
                 <LineAdvance
                     shape="smooth"
                     point
@@ -71,14 +64,8 @@ class PowerEntry extends React.Component<EntryProps, EntryState> {
     }
 }
 
-const styles = ({palette, spacing}: Theme) => createStyles({
+const styles = ({spacing}: Theme) => createStyles({
     root: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginRight: spacing(2),
-    },
-    title: {
         flexGrow: 1,
     },
     card: {
@@ -86,7 +73,7 @@ const styles = ({palette, spacing}: Theme) => createStyles({
     },
 });
 
-interface Props extends WithStyles<typeof styles>, RouteComponentProps {
+interface Props extends WithStyles<typeof styles> {
 }
 
 interface State {
@@ -107,24 +94,12 @@ class Power extends React.Component<Props, State> {
 
     render() {
         const {classes} = this.props;
+        const {dates} = this.state;
         return (
             <div className={classes.root}>
-                <AppBar position="sticky">
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            className={classes.menuButton}
-                            color="inherit"
-                            aria-label="back"
-                            onClick={() => this.props.history.go(-1)}
-                        >
-                            <ArrowBackIcon/>
-                        </IconButton>
-                        <Typography variant="h6" className={classes.title}>Power</Typography>
-                    </Toolbar>
-                </AppBar>
+                <DefaultAppBar title='Power'/>
                 <Container maxWidth="md">
-                    {this.state.dates.map((value, index) => {
+                    {dates.map((value) => {
                         return (
                             <Card variant="outlined" key={value} className={classes.card}>
                                 <CardActionArea>
