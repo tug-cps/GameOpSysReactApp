@@ -4,7 +4,7 @@ import {
     Button,
     Container, createStyles,
     Grid,
-    IconButton, List, ListItem, Snackbar,
+    IconButton, Link, List, ListItem, Snackbar,
     Theme,
     Toolbar,
     Typography, WithStyles
@@ -12,7 +12,7 @@ import {
 import {withStyles} from "@material-ui/core/styles";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CloseIcon from '@material-ui/icons/Close';
-import {Link, RouteComponentProps} from "react-router-dom";
+import {RouteComponentProps} from "react-router-dom";
 import {apiClient} from "./ApiClient";
 
 const styles = (theme: Theme) => createStyles({
@@ -100,8 +100,9 @@ class Upload extends React.Component<Props, State> {
                                 {operators.map((op) => {
                                     return (
                                         <ListItem key={op.name}>
-                                            <Link to={op.link}>{op.name}</Link>
-                                        </ListItem>)
+                                            <Link href={op.link}>{op.name}</Link>
+                                        </ListItem>
+                                    )
                                 })}
                             </List>
                         </Grid>

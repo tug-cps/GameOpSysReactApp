@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import {Link, RouteComponentProps} from "react-router-dom";
+import {RouteComponentProps} from "react-router-dom";
 import {apiClient, UserPredictionModel} from "./ApiClient";
 
 interface EntryProps {
@@ -41,18 +41,16 @@ class ArchiveEntry extends React.Component<EntryProps, EntryState> {
         return (
             <Card variant="outlined">
                 <CardActionArea>
-                    <Link to={'/archive/' + this.props.date}>
-                        <CardContent>
-                            <Typography variant="h6">{this.props.date}</Typography>
-                            {this.state.predictions.map((prediction) => {
-                                return (
-                                    <Typography variant="body1">
-                                        {prediction.data.map((v) => v ? '█' : '░')}
-                                    </Typography>
-                                );
-                            })}
-                        </CardContent>
-                    </Link>
+                    <CardContent>
+                        <Typography variant="h6">{this.props.date}</Typography>
+                        {this.state.predictions.map((prediction) => {
+                            return (
+                                <Typography variant="body1">
+                                    {prediction.data.map((v) => v ? '█' : '░')}
+                                </Typography>
+                            );
+                        })}
+                    </CardContent>
                 </CardActionArea>
             </Card>
         )

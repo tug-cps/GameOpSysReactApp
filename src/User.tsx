@@ -17,7 +17,7 @@ import {
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import {Link, RouteComponentProps} from "react-router-dom";
+import {RouteComponentProps, Link as RouterLink} from "react-router-dom";
 import {apiClient, UserModel} from "./ApiClient";
 
 const styles = ({palette, spacing}: Theme) => createStyles({
@@ -115,11 +115,9 @@ class User extends React.Component<Props, State> {
                         </ListItem>
                     </List>
                 </Container>
-                <Fab variant="extended" color="primary" className={classes.fab}>
-                    <Link to='/consumers'>
-                        <Icon className={classes.extendedIcon}>edit</Icon>
-                        Edit consumers
-                    </Link>
+                <Fab variant="extended" color="primary" className={classes.fab} component={RouterLink} to="/consumers">
+                    <Icon className={classes.extendedIcon}>edit</Icon>
+                    Edit consumers
                 </Fab>
             </div>
         )
