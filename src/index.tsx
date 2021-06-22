@@ -16,6 +16,7 @@ import Power from "./Power";
 import Archive from "./Archive";
 import Consumers from "./Consumers";
 import Behavior from "./Behavior";
+import {Typography} from "@material-ui/core";
 
 const theme = createMuiTheme({
     palette: {
@@ -49,9 +50,14 @@ ReactDOM.render((
                         <PrivateRoute path="/archive" component={Archive}/>
                         <PrivateRoute path="/consumers" component={Consumers}/>
                         <PrivateRoute path="/behavior" component={Behavior}/>
-                        <Route component={() => (<div>404 Not found</div>)} />
+                        <Route component={() => (<div>404 Not found</div>)}/>
                     </Switch>
                 </Router>
+                {process.env.NODE_ENV !== "production" &&
+                <Typography component="h5" style={{position: "fixed", bottom: 0}}>
+                    {process.env.NODE_ENV} build using api {process.env.REACT_APP_API_BASE_URL}
+                </Typography>
+                }
             </ThemeProvider>
         </React.StrictMode>
     ), document.getElementById('root')
