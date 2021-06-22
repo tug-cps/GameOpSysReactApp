@@ -1,8 +1,6 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
 
-const BASE_URI = 'https://it035137.uni-graz.at:443/v2/';
-
-const client = axios.create({baseURL: BASE_URI});
+const client = axios.create({baseURL: process.env.REACT_APP_API_BASE_URL});
 
 interface LoginResponse {
     token: string;
@@ -133,7 +131,7 @@ class ApiClient {
         return client.put(url, data, {...config, headers: {Authorization: `${this.accessToken}`}})
     }
 
-    private async perform<T = any>(url?: string, params?: any) {
+    private async perform(url?: string, params?: any) {
         return client({
             method: 'get',
             url: url,
