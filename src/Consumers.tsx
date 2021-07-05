@@ -3,7 +3,6 @@ import {
     Button,
     Container,
     createStyles,
-    CssBaseline,
     Dialog,
     DialogActions,
     DialogContent,
@@ -102,7 +101,6 @@ class Consumers extends React.Component<Props, State> {
             <React.Fragment>
                 <DefaultAppBar title='Consumers'/>
                 <Container maxWidth="sm" disableGutters>
-                    <CssBaseline/>
                     <List className={classes.list}>
                         {consumers.map(ConsumerCard)}
                     </List>

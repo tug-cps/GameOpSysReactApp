@@ -6,7 +6,6 @@ import {
     CardMedia,
     Container,
     createStyles,
-    CssBaseline,
     Grid,
     Theme,
     Typography,
@@ -102,7 +101,6 @@ class Survey extends React.Component<Props, State> {
             <React.Fragment>
                 <DefaultAppBar title='Surveys'/>
                 <Container component="main" maxWidth="lg" disableGutters>
-                    <CssBaseline/>
                     <Grid container spacing={1}>
                         {this.state.items.map(createCard)}
                     </Grid>
