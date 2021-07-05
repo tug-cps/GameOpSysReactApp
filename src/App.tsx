@@ -1,5 +1,5 @@
 import {Component, Suspense} from 'react';
-import {Box, CssBaseline, ThemeProvider, Typography,} from "@material-ui/core";
+import {CssBaseline, ThemeProvider, Typography,} from "@material-ui/core";
 import {createMuiTheme} from "@material-ui/core/styles";
 import ReactRouter from "./Routes";
 
