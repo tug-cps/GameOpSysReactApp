@@ -10,7 +10,6 @@ import Logout from "./Logout"
 import PrivateRoute from "./common/PrivateRoute";
 import Upload from "./Upload";
 import User from "./User";
-import Survey from "./Survey";
 import Verify from "./Verify";
 import Power from "./Power";
 import Archive from "./Archive";
@@ -39,13 +38,12 @@ ReactDOM.render((
             <ThemeProvider theme={theme}>
                 <Router basename={process.env.PUBLIC_URL}>
                     <Switch>
-                        <PrivateRoute path="/" exact component={App}/>
+                        <PrivateRoute path="/logout" component={Logout}/>
                         <Route path="/login" component={Login}/>
                         <Route path="/verify" component={Verify}/>
-                        <PrivateRoute path="/logout" component={Logout}/>
+                        <PrivateRoute exact path="/" component={App}/>
                         <PrivateRoute path="/upload" component={Upload}/>
                         <PrivateRoute path="/user" component={User}/>
-                        <PrivateRoute path="/survey" component={Survey}/>
                         <PrivateRoute path="/power" component={Power}/>
                         <PrivateRoute path="/archive" component={Archive}/>
                         <PrivateRoute path="/consumers" component={Consumers}/>

@@ -76,13 +76,6 @@ function App() {
             header: false
         },
         {
-            title: 'Surveys',
-            subtitle: 'My surveys',
-            icon: 'assignment',
-            destination: '/survey',
-            header: false
-        },
-        {
             title: 'My Data',
             subtitle: 'Edit my data',
             icon: 'person',
