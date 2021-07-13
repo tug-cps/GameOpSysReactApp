@@ -52,6 +52,36 @@ interface Props {
 interface State {
 }
 
+interface CardProps {
+    item: Item
+}
+
+const HomeCard = withStyles(styles)(
+    class extends React.Component<CardProps & WithStyles<typeof styles>, {}> {
+        render() {
+            const {classes, item} = this.props
+
+            return (
+                <Grid item xs={item.header ? 12 : 6} xl={item.header ? 12 : 4} key={item.title}>
+                    <Card variant="outlined" className={classes.card}>
+                        <CardActionArea component={RouterLink} to={item.destination}>
+                            <CardMedia className={classes.media}>
+                                <Typography align='center'>
+                                    <Icon className={classes.largeIcon} style={{color: '#fff'}}>{item.icon}</Icon>
+                                </Typography>
+                            </CardMedia>
+                            <CardContent>
+                                <Typography variant="h6">{item.title}</Typography>
+                                <Typography color="textSecondary" noWrap>{item.subtitle}</Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </Grid>
+            )
+        }
+    }
+)
+
 class Home extends React.Component<Props & WithStyles<typeof styles> & WithTranslation, State> {
     render() {
         const {classes, t} = this.props;
@@ -101,26 +131,6 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
             }
         ]
 
-        function createCard(item: Item) {
-            return (
-                <Grid item xs={item.header ? 12 : 6} xl={item.header ? 12 : 4} key={item.title}>
-                    <Card variant="outlined" className={classes.card}>
-                        <CardActionArea component={RouterLink} to={item.destination}>
-                            <CardMedia className={classes.media}>
-                                <Typography align='center'>
-                                    <Icon className={classes.largeIcon} style={{color: '#fff'}}>{item.icon}</Icon>
-                                </Typography>
-                            </CardMedia>
-                            <CardContent>
-                                <Typography variant="h6">{item.title}</Typography>
-                                <Typography color="textSecondary" noWrap>{item.subtitle}</Typography>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                </Grid>
-            )
-        }
-
         return (
             <React.Fragment>
                 <AppBar position="sticky">
@@ -130,7 +140,7 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
                     </Toolbar>
                 </AppBar>
                 <Container component="main" maxWidth="lg" disableGutters className={classes.root}>
-                    <Grid container spacing={1}>{items.map(createCard)}</Grid>
+                    <Grid container spacing={1}>{items.map((item: Item) => <HomeCard item={item}/>)}</Grid>
                 </Container>
             </React.Fragment>
         );

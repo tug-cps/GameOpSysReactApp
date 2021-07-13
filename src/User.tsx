@@ -3,23 +3,25 @@ import {
     Container,
     createStyles,
     Fab,
+    FormControl,
     Icon,
+    InputLabel,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
+    MenuItem,
+    Select,
     Theme,
     WithStyles
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
 import {Link as RouterLink} from "react-router-dom";
-import {apiClient, UserModel} from "./common/ApiClient";
+import {apiClient} from "./common/ApiClient";
 import DefaultAppBar from "./common/DefaultAppBar";
+import i18n from "i18next";
 
 const styles = ({spacing}: Theme) => createStyles({
-    root: {
-        flexGrow: 1,
-    },
     fab: {
         position: 'absolute',
         bottom: spacing(2),
@@ -34,61 +36,84 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 interface State {
-    user: UserModel;
-    consumersCount: number;
+    userId: string
+    email: string
+    type: string
+    creationDate: string
+    unlockDate: string
+    treatmentGroup: string
+    consumersCount: number
+    language: string
 }
 
 class User extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            user: {
-                userId: '',
-                email: '',
-                type: '',
-                creationDate: '',
-                unlockDate: '',
-                treatmentGroup: ''
-            },
-            consumersCount: 0
+            userId: '',
+            email: '',
+            type: '',
+            creationDate: '',
+            unlockDate: '',
+            treatmentGroup: '',
+            consumersCount: 0,
+            language: i18n.language
         };
     }
 
     componentDidMount() {
-        apiClient.getUser().then((user) => this.setState({user: user}));
+        apiClient.getUser().then((user) => this.setState(user));
         apiClient.getConsumers().then((consumers) => this.setState({consumersCount: consumers.length}))
     }
 
     render() {
         const {classes} = this.props;
+
+        const state = this.state;
+
+        const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+            i18n.changeLanguage(event.target.value as string).then(() => {
+                this.setState({language: event.target.value as string});
+            })
+        };
         return (
-            <div className={classes.root}>
-                <DefaultAppBar title='user'/>
-                <Container maxWidth="md">
+            <React.Fragment>
+                <DefaultAppBar title='User'/>
+                <Container maxWidth="sm">
                     <List>
                         <ListItem>
                             <ListItemIcon><Icon>email</Icon></ListItemIcon>
-                            <ListItemText>{this.state.user.email}</ListItemText>
+                            <ListItemText>{state.email}</ListItemText>
                         </ListItem>
                         <ListItem>
                             <ListItemIcon><Icon>power</Icon></ListItemIcon>
-                            <ListItemText>{this.state.consumersCount} consumers</ListItemText>
+                            <ListItemText>{state.consumersCount} consumers</ListItemText>
                         </ListItem>
                         <ListItem>
                             <ListItemIcon><Icon>group</Icon></ListItemIcon>
-                            <ListItemText>{this.state.user.treatmentGroup}</ListItemText>
+                            <ListItemText>{state.treatmentGroup}</ListItemText>
                         </ListItem>
                         <ListItem>
                             <ListItemIcon><Icon>access_time</Icon></ListItemIcon>
-                            <ListItemText>Created at {this.state.user.creationDate}</ListItemText>
+                            <ListItemText>Created at {state.creationDate}</ListItemText>
                         </ListItem>
                         <ListItem>
                             <ListItemIcon/>
-                            <ListItemText>Unlocked at {this.state.user.unlockDate}</ListItemText>
+                            <ListItemText>Unlocked at {state.unlockDate}</ListItemText>
                         </ListItem>
                         <ListItem>
-                            <ListItemIcon/>
-                            <ListItemText>Finished at</ListItemText>
+                            <ListItemIcon><Icon>language</Icon></ListItemIcon>
+                            <FormControl fullWidth variant="outlined">
+                                <InputLabel>Language</InputLabel>
+                                <Select
+                                    value={state.language}
+                                    label="Language"
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value={"de"}>German</MenuItem>
+                                    <MenuItem value={"en"}>English</MenuItem>
+                                </Select>
+                            </FormControl>
                         </ListItem>
                     </List>
                 </Container>
@@ -96,7 +121,7 @@ class User extends React.Component<Props, State> {
                     <Icon className={classes.extendedIcon}>edit</Icon>
                     Edit consumers
                 </Fab>
-            </div>
+            </React.Fragment>
         )
     }
 }
