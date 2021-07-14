@@ -1,15 +1,5 @@
 import React from 'react';
-import {
-    Avatar,
-    Button,
-    Container,
-    createStyles,
-    CssBaseline,
-    TextField,
-    Theme,
-    Typography,
-    WithStyles
-} from "@material-ui/core";
+import {Avatar, Button, Container, createStyles, TextField, Theme, Typography, WithStyles} from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
 import {apiClient} from "./common/ApiClient";
 import {RouteComponentProps} from 'react-router-dom';
@@ -66,7 +56,6 @@ class Login extends React.Component<Props, State> {
         const {classes} = this.props;
         return (
             <Container component="main" maxWidth="xs">
-                <CssBaseline/>
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}/>
                     <Typography component="h1" variant="h5">Sign in</Typography>

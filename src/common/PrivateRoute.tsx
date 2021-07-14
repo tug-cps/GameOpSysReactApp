@@ -1,36 +1,33 @@
 import * as React from 'react';
-import {
-    Route,
-    Redirect,
-    RouteProps,
-} from 'react-router-dom';
+import {Redirect, Route, RouteProps,} from 'react-router-dom';
 import {apiClient} from "./ApiClient";
 
-interface PrivateRouteProps extends RouteProps {
-    // tslint:disable-next-line:no-any
-    component: any;
+interface Props {
+    component: any
 }
 
-const PrivateRoute = (props: PrivateRouteProps) => {
-    const { component: Component, ...rest } = props;
-    const isSignedIn = apiClient.isLoggedIn;
-    return (
-        <Route
-            {...rest}
-            render={(routeProps) =>
-                isSignedIn ? (
-                    <Component {...routeProps} />
-                ) : (
-                    <Redirect
-                        to={{
-                            pathname: '/login',
-                            state: { from: routeProps.location }
-                        }}
-                    />
-                )
-            }
-        />
-    );
-};
+class PrivateRoute extends React.Component<Props & RouteProps> {
+    render() {
+        const {component: Component, ...rest} = this.props;
+        const isSignedIn = apiClient.isLoggedIn;
+        return (
+            <Route
+                {...rest}
+                render={(routeProps) =>
+                    isSignedIn ? (
+                        <Component {...routeProps} />
+                    ) : (
+                        <Redirect
+                            to={{
+                                pathname: '/login',
+                                state: {from: routeProps.location}
+                            }}
+                        />
+                    )
+                }
+            />
+        );
+    }
+}
 
 export default PrivateRoute;
