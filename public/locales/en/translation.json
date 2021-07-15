@@ -1,5 +1,13 @@
 {
   "logout": "Logout",
   "card_upload_title": "Upload",
-  "card_upload_subtitle": "Upload energy consumption"
+  "card_upload_subtitle": "Upload energy consumption",
+  "card_behavior_title": "Behavior",
+  "card_behavior_subtitle": "My daily predicion",
+  "card_power_title": "Power",
+  "card_power_subtitle": "My accuracy",
+  "card_archive_title": "Archive",
+  "card_archive_subtitle": "My previous predictions",
+  "card_user_title": "My Data",
+  "card_user_subtitle": "Edit My data"
 }

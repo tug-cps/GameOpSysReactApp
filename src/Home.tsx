@@ -65,22 +65,22 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
                 header: false
             },
             {
-                title: 'Behavior',
-                subtitle: 'My daily prediction',
+                title: t('card_behavior_title'),
+                subtitle: t('card_behavior_subtitle'),
                 icon: 'edit',
                 destination: '/behavior',
                 header: false
             },
             {
-                title: 'Power',
-                subtitle: 'My accuracy',
+                title: t('card_power_title'),
+                subtitle: t('card_power_subtitle'),
                 icon: 'show_chart',
                 destination: '/power',
                 header: false
             },
             {
-                title: 'Archive',
-                subtitle: 'My previous predictions',
+                title: t('card_archive_title'),
+                subtitle: t('card_archive_subtitle'),
                 icon: 'history',
                 destination: '/archive',
                 header: false
@@ -93,8 +93,8 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
                 header: false
             },
             {
-                title: 'My Data',
-                subtitle: 'Edit my data',
+                title: t('card_user_title'),
+                subtitle: t('card_user_subtitle'),
                 icon: 'person',
                 destination: '/user',
                 header: false
