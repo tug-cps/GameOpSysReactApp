@@ -86,13 +86,6 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
                 header: false
             },
             {
-                title: 'Surveys',
-                subtitle: 'My surveys',
-                icon: 'assignment',
-                destination: '/survey',
-                header: false
-            },
-            {
                 title: t('card_user_title'),
                 subtitle: t('card_user_subtitle'),
                 icon: 'person',
