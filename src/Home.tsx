@@ -92,6 +92,13 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
                 destination: '/user',
                 header: false
             },
+            {
+                title: t('card_thermostats_title'),
+                subtitle: t('card_thermostats_subtitle'),
+                icon: 'power',
+                destination: '/thermostats',
+                header: false
+            }
         ]
 
         function createCard(item: Item) {
