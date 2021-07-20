@@ -11,7 +11,7 @@ import Consumers from "./Consumers";
 import Behavior from "./Behavior";
 import React from "react";
 import Home from "./Home";
-
+import Thermostats from "./Thermostats";
 const ReactRouter = () => {
     return (
         <Switch>
@@ -25,6 +25,7 @@ const ReactRouter = () => {
             <PrivateRoute path="/archive" component={Archive}/>
             <PrivateRoute path="/consumers" component={Consumers}/>
             <PrivateRoute path="/behavior" component={Behavior}/>
+            <PrivateRoute path="/thermostats" component={Thermostats}/>
             <Route component={() => (<div>404 Not found</div>)}/>
         </Switch>
     )
