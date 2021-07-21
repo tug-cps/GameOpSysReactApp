@@ -1,8 +1,9 @@
 import React from 'react';
 import {Avatar, Button, Container, createStyles, TextField, Theme, Typography, WithStyles} from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import {apiClient} from "./common/ApiClient";
 import {RouteComponentProps} from 'react-router-dom';
+import BackendService from "./service/BackendService";
+import {withRouter} from "react-router";
 
 const styles = ({palette, spacing}: Theme) => createStyles({
     paper: {
@@ -25,6 +26,7 @@ const styles = ({palette, spacing}: Theme) => createStyles({
 });
 
 interface Props extends WithStyles<typeof styles>, RouteComponentProps {
+    backendService: BackendService
 }
 
 interface State {
@@ -45,11 +47,10 @@ class Login extends React.Component<Props, State> {
 
     handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        console.log("onSubmit!!!");
-        apiClient.requestPin(this.state.shared_password, this.state.email)
-            .then(() => {
-                this.props.history.push('/verify')
-            })
+        this.props.backendService
+            .requestPin(this.state.shared_password, this.state.email)
+            .then(() => {this.props.history.push('/verify', {email: this.state.email})})
+            .catch((error) => {console.log(error.response)})
     }
 
     render() {
@@ -97,4 +98,4 @@ class Login extends React.Component<Props, State> {
     }
 }
 
-export default withStyles(styles)(Login);
+export default withRouter(withStyles(styles)(Login));

@@ -1,7 +1,9 @@
-import {Component, Suspense} from 'react';
-import {CssBaseline, ThemeProvider, Typography,} from "@material-ui/core";
+import React from "react";
+import {CssBaseline, LinearProgress, ThemeProvider, Typography,} from "@material-ui/core";
 import {createMuiTheme} from "@material-ui/core/styles";
 import ReactRouter from "./Routes";
+import BackendService from "./service/BackendService";
+import Config from "./Config";
 
 const theme = createMuiTheme({
     palette: {
@@ -19,17 +21,19 @@ const theme = createMuiTheme({
     },
 });
 
-class App extends Component {
+const backendService = new BackendService(Config.backend);
+
+class App extends React.Component {
     render() {
         return (
             <ThemeProvider theme={theme}>
                 <CssBaseline/>
-                <Suspense fallback="Loading ...">
-                    <ReactRouter/>
-                </Suspense>
-                {process.env.NODE_ENV !== "production" &&
+                <React.Suspense fallback={<LinearProgress/>}>
+                    <ReactRouter backendService={backendService}/>
+                </React.Suspense>
+                {Config.type !== "production" &&
                 <Typography component="h5" style={{position: "fixed", bottom: 0}}>
-                    {process.env.NODE_ENV} build using api {process.env.REACT_APP_API_BASE_URL}
+                    {Config.type} build, using {Config.apiDescription}
                 </Typography>
                 }
             </ThemeProvider>

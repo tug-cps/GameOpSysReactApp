@@ -14,8 +14,8 @@ import {
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
 import CloseIcon from '@material-ui/icons/Close';
-import {apiClient} from "./common/ApiClient";
 import DefaultAppBar from "./common/DefaultAppBar";
+import BackendService from "./service/BackendService";
 
 const styles = () => createStyles({
     input: {
@@ -29,6 +29,7 @@ interface Operator {
 }
 
 interface Props extends WithStyles<typeof styles> {
+    backendService: BackendService
 }
 
 interface State {
@@ -48,7 +49,7 @@ class Upload extends React.Component<Props, State> {
 
     onFormUpload(event: React.ChangeEvent<HTMLInputElement>) {
         if (event.target != null && event.target.files != null) {
-            apiClient.postConsumption(event.target.files[0]).then(() => {
+            this.props.backendService.postConsumption(event.target.files[0]).then(() => {
                 console.log("File uploaded.")
                 this.setState({open: true})
             });
@@ -84,7 +85,7 @@ class Upload extends React.Component<Props, State> {
                                 {operators.map((op) => {
                                     return (
                                         <ListItem key={op.name}>
-                                            <Link href={op.link}>{op.name}</Link>
+                                            <Typography><Link href={op.link}>{op.name}</Link></Typography>
                                         </ListItem>
                                     )
                                 })}

@@ -1,4 +1,4 @@
-import {HashRouter as Router} from 'react-router-dom';
+import {BrowserRouter as Router} from 'react-router-dom';
 
 import React from 'react'
 import './index.css';
@@ -8,7 +8,7 @@ import './i18n';
 
 ReactDOM.render((
     <React.StrictMode>
-        <Router basename={process.env.PUBLIC_URL}>
+        <Router basename='#'>
             <App/>
         </Router>
     </React.StrictMode>

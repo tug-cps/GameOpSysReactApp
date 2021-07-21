@@ -17,9 +17,9 @@ import {
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
 import {Link as RouterLink} from "react-router-dom";
-import {apiClient} from "./common/ApiClient";
 import DefaultAppBar from "./common/DefaultAppBar";
 import i18n from "i18next";
+import BackendService from "./service/BackendService";
 
 const styles = ({spacing}: Theme) => createStyles({
     fab: {
@@ -33,6 +33,7 @@ const styles = ({spacing}: Theme) => createStyles({
 });
 
 interface Props extends WithStyles<typeof styles> {
+    backendService: BackendService
 }
 
 interface State {
@@ -62,13 +63,21 @@ class User extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-        apiClient.getUser().then((user) => this.setState(user));
-        apiClient.getConsumers().then((consumers) => this.setState({consumersCount: consumers.length}))
+        const {backendService} = this.props;
+        backendService.getUser()
+            .then((user) => this.setState(user))
+            .catch((error) => {
+                console.log(error)
+            })
+        backendService.getConsumers()
+            .then((consumers) => this.setState({consumersCount: consumers.length}))
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     render() {
         const {classes} = this.props;
-
         const state = this.state;
 
         const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {

@@ -19,8 +19,9 @@ import {
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import {withStyles} from "@material-ui/core/styles";
-import {apiClient, ConsumerModel} from "./common/ApiClient";
+import BackendService from "./service/BackendService";
 import DefaultAppBar from "./common/DefaultAppBar";
+import {ConsumerModel} from "./service/Model";
 
 const styles = ({palette}: Theme) => createStyles({
     list: {
@@ -30,6 +31,7 @@ const styles = ({palette}: Theme) => createStyles({
 
 
 interface Props extends WithStyles<typeof styles> {
+    backendService: BackendService
 }
 
 interface State {
@@ -53,7 +55,10 @@ class Consumers extends React.Component<Props, State> {
     }
 
     refresh() {
-        apiClient.getConsumers().then((consumers) => this.setState({consumers: consumers}))
+        const {backendService} = this.props;
+        backendService.getConsumers()
+            .then((consumers) => this.setState({consumers: consumers}))
+            .catch((reason) => {console.log(reason)})
     }
 
     componentDidMount() {
@@ -74,13 +79,13 @@ class Consumers extends React.Component<Props, State> {
         const handleChangeName = () => {
             const {selectedConsumer} = this.state;
             if (selectedConsumer != null) {
-                apiClient.putConsumer({...selectedConsumer, name: this.state.consumerName}).then(this.refresh);
+                this.props.backendService.putConsumer({...selectedConsumer, name: this.state.consumerName}).then(this.refresh);
                 handleClose();
             }
         }
 
         const handleChangeActive = (consumer: ConsumerModel) => {
-            apiClient.putConsumer({...consumer, active: !consumer.active}).then(this.refresh);
+            this.props.backendService.putConsumer({...consumer, active: !consumer.active}).then(this.refresh);
         }
 
         const ConsumerCard = (consumer: ConsumerModel) => {

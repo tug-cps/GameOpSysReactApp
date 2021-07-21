@@ -10,8 +10,9 @@ import {
     WithStyles
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import {apiClient} from "./common/ApiClient";
 import {RouteComponentProps} from "react-router-dom";
+import BackendService from "./service/BackendService";
+import {withRouter} from "react-router";
 
 const styles = ({palette, spacing}: Theme) => createStyles({
     paper: {
@@ -34,9 +35,10 @@ const styles = ({palette, spacing}: Theme) => createStyles({
 });
 
 interface Props extends WithStyles<typeof styles>, RouteComponentProps {
+    backendService: BackendService
 }
 
-class Login extends React.Component<Props, { password: string }> {
+class Verify extends React.Component<Props, { email?: string, password: string }> {
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -46,11 +48,21 @@ class Login extends React.Component<Props, { password: string }> {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        apiClient.login(this.state.password).then(() => {
+    componentDidMount() {
+        if (this.props.location == null || this.props.location.state == null || this.props.location.state.email == null) {
             this.props.history.push('/')
-        })
+        }
+    }
+
+    handleSubmit(e: React.FormEvent) {
+        const {password} = this.state;
+        const {email} = this.props.location.state;
+
+        e.preventDefault();
+        this.props.backendService
+            .login(email, password)
+            .then(() => {this.props.history.push('/')})
+            .catch((error) => console.log(error))
     }
 
     render() {
@@ -59,7 +71,7 @@ class Login extends React.Component<Props, { password: string }> {
             <Container component="main" maxWidth="xs">
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}/>
-                    <Typography component="h1" variant="h5">Sign in</Typography>
+                    <Typography component="h1" variant="h5">Verify</Typography>
                     <form className={classes.form} onSubmit={this.handleSubmit}>
                         <TextField
                             id="otp"
@@ -79,4 +91,4 @@ class Login extends React.Component<Props, { password: string }> {
     }
 }
 
-export default withStyles(styles)(Login);
+export default withRouter(withStyles(styles)(Verify));
