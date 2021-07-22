@@ -140,7 +140,7 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
                     </Toolbar>
                 </AppBar>
                 <Container component="main" maxWidth="lg" disableGutters className={classes.root}>
-                    <Grid container spacing={1}>{items.map((item: Item) => <HomeCard item={item}/>)}</Grid>
+                    <Grid container spacing={1}>{items.map((item: Item, index: number) => <HomeCard item={item} key={index}/>)}</Grid>
                 </Container>
             </React.Fragment>
         );

@@ -10,11 +10,12 @@ import {
     WithStyles
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import {apiClient} from "./common/ApiClient";
 import {Chart, LineAdvance} from "bizcharts";
 import DefaultAppBar from "./common/DefaultAppBar";
+import BackendService from "./service/BackendService";
 
 interface EntryProps {
+    backendService: BackendService;
     date: string;
 }
 
@@ -37,7 +38,7 @@ class PowerEntry extends React.Component<EntryProps, EntryState> {
     }
 
     componentDidMount() {
-        apiClient.getProcessedConsumption(this.props.date).then((consumptions) => {
+        this.props.backendService.getProcessedConsumption(this.props.date).then((consumptions) => {
             this.setState({
                 data: consumptions.map((c) => {
                     return c.data.map((value, idx) => {
@@ -74,6 +75,7 @@ const styles = ({spacing}: Theme) => createStyles({
 });
 
 interface Props extends WithStyles<typeof styles> {
+    backendService: BackendService
 }
 
 interface State {
@@ -89,7 +91,10 @@ class Power extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-        apiClient.getProcessedConsumptions().then((response) => this.setState({dates: response}));
+        const {backendService} = this.props;
+        backendService.getProcessedConsumptions()
+            .then((response) => this.setState({dates: response}))
+            .catch((reason) => console.log(reason))
     }
 
     render() {
@@ -105,7 +110,7 @@ class Power extends React.Component<Props, State> {
                                 <CardActionArea>
                                     <CardContent>
                                         <Typography variant="h6">{value}</Typography>
-                                        <PowerEntry date={value}/>
+                                        <PowerEntry date={value} backendService={this.props.backendService}/>
                                     </CardContent>
                                 </CardActionArea>
                             </Card>

@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
       - run: npm install
-      - run: npm run build
+      - run: npm run build:local
       - uses: peaceiris/actions-gh-pages@v3
         name: Deploy to GitHub Pages
         with:

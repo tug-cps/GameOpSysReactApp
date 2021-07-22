@@ -1,15 +1,19 @@
-import React from 'react';
+import {useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
-import {apiClient} from "./common/ApiClient";
+import BackendService from "./service/BackendService";
 
 
-function Logout() {
+function Logout(props: {backendService: BackendService}) {
     const history = useHistory();
 
-    apiClient.logout().finally(() => {
-        history.push("/login");
-    })
-    return (<div/>)
+    useEffect(() => {
+        props.backendService
+            .logout()
+            .catch((error) => console.log(error))
+            .then(() => history.push("/login"))
+    });
+
+    return null;
 }
 
 export default Logout;

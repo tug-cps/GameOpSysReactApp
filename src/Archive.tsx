@@ -10,10 +10,11 @@ import {
     WithStyles
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import {apiClient, UserPredictionModel} from "./common/ApiClient";
+import BackendService from "./service/BackendService";
 import DefaultAppBar from "./common/DefaultAppBar";
+import {UserPredictionModel} from "./service/Model";
 
-class ArchiveEntry extends React.Component<{ date: string }, { predictions: UserPredictionModel[] }> {
+class ArchiveEntry extends React.Component<{ date: string, backendService: BackendService }, { predictions: UserPredictionModel[] }> {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -22,7 +23,7 @@ class ArchiveEntry extends React.Component<{ date: string }, { predictions: User
     }
 
     componentDidMount() {
-        apiClient.getPrediction(this.props.date).then((prediction) => this.setState({predictions: prediction}))
+        this.props.backendService.getPrediction(this.props.date).then((prediction) => this.setState({predictions: prediction}))
     }
 
     render() {
@@ -58,6 +59,7 @@ const styles = ({spacing}: Theme) => createStyles({
 
 
 interface Props extends WithStyles<typeof styles> {
+    backendService: BackendService
 }
 
 interface State {
@@ -73,7 +75,10 @@ class Archive extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-        apiClient.getPredictions().then((response) => this.setState({dates: response}));
+        const {backendService} = this.props;
+        backendService.getPredictions()
+            .then((response) => this.setState({dates: response}))
+            .catch((reason) => {console.log(reason)})
     }
 
     render() {
@@ -83,7 +88,7 @@ class Archive extends React.Component<Props, State> {
                 <DefaultAppBar title='Predictions'/>
                 <Container maxWidth="md">
                     {this.state.dates.map((value) => {
-                        return (<ArchiveEntry date={value} key={value}/>)
+                        return (<ArchiveEntry date={value} key={value} backendService={this.props.backendService}/>)
                     })}
                 </Container>
             </div>
