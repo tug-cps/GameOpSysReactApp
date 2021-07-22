@@ -57,9 +57,11 @@ const ReactRouter = (props: { backendService: BackendService }) => {
             <Route path="/behavior"><Behavior/></Route>
             <Route path="/thermostats"><Thermostats/></Route>
             <Route exact path="/"><Home/></Route>
+            <Route exact path={`${process.env.PUBLIC_URL}`}><Home/></Route>
             <Route>{_404("/")}</Route>
         </Switch>
     );
+
 
     return (
         <React.Fragment>

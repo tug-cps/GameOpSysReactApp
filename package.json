@@ -2,7 +2,7 @@
   "name": "gameopsys-react-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
+  "homepage": "https://tug-cps.github.io/GameOpSysReactApp",
   "dependencies": {
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
