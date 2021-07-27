@@ -7,7 +7,10 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    FormControl,
     IconButton,
+    Input,
+    InputLabel,
     List,
     ListItem,
     ListItemSecondaryAction,
@@ -22,6 +25,7 @@ import {withStyles} from "@material-ui/core/styles";
 import BackendService from "./service/BackendService";
 import DefaultAppBar from "./common/DefaultAppBar";
 import {ConsumerModel} from "./service/Model";
+import { Delete } from '@material-ui/icons';
 
 const styles = ({palette}: Theme) => createStyles({
     list: {
@@ -38,6 +42,7 @@ interface State {
     consumers: ConsumerModel[]
     open: boolean
     consumerName: string
+    consumerInput: string
     selectedConsumer?: ConsumerModel
 }
 
@@ -48,7 +53,8 @@ class Consumers extends React.Component<Props, State> {
         this.state = {
             consumers: [],
             open: false,
-            consumerName: ""
+            consumerName: "",
+            consumerInput: ""
         }
 
         this.refresh = this.refresh.bind(this);
@@ -88,11 +94,38 @@ class Consumers extends React.Component<Props, State> {
             this.props.backendService.putConsumer({...consumer, active: !consumer.active}).then(this.refresh);
         }
 
+        const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+            this.setState({consumerInput: e.currentTarget.value})
+        }
+
+        const handleAddConsumer = (e : React.SyntheticEvent) => {
+            e.preventDefault();
+            let newConsumer : ConsumerModel = { consumerId:"",owner:"", 
+                                                name:this.state.consumerInput,
+                                                variableName:"", 
+                                                active:true };
+            newConsumer.consumerId = Math.floor(Math.random() * 100).toString();
+            this.setState(prevState => ({
+                consumers: [...prevState.consumers, newConsumer],
+                consumerInput:""
+            }))
+        }
+
+        const handleRemoveConsumer = (id : string) => {
+            this.setState(prevState => ({
+                consumers: [...prevState.consumers.filter((consumer:ConsumerModel) => consumer.consumerId != id)]
+            }))
+
+        }
+
         const ConsumerCard = (consumer: ConsumerModel) => {
             return (
                 <ListItem key={consumer.consumerId} role={undefined} button onClick={() => handleClickOpen(consumer)}>
                     <ListItemText primary={consumer.name}/>
                     <ListItemSecondaryAction onClick={() => handleChangeActive(consumer)}>
+                        <IconButton onClick={() => handleRemoveConsumer(consumer.consumerId)}>
+                            <Delete/>
+                        </IconButton>
                         <IconButton edge="end" arial-label="show or hide">
                             {consumer.active ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                         </IconButton>
@@ -104,7 +137,14 @@ class Consumers extends React.Component<Props, State> {
         const {consumers, open, consumerName} = this.state;
         return (
             <React.Fragment>
+                <form onSubmit={handleAddConsumer}>
                 <DefaultAppBar title='Consumers'/>
+                <FormControl>
+                    <InputLabel htmlFor="new-consumer">Add new consumer</InputLabel>
+                    <Input id="new-consumer" onChange={onChange}/>
+                    <Button type="submit">Submit</Button>
+                </FormControl>
+                </form>
                 <Container maxWidth="sm" disableGutters>
                     <List className={classes.list}>
                         {consumers.map(ConsumerCard)}
