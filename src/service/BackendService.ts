@@ -74,6 +74,11 @@ class BackendService {
             }))
     }
 
+    postConsumer(consumer: ConsumerModel) {
+        return this.backend
+            .post('/consumer/', consumer, this.addAuth())
+    }
+
     getProcessedConsumptions(): Promise<string[]> {
         return this.backend
             .get<string[]>('/processedconsumption', this.addAuth())

@@ -109,11 +109,12 @@ class Consumers extends React.Component<Props, State> {
                 consumers: [...prevState.consumers, newConsumer],
                 consumerInput:""
             }))
+            this.props.backendService.postConsumer(newConsumer).then(this.refresh);
         }
 
         const handleRemoveConsumer = (id : string) => {
             this.setState(prevState => ({
-                consumers: [...prevState.consumers.filter((consumer:ConsumerModel) => consumer.consumerId != id)]
+                consumers: [...prevState.consumers.filter((consumer:ConsumerModel) => consumer.consumerId !== id)]
             }))
 
         }
