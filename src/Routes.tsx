@@ -11,6 +11,7 @@ import Behavior from "./Behavior";
 import React, {useEffect, useState} from "react";
 import Home from "./Home";
 import Thermostats from "./Thermostats";
+import Predictions from "./Predictions";
 import BackendService from "./service/BackendService";
 import {Box, Button, LinearProgress, Typography} from "@material-ui/core";
 
@@ -56,6 +57,7 @@ const ReactRouter = (props: { backendService: BackendService }) => {
             <Route path="/consumers"><Consumers backendService={backendService}/></Route>
             <Route path="/behavior"><Behavior/></Route>
             <Route path="/thermostats"><Thermostats/></Route>
+            <Route path="/predictions"><Predictions/></Route>
             <Route exact path="/"><Home/></Route>
             <Route exact path={`${process.env.PUBLIC_URL}`}><Home/></Route>
             <Route>{_404("/")}</Route>

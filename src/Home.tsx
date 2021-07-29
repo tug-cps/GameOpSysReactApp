@@ -128,6 +128,13 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
                 icon: 'power',
                 destination: '/thermostats',
                 header: false
+            },
+            {
+                title: t('card_predictions_title'),
+                subtitle: t('card_predictions_subtitle'),
+                icon: 'flash_on',
+                destination: '/predictions',
+                header: false
             }
         ]
 

@@ -11,5 +11,7 @@
   "card_user_title": "My Data",
   "card_user_subtitle": "Edit My data",
   "card_thermostats_title": "My Thermostats",
-  "card_thermostats_subtitle": "Thermostats for predictions"
+  "card_thermostats_subtitle": "Thermostats for predictions",
+  "card_predictions_title": "My Predictions",
+  "card_predictions_subtitle": "Get My Predictions"
 }
