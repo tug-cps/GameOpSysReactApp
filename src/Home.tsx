@@ -86,7 +86,14 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
     render() {
         const {classes, t} = this.props;
 
-        const items = [
+        const items: Item[] = [
+            {
+                title: t('card_achievement_title'),
+                subtitle: t('card_achievement_subtitle'),
+                icon: 'star',
+                destination: 'achievement',
+                header: false
+            },
             {
                 title: t('card_upload_title'),
                 subtitle: t('card_upload_subtitle'),
@@ -127,13 +134,6 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
                 subtitle: t('card_thermostats_subtitle'),
                 icon: 'power',
                 destination: '/thermostats',
-                header: false
-            },
-            {
-                title: t('card_achievement_title'),
-                subtitle: t('card_achievement_subtitle'),
-                icon: 'star',
-                destination: 'achievement',
                 header: false
             }
         ]

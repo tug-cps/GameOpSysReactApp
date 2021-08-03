@@ -1,5 +1,7 @@
 {
   "logout": "Logout",
+  "card_achievement_title": "Achievements",
+  "card_achievement_subtitle": "Achievements",
   "card_upload_title": "Upload",
   "card_upload_subtitle": "Upload energy consumption",
   "card_behavior_title": "Behavior",
