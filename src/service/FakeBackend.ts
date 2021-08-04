@@ -1,5 +1,16 @@
 import {Backend} from "./Backend";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
+import {getFakeDB, resetFakeDB, saveFakeDB} from "./FakeDB";
+import {Executor} from "./Executor";
+
+function findInDict(dict: any, matcher: (value: any) => boolean): any {
+    for (let key in dict) {
+        if (matcher(dict[key])) {
+            return key;
+        }
+    }
+    return null;
+}
 
 class FakeBackend implements Backend {
     delete<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
@@ -9,79 +20,39 @@ class FakeBackend implements Backend {
 
     get<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
         return new Promise<R>((resolve, reject) => {
-            console.log(`Fake backend call to ${url}`, config)
+            const e = new Executor(resolve, reject);
+
+            console.log(`GET Fake backend call to ${url}`, config)
+            if (config == null) return e.error();
+            const db = getFakeDB();
 
             if (url.endsWith('/request_pin')) {
-                if (config && config.params.shared_password === 'test' && config.params.email === "user@test.com") {
-                    ok({})
-                } else {
-                    error()
+                const {shared_password, email} = config.params;
+                if (shared_password === 'test' && db.user[email] != null) {
+                    return e.ok({})
                 }
+                return e.error()
             } else if (url.endsWith('/login')) {
-                if (config && config.params.password === "123456") {
-                    ok({token: 'fakeToken.thistokenisfake'})
-                } else {
-                    error()
+                const {email, password} = config.params;
+                const user = db.user[email]
+                if (user != null && password === "123456") {
+                    return e.ok({token: findInDict(db.token, (v: string) => v === email)})
                 }
-            } else if (url.endsWith('/logout')) {
-                ok({})
+                return e.error()
+            }
+            const token = config.headers.Authorization;
+            const user = db.token[token]
+            if (user == null) return e.error()
+
+            if (url.endsWith('/logout')) {
+                resetFakeDB()
+                e.ok({})
             } else if (url.endsWith('/user')) {
-                ok({
-                    userId: '1234',
-                    email: 'user@test.com',
-                    type: 'normal',
-                    creationDate: '01-01-2020',
-                    unlockDate: '01-01-2020',
-                    treatmentGroup: 'group_1'
-                })
+                e.ok(db.user[user])
             } else if (url.endsWith('/consumer')) {
-                ok(
-                    [
-                        {
-                            consumerId: 0,
-                            owner: 0,
-                            name: 'something',
-                            variableName: 'something',
-                            active: true
-                        },
-                        {
-                            consumerId: 1,
-                            owner: 0,
-                            name: 'something else',
-                            variableName: 'something else',
-                            active: true
-                        },
-                    ]
-                )
+                e.ok(db.consumer[user])
             } else {
-                error()
-            }
-
-
-            function ok(data: {}) {
-                console.log("Resolving call with OK")
-                resolve({
-                    data: data,
-                    status: 200,
-                    statusText: "OK",
-                    headers: {},
-                    config: {},
-                    request: {}
-                } as AxiosResponse<T> as unknown as R)
-            }
-
-            function error() {
-                console.log("Resolving call with Error")
-                reject({
-                    response: {
-                        data: {},
-                        status: 400,
-                        statusText: "BAD REQUEST",
-                        headers: {},
-                        config: {},
-                        request: {}
-                    }
-                })
+                e.error()
             }
         })
     }
@@ -93,6 +64,29 @@ class FakeBackend implements Backend {
 
     put<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: AxiosRequestConfig): Promise<R> {
         return new Promise<R>((resolve, reject) => {
+            const e = new Executor(resolve, reject);
+            console.log(`PUT Fake backend call to ${url}`, config)
+            if (config == null) return e.error();
+            const db = getFakeDB();
+            const token = config.headers.Authorization;
+            const user = db.token[token]
+            if (user == null) return e.error()
+
+            if (url.startsWith('/consumer')) {
+                const id = url.split('/').pop()
+                if (id == null) return e.error()
+                const {consumer_name, consumer_active} = config.params;
+
+                const consumerIndex = db.consumer[user].findIndex((v: any) => v.consumerId === +id)
+                let consumer = db.consumer[user][consumerIndex]
+                consumer = {...consumer, name: consumer_name, active: consumer_active}
+                db.consumer[user][consumerIndex] = consumer
+                saveFakeDB(db)
+
+                return e.ok({})
+            }
+
+            e.error()
         })
     }
 }

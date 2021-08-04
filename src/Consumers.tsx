@@ -77,15 +77,19 @@ class Consumers extends React.Component<Props, State> {
         };
 
         const handleChangeName = () => {
-            const {selectedConsumer} = this.state;
+            const {selectedConsumer, consumerName} = this.state;
+            const {backendService} = this.props;
             if (selectedConsumer != null) {
-                this.props.backendService.putConsumer({...selectedConsumer, name: this.state.consumerName}).then(this.refresh);
+                backendService.putConsumer({...selectedConsumer, name: consumerName})
+                    .then(this.refresh);
                 handleClose();
             }
         }
 
         const handleChangeActive = (consumer: ConsumerModel) => {
-            this.props.backendService.putConsumer({...consumer, active: !consumer.active}).then(this.refresh);
+            const {backendService} = this.props;
+            backendService.putConsumer({...consumer, active: !consumer.active})
+                .then(this.refresh);
         }
 
         const ConsumerCard = (consumer: ConsumerModel) => {
