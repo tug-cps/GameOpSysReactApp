@@ -1,11 +1,10 @@
 import React from "react";
-import {CssBaseline, LinearProgress, ThemeProvider, Typography,} from "@material-ui/core";
-import {createMuiTheme} from "@material-ui/core/styles";
+import {createTheme, CssBaseline, LinearProgress, ThemeProvider,} from "@material-ui/core";
 import ReactRouter from "./Routes";
 import BackendService from "./service/BackendService";
 import Config from "./Config";
 
-const theme = createMuiTheme({
+const theme = createTheme({
     palette: {
         primary: {
             main: '#7cb342',
@@ -31,11 +30,6 @@ class App extends React.Component {
                 <React.Suspense fallback={<LinearProgress/>}>
                     <ReactRouter backendService={backendService}/>
                 </React.Suspense>
-                {Config.type !== "production" &&
-                <Typography component="h5" style={{position: "fixed", bottom: 0}}>
-                    {Config.type} build, using {Config.apiDescription}
-                </Typography>
-                }
             </ThemeProvider>
         );
     }

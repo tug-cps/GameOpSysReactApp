@@ -88,13 +88,6 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
 
         const items: Item[] = [
             {
-                title: t('card_achievement_title'),
-                subtitle: t('card_achievement_subtitle'),
-                icon: 'star',
-                destination: '/achievement',
-                header: false
-            },
-            {
                 title: t('card_upload_title'),
                 subtitle: t('card_upload_subtitle'),
                 icon: 'cloud_upload',
@@ -106,6 +99,13 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
                 subtitle: t('card_behavior_subtitle'),
                 icon: 'edit',
                 destination: '/behavior',
+                header: false
+            },
+            {
+                title: t('card_thermostats_title'),
+                subtitle: t('card_thermostats_subtitle'),
+                icon: 'ac_unit',
+                destination: '/thermostats',
                 header: false
             },
             {
@@ -122,20 +122,6 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
                 destination: '/archive',
                 header: false
             },
-            {
-                title: t('card_user_title'),
-                subtitle: t('card_user_subtitle'),
-                icon: 'person',
-                destination: '/user',
-                header: false
-            },
-            {
-                title: t('card_thermostats_title'),
-                subtitle: t('card_thermostats_subtitle'),
-                icon: 'power',
-                destination: '/thermostats',
-                header: false
-            }
         ]
 
         return (
