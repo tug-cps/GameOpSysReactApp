@@ -53,7 +53,7 @@ export function getFakeDB() {
                         {
                             consumerId: 5,
                             owner: 0,
-                            name: 'Eigenes Gerät b',
+                            name: 'Eigenes Gerät B',
                             variableName: 'something else',
                             active: true
                         },

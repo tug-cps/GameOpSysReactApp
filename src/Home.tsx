@@ -91,7 +91,7 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
                 title: t('card_achievement_title'),
                 subtitle: t('card_achievement_subtitle'),
                 icon: 'star',
-                destination: 'achievement',
+                destination: '/achievement',
                 header: false
             },
             {
@@ -142,7 +142,7 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
             <React.Fragment>
                 <AppBar position="sticky">
                     <Toolbar>
-                        <Typography variant="h6" className={classes.title}>GameOpSysApp</Typography>
+                        <Typography variant="h6" className={classes.title}>{t('home_title')}</Typography>
                         <Button color="inherit" component={RouterLink} to="/logout">{t('logout')}</Button>
                     </Toolbar>
                 </AppBar>

@@ -72,15 +72,15 @@ class FakeBackend implements Backend {
             const user = db.token[token]
             if (user == null) return e.error()
 
-            if (url.startsWith('/consumer')) {
-                const id = url.split('/').pop()
-                if (id == null) return e.error()
-                const {consumer_name, consumer_active} = config.params;
+            const id = url.split('/').pop()
+            if (id == null) return e.error()
 
-                const consumerIndex = db.consumer[user].findIndex((v: any) => v.consumerId === +id)
-                let consumer = db.consumer[user][consumerIndex]
-                consumer = {...consumer, name: consumer_name, active: consumer_active}
-                db.consumer[user][consumerIndex] = consumer
+            if (url.startsWith('/consumer')) {
+                const {consumer_name, consumer_active} = config.params;
+                meldArrayElement(db.consumer[user],
+                    (v: any) => v.consumerId === +id,
+                    {name: consumer_name, active: consumer_active}
+                )
                 saveFakeDB(db)
 
                 return e.ok({})
@@ -89,6 +89,11 @@ class FakeBackend implements Backend {
             e.error()
         })
     }
+}
+
+function meldArrayElement(array: any, elementMatcher: any, changes: any) {
+    const consumerIndex = array.findIndex(elementMatcher)
+    array[consumerIndex] = {...array[consumerIndex], ...changes}
 }
 
 export default FakeBackend;
