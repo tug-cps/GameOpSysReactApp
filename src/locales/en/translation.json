@@ -1,8 +1,6 @@
 {
   "logout": "Logout",
   "home_title": "Ansers",
-  "card_achievement_title": "Achievements",
-  "card_achievement_subtitle": "Achievements",
   "card_upload_title": "Upload",
   "card_upload_subtitle": "Upload energy consumption",
   "card_behavior_title": "Behavior",
@@ -14,5 +12,6 @@
   "card_user_title": "My Data",
   "card_user_subtitle": "Edit My data",
   "card_thermostats_title": "My Thermostats",
-  "card_thermostats_subtitle": "Thermostats for predictions"
+  "card_thermostats_subtitle": "Thermostats for predictions",
+  "edit_consumers": "Edit consumers"
 }

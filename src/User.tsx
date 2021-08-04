@@ -20,6 +20,7 @@ import {Link as RouterLink} from "react-router-dom";
 import DefaultAppBar from "./common/DefaultAppBar";
 import i18n from "i18next";
 import BackendService from "./service/BackendService";
+import {withTranslation, WithTranslation} from "react-i18next";
 
 const styles = ({spacing}: Theme) => createStyles({
     fab: {
@@ -32,7 +33,7 @@ const styles = ({spacing}: Theme) => createStyles({
     },
 });
 
-interface Props extends WithStyles<typeof styles> {
+interface Props extends WithStyles<typeof styles>, WithTranslation {
     backendService: BackendService
 }
 
@@ -77,7 +78,7 @@ class User extends React.Component<Props, State> {
     }
 
     render() {
-        const {classes} = this.props;
+        const {classes, t} = this.props;
         const state = this.state;
 
         const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -87,7 +88,7 @@ class User extends React.Component<Props, State> {
         };
         return (
             <React.Fragment>
-                <DefaultAppBar title='User'/>
+                <DefaultAppBar title={t('card_user_title')} />
                 <Container maxWidth="sm">
                     <List>
                         <ListItem>
@@ -128,11 +129,11 @@ class User extends React.Component<Props, State> {
                 </Container>
                 <Fab variant="extended" color="primary" className={classes.fab} component={RouterLink} to="/consumers">
                     <Icon className={classes.extendedIcon}>edit</Icon>
-                    Edit consumers
+                    {t('edit_consumers')}
                 </Fab>
             </React.Fragment>
         )
     }
 }
 
-export default withStyles(styles)(User);
+export default withStyles(styles)(withTranslation()(User));

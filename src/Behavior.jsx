@@ -2,6 +2,7 @@ import React from "react";
 import TableDragSelect from "react-table-drag-select";
 import {Box, Container, TableCell, TableContainer} from "@material-ui/core";
 import DefaultAppBar from "./common/DefaultAppBar";
+import {withTranslation} from "react-i18next";
 
 const formatTime = (v) => {
     if (v < 10) {
@@ -14,7 +15,7 @@ const hours = Array.from(Array(24).keys()).map(v => formatTime(v) + "-" + format
 const colors = ['lightgreen', 'yellow', 'red']
 const energyAvailable = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0].map(v => colors[v])
 
-class App extends React.Component {
+class Behavior extends React.Component<> {
 
     state = {
         cells: [
@@ -30,37 +31,40 @@ class App extends React.Component {
     };
 
 
-    render = () =>
-        <div>
-            <DefaultAppBar title='Behavior'/>
-            <Container>
-                <Box component="div" overflow="visible">
-                    <TableContainer>
-                        <TableDragSelect value={this.state.cells} onChange={this.handleChange}>
-                            <tr>
-                                <td disabled/>
-                                {hours.map((value) => <TableCell disabled>{String(value)}</TableCell>)}
-                            </tr>
-                            <tr>
-                                <td disabled/>
-                                {energyAvailable.map((v) =>
-                                    <TableCell style={{backgroundColor: v}} disabled/>)}
-                            </tr>
-                            {/* Content */}
-                            {consumers.map((value) =>
+    render() {
+        const {t} = this.props;
+        return (
+            <div>
+                <DefaultAppBar title={t('card_behavior_title')} />
+                <Container>
+                    <Box component="div" overflow="visible">
+                        <TableContainer>
+                            <TableDragSelect value={this.state.cells} onChange={this.handleChange}>
                                 <tr>
-                                    <td disabled>{String(value)}</td>
-                                    {hours.map(() => <td/>)}
+                                    <td disabled/>
+                                    {hours.map((value) => <TableCell disabled>{String(value)}</TableCell>)}
                                 </tr>
-                            )}
-                        </TableDragSelect>
-                    </TableContainer>
+                                <tr>
+                                    <td disabled/>
+                                    {energyAvailable.map((v) =>
+                                        <TableCell style={{backgroundColor: v}} disabled/>)}
+                                </tr>
+                                {/* Content */}
+                                {consumers.map((value) =>
+                                    <tr>
+                                        <td disabled>{String(value)}</td>
+                                        {hours.map(() => <td/>)}
+                                    </tr>
+                                )}
+                            </TableDragSelect>
+                        </TableContainer>
 
-                </Box>
-            </Container>
-        </div>;
+                    </Box>
+                </Container>
+            </div>)
+    };
 
     handleChange = cells => this.setState({cells});
 }
 
-export default App;
+export default withTranslation()(Behavior);

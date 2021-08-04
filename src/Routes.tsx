@@ -11,9 +11,9 @@ import Behavior from "./Behavior";
 import React, {useEffect, useState} from "react";
 import Home from "./Home";
 import Thermostats from "./Thermostats";
-import Achievement from "./Achievement";
 import BackendService from "./service/BackendService";
 import {Box, Button, LinearProgress, Typography} from "@material-ui/core";
+import SimpleBottomNavigation from "./common/SimpleBottomNavigation";
 
 const ReactRouter = (props: { backendService: BackendService }) => {
     const {backendService} = props;
@@ -48,21 +48,23 @@ const ReactRouter = (props: { backendService: BackendService }) => {
     );
 
     const privatePaths = () => (
-        <Switch>
-            <Route path="/logout"><Logout backendService={backendService}/></Route>
-            <Route path="/upload"><Upload backendService={backendService}/></Route>
-            <Route path="/user"><User backendService={backendService}/></Route>
-            <Route path="/power"><Power backendService={backendService}/></Route>
-            <Route path="/archive"><Archive backendService={backendService}/></Route>
-            <Route path="/consumers"><Consumers backendService={backendService}/></Route>
-            <Route path="/behavior"><Behavior/></Route>
-            <Route path="/thermostats"><Thermostats/></Route>
-            <Route path="/achievement"><Achievement/></Route>
-            <Route exact path="/"><Home/></Route>
-            <Route exact path={`${process.env.PUBLIC_URL}`}><Home/></Route>
-            <Route>{_404("/")}</Route>
-        </Switch>
-    );
+        <Box>
+            <Switch>
+                <Route path="/logout"><Logout backendService={backendService}/></Route>
+                <Route path="/upload"><Upload backendService={backendService}/></Route>
+                <Route path="/user"><User backendService={backendService}/></Route>
+                <Route path="/power"><Power backendService={backendService}/></Route>
+                <Route path="/archive"><Archive backendService={backendService}/></Route>
+                <Route path="/consumers"><Consumers backendService={backendService}/></Route>
+                <Route path="/behavior"><Behavior/></Route>
+                <Route path="/thermostats"><Thermostats/></Route>
+                <Route exact path="/"><Home/></Route>
+                <Route exact path={`${process.env.PUBLIC_URL}`}><Home/></Route>
+                <Route>{_404("/")}</Route>
+            </Switch>
+            <SimpleBottomNavigation />
+        </Box>
+);
 
 
     return (
