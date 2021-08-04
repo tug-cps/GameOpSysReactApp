@@ -47,9 +47,9 @@ class BackendService {
 
     logout(): Promise<any> {
         localStorage.removeItem("token");
-        this.accessToken.next(null)
         return this.backend
-            .get('/logout', this.addAuth());
+            .get('/logout', this.addAuth())
+            .finally(() => this.accessToken.next(null))
     }
 
     getUser(): Promise<UserModel> {
