@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    Button,
     Container,
     createStyles,
     Fab,
@@ -88,7 +89,9 @@ class User extends React.Component<Props, State> {
         };
         return (
             <React.Fragment>
-                <DefaultAppBar title={t('card_user_title')} />
+                <DefaultAppBar hideBackButton title={t('card_user_title')}>
+                    <Button color="inherit" component={RouterLink} to="/logout">{t('logout')}</Button>
+                </DefaultAppBar>
                 <Container maxWidth="sm">
                     <List>
                         <ListItem>
