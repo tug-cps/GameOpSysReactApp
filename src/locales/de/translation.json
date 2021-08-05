@@ -13,5 +13,10 @@
   "card_user_subtitle": "Bearbeite meine Daten",
   "card_thermostats_title": "Thermostateinstellung",
   "card_thermostats_subtitle": "Meine Thermostateinstellungen",
-  "edit_consumers": "Verbraucher bearbeiten"
+  "edit_consumers": "Verbraucher bearbeiten",
+  "login_welcome": "Willkommen bei Ansers, bitte melden Sie sich an...",
+  "login_sign_in": "Anmelden",
+  "login_shared_password": "Geteiltes Passwort",
+  "login_email_address": "Email Adresse",
+  "login_submit": "Sende Verifizierungscode"
 }

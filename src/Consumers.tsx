@@ -12,8 +12,10 @@ import {
     ListItem,
     ListItemSecondaryAction,
     ListItemText,
+    Paper,
     TextField,
     Theme,
+    Typography,
     WithStyles
 } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
@@ -24,9 +26,7 @@ import DefaultAppBar from "./common/DefaultAppBar";
 import {ConsumerModel} from "./service/Model";
 
 const styles = ({palette}: Theme) => createStyles({
-    list: {
-        backgroundColor: palette.background.paper,
-    },
+    list: {},
 });
 
 
@@ -58,7 +58,9 @@ class Consumers extends React.Component<Props, State> {
         const {backendService} = this.props;
         backendService.getConsumers()
             .then((consumers) => this.setState({consumers: consumers}))
-            .catch((reason) => {console.log(reason)})
+            .catch((reason) => {
+                console.log(reason)
+            })
     }
 
     componentDidMount() {
@@ -110,9 +112,12 @@ class Consumers extends React.Component<Props, State> {
             <React.Fragment>
                 <DefaultAppBar title='Consumers'/>
                 <Container maxWidth="sm" disableGutters>
-                    <List className={classes.list}>
-                        {consumers.map(ConsumerCard)}
-                    </List>
+                    <Typography paragraph component="h1" variant="h3">Consumers</Typography>
+                    <Paper>
+                        <List className={classes.list}>
+                            {consumers.map(ConsumerCard)}
+                        </List>
+                    </Paper>
                 </Container>
                 <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Change consumer</DialogTitle>

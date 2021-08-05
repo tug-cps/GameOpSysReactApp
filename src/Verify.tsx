@@ -49,8 +49,9 @@ class Verify extends React.Component<Props, { email?: string, password: string }
     }
 
     componentDidMount() {
-        if (this.props.location == null || this.props.location.state == null || this.props.location.state.email == null) {
-            this.props.history.push('/')
+        const {location, history} = this.props;
+        if (location == null || location.state == null || location.state.email == null) {
+            history.push('/')
         }
     }
 
@@ -68,12 +69,13 @@ class Verify extends React.Component<Props, { email?: string, password: string }
     render() {
         const {classes} = this.props;
         return (
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="sm">
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}/>
                     <Typography component="h1" variant="h5">Verify</Typography>
                     <form className={classes.form} onSubmit={this.handleSubmit}>
                         <TextField
+                            autoFocus
                             id="otp"
                             label="Pin"
                             variant="outlined"

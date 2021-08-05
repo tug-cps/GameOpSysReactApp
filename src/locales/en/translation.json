@@ -13,5 +13,10 @@
   "card_user_subtitle": "Edit My data",
   "card_thermostats_title": "My Thermostats",
   "card_thermostats_subtitle": "Thermostats for predictions",
-  "edit_consumers": "Edit consumers"
+  "edit_consumers": "Edit consumers",
+  "login_welcome": "Welcome to Ansers, please sign in...",
+  "login_sign_in": "Sign in",
+  "login_shared_password": "Shared password",
+  "login_email_address": "Email address",
+  "login_submit": "Send verification code"
 }

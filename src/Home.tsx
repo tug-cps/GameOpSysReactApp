@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-    AppBar,
-    Button,
     Card,
     CardActionArea,
     CardContent,
@@ -10,7 +8,6 @@ import {
     createStyles,
     Grid,
     Theme,
-    Toolbar,
     Typography,
     withStyles,
     WithStyles
@@ -18,6 +15,7 @@ import {
 import Icon from "@material-ui/core/Icon";
 import {Link as RouterLink} from "react-router-dom";
 import {WithTranslation, withTranslation} from "react-i18next";
+import DefaultAppBar from "./common/DefaultAppBar";
 
 const styles = (theme: Theme) => createStyles({
     card: {
@@ -126,12 +124,7 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
 
         return (
             <React.Fragment>
-                <AppBar position="sticky">
-                    <Toolbar>
-                        <Typography variant="h6" className={classes.title}>{t('home_title')}</Typography>
-                        <Button color="inherit" component={RouterLink} to="/logout">{t('logout')}</Button>
-                    </Toolbar>
-                </AppBar>
+                <DefaultAppBar hideBackButton title={t('home_title')}/>
                 <Container component="main" maxWidth="lg" disableGutters className={classes.root}>
                     <Grid container spacing={1}>{items.map((item: Item, index: number) => <HomeCard item={item} key={index}/>)}</Grid>
                 </Container>
