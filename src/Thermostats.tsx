@@ -160,7 +160,7 @@ class Thermostats extends React.Component<Props, State> {
         ]
 
         return (
-            <div>
+            <React.Fragment>
                 <DefaultAppBar title='Thermostats'>
                     <Button color="inherit">Speichern</Button>
                 </DefaultAppBar>
@@ -188,7 +188,7 @@ class Thermostats extends React.Component<Props, State> {
                     </Box>
                 </Container>
 
-            </div>
+            </React.Fragment>
         )
     }
 }

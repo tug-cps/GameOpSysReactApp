@@ -62,9 +62,8 @@ const ReactRouter = (props: { backendService: BackendService }) => {
                 <Route exact path={`${process.env.PUBLIC_URL}`}><Home/></Route>
                 <Route>{_404("/")}</Route>
             </Switch>
-            <SimpleBottomNavigation />
         </Box>
-);
+    );
 
 
     return (
@@ -72,6 +71,7 @@ const ReactRouter = (props: { backendService: BackendService }) => {
             {!isLoggedIn && <Redirect to="/login"/>}
             {!isLoggedIn && publicPaths()}
             {isLoggedIn && privatePaths()}
+            {isLoggedIn && (<SimpleBottomNavigation/>)}
         </React.Fragment>
     )
 }

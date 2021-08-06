@@ -1,6 +1,7 @@
 {
   "logout": "Logout",
   "home_title": "Ansers",
+  "home_link": "Start",
   "card_upload_title": "Upload",
   "card_upload_subtitle": "Upload energy consumption",
   "card_behavior_title": "Behavior",
@@ -13,6 +14,10 @@
   "card_user_subtitle": "Edit My data",
   "card_thermostats_title": "My Thermostats",
   "card_thermostats_subtitle": "Thermostats for predictions",
+  "user_consumer": "{{count}} consumer",
+  "user_consumer_plural": "{{count}} consumers",
+  "user_created": "Created at {{text}}",
+  "user_unlocked": "Unlocked at {{text}}",
   "edit_consumers": "Edit consumers",
   "login_welcome": "Welcome to Ansers, please sign in...",
   "login_sign_in": "Sign in",

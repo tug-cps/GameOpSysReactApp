@@ -2,8 +2,6 @@ import React from 'react';
 import {
     Button,
     Container,
-    createStyles,
-    Fab,
     FormControl,
     Icon,
     InputLabel,
@@ -12,29 +10,15 @@ import {
     ListItemIcon,
     ListItemText,
     MenuItem,
-    Select,
-    Theme,
-    WithStyles
+    Select
 } from "@material-ui/core";
-import {withStyles} from "@material-ui/core/styles";
 import {Link as RouterLink} from "react-router-dom";
 import DefaultAppBar from "./common/DefaultAppBar";
 import i18n from "i18next";
 import BackendService from "./service/BackendService";
 import {withTranslation, WithTranslation} from "react-i18next";
 
-const styles = ({spacing}: Theme) => createStyles({
-    fab: {
-        position: 'absolute',
-        bottom: spacing(2),
-        right: spacing(2),
-    },
-    extendedIcon: {
-        marginRight: spacing(1),
-    },
-});
-
-interface Props extends WithStyles<typeof styles>, WithTranslation {
+interface Props extends WithTranslation {
     backendService: BackendService
 }
 
@@ -68,18 +52,14 @@ class User extends React.Component<Props, State> {
         const {backendService} = this.props;
         backendService.getUser()
             .then((user) => this.setState(user))
-            .catch((error) => {
-                console.log(error)
-            })
+            .catch((error) => console.log(error))
         backendService.getConsumers()
             .then((consumers) => this.setState({consumersCount: consumers.length}))
-            .catch((error) => {
-                console.log(error)
-            })
+            .catch((error) => console.log(error))
     }
 
     render() {
-        const {classes, t} = this.props;
+        const {t} = this.props;
         const state = this.state;
 
         const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -87,6 +67,12 @@ class User extends React.Component<Props, State> {
                 this.setState({language: event.target.value as string});
             })
         };
+        const items = [
+            {icon: 'email', text: state.email},
+            {icon: 'group', text: state.treatmentGroup},
+            {icon: 'access_time', text: t('user_created', {text: state.creationDate})},
+            {icon: '', text: t('user_unlocked', {text: state.unlockDate})}
+        ]
         return (
             <React.Fragment>
                 <DefaultAppBar hideBackButton title={t('card_user_title')}>
@@ -94,25 +80,19 @@ class User extends React.Component<Props, State> {
                 </DefaultAppBar>
                 <Container maxWidth="sm">
                     <List>
-                        <ListItem>
-                            <ListItemIcon><Icon>email</Icon></ListItemIcon>
-                            <ListItemText>{state.email}</ListItemText>
-                        </ListItem>
-                        <ListItem>
+                        {items.map((it) => {
+                            return (
+                                <ListItem>
+                                    <ListItemIcon><Icon>{it.icon}</Icon></ListItemIcon>
+                                    <ListItemText>{it.text}</ListItemText>
+                                </ListItem>
+                            )
+                        })}
+                        <ListItem/>
+                        <ListItem button component={RouterLink} to={"/consumers"}>
                             <ListItemIcon><Icon>power</Icon></ListItemIcon>
-                            <ListItemText>{state.consumersCount} consumers</ListItemText>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemIcon><Icon>group</Icon></ListItemIcon>
-                            <ListItemText>{state.treatmentGroup}</ListItemText>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemIcon><Icon>access_time</Icon></ListItemIcon>
-                            <ListItemText>Created at {state.creationDate}</ListItemText>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemIcon/>
-                            <ListItemText>Unlocked at {state.unlockDate}</ListItemText>
+                            <ListItemText>{t('user_consumer', {count: state.consumersCount})}</ListItemText>
+                            <ListItemIcon><Icon>arrow_right</Icon></ListItemIcon>
                         </ListItem>
                         <ListItem>
                             <ListItemIcon><Icon>language</Icon></ListItemIcon>
@@ -130,13 +110,9 @@ class User extends React.Component<Props, State> {
                         </ListItem>
                     </List>
                 </Container>
-                <Fab variant="extended" color="primary" className={classes.fab} component={RouterLink} to="/consumers">
-                    <Icon className={classes.extendedIcon}>edit</Icon>
-                    {t('edit_consumers')}
-                </Fab>
             </React.Fragment>
         )
     }
 }
 
-export default withStyles(styles)(withTranslation()(User));
+export default withTranslation()(User);
