@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    Box,
     Card,
     CardActionArea,
     CardContent,
@@ -17,23 +18,16 @@ import {Link as RouterLink} from "react-router-dom";
 import {WithTranslation, withTranslation} from "react-i18next";
 import DefaultAppBar from "./common/DefaultAppBar";
 
-const styles = (theme: Theme) => createStyles({
-    card: {
-        borderColor: theme.palette.secondary.main,
-    },
-    root: {
-        flexGrow: 1,
-    },
+const styles = ({palette}: Theme) => createStyles({
     media: {
-        minHeight: 120,
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: palette.secondary.main,
+        display: "flex",
+        alignItems: "center",
+        padding: "8px"
     },
-    largeIcon: {
-        fontSize: "8em",
-    },
-    title: {
-        flexGrow: 1,
-    },
+    icon: {
+        color: palette.background.paper
+    }
 });
 
 interface Item {
@@ -42,12 +36,6 @@ interface Item {
     icon: string;
     destination: string;
     header: boolean
-}
-
-interface Props {
-}
-
-interface State {
 }
 
 interface CardProps {
@@ -60,18 +48,18 @@ const HomeCard = withStyles(styles)(
             const {classes, item} = this.props
 
             return (
-                <Grid item xs={item.header ? 12 : 6} xl={item.header ? 12 : 4} key={item.title}>
-                    <Card variant="outlined" className={classes.card}>
+                <Grid item xs={12} sm={item.header ? 12 : 6} xl={item.header ? 12 : 4} key={item.title}>
+                    <Card variant="outlined">
                         <CardActionArea component={RouterLink} to={item.destination}>
-                            <CardMedia className={classes.media}>
-                                <Typography align='center'>
-                                    <Icon className={classes.largeIcon} style={{color: '#fff'}}>{item.icon}</Icon>
-                                </Typography>
-                            </CardMedia>
-                            <CardContent>
-                                <Typography variant="h6">{item.title}</Typography>
-                                <Typography color="textSecondary" noWrap>{item.subtitle}</Typography>
-                            </CardContent>
+                            <Box display="flex">
+                                <CardMedia className={classes.media}>
+                                    <Icon className={classes.icon}>{item.icon}</Icon>
+                                </CardMedia>
+                                <CardContent>
+                                    <Typography variant="h6">{item.title}</Typography>
+                                    <Typography color="textSecondary" noWrap>{item.subtitle}</Typography>
+                                </CardContent>
+                            </Box>
                         </CardActionArea>
                     </Card>
                 </Grid>
@@ -80,9 +68,10 @@ const HomeCard = withStyles(styles)(
     }
 )
 
-class Home extends React.Component<Props & WithStyles<typeof styles> & WithTranslation, State> {
+class Home extends React.Component<WithTranslation> {
+
     render() {
-        const {classes, t} = this.props;
+        const {t} = this.props;
 
         const items: Item[] = [
             {
@@ -125,12 +114,16 @@ class Home extends React.Component<Props & WithStyles<typeof styles> & WithTrans
         return (
             <React.Fragment>
                 <DefaultAppBar hideBackButton title={t('home_title')}/>
-                <Container component="main" maxWidth="lg" disableGutters className={classes.root}>
-                    <Grid container spacing={1}>{items.map((item: Item, index: number) => <HomeCard item={item} key={index}/>)}</Grid>
+                <Container maxWidth="lg" disableGutters>
+                    <Box padding={1}>
+                        <Grid container spacing={1}>
+                            {items.map((item: Item, index: number) => <HomeCard item={item} key={index}/>)}
+                        </Grid>
+                    </Box>
                 </Container>
             </React.Fragment>
         );
     }
 }
 
-export default withStyles(styles)(withTranslation()(Home));
+export default withTranslation()(Home);

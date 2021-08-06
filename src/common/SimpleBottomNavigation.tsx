@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
@@ -14,6 +14,7 @@ const useStyles = makeStyles({
         width: '100%',
         position: 'fixed',
         bottom: 0,
+        overflow: "hidden"
     }
 });
 
@@ -25,22 +26,25 @@ export default function SimpleBottomNavigation() {
     const destinations = ["/", "/behavior", "/user"];
 
     return (
-        <Paper className={classes.root} elevation={3}>
-            <BottomNavigation
-                value={value}
-                onChange={(event, newValue) => {
-                    setValue(newValue);
-                    const destination = destinations[newValue];
-                    if (destination != null) {
-                        history.push(destination);
-                    }
-                }}
-                showLabels
-            >
-                <BottomNavigationAction label={t("home_title")} icon={<HomeOutlinedIcon />} />
-                <BottomNavigationAction label={t("card_behavior_title")} icon={<EditOutlinedIcon />} />
-                <BottomNavigationAction label={t("card_user_title")} icon={<PersonOutlineIcon />} />
-            </BottomNavigation>
-        </Paper>
+        <React.Fragment>
+            <div style={{marginTop: "60px"}}/>
+            <Paper className={classes.root} elevation={3}>
+                <BottomNavigation
+                    value={value}
+                    onChange={(event, newValue) => {
+                        setValue(newValue);
+                        const destination = destinations[newValue];
+                        if (destination != null) {
+                            history.push(destination);
+                        }
+                    }}
+                    showLabels
+                >
+                    <BottomNavigationAction label={t("home_link")} icon={<HomeOutlinedIcon/>}/>
+                    <BottomNavigationAction label={t("card_behavior_title")} icon={<EditOutlinedIcon/>}/>
+                    <BottomNavigationAction label={t("card_user_title")} icon={<PersonOutlineIcon/>}/>
+                </BottomNavigation>
+            </Paper>
+        </React.Fragment>
     );
 }

@@ -69,54 +69,56 @@ class Login extends React.Component<Props, State> {
     render() {
         const {classes, t} = this.props;
         return (
-            <Container maxWidth="lg">
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md className={classes.paper}>
-                        <Box alignItems="center" display="flex" justifyContent="center" flexDirection="column"
-                             height="100%">
-                            <Typography paragraph component="h1" variant="h2">Ansers</Typography>
-                            <Typography component="h2" variant="h5">{t('login_welcome')}</Typography>
-                        </Box>
+            <Box display="flex" alignItems="center" height="100vh">
+                <Container maxWidth="lg">
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md className={classes.paper}>
+                            <Box alignItems="center" display="flex" justifyContent="center" flexDirection="column"
+                                 height="100%">
+                                <Typography paragraph component="h1" variant="h2">Ansers</Typography>
+                                <Typography component="h2" variant="h5">{t('login_welcome')}</Typography>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} md className={classes.paper}>
+                            <Avatar className={classes.avatar}/>
+                            <Typography component="h1" variant="h5">{t('login_sign_in')}</Typography>
+                            <form onSubmit={this.handleSubmit}>
+                                <TextField
+                                    autoFocus
+                                    id="shared_password"
+                                    label={t('login_shared_password')}
+                                    variant="outlined"
+                                    margin="normal"
+                                    value={this.state.shared_password}
+                                    onChange={(e) => this.setState({shared_password: e.target.value})}
+                                    required
+                                    fullWidth
+                                />
+                                <TextField
+                                    autoComplete="email"
+                                    id="email"
+                                    label={t('login_email_address')}
+                                    variant="outlined"
+                                    margin="normal"
+                                    value={this.state.email}
+                                    onChange={(e) => this.setState({email: e.target.value})}
+                                    required
+                                    fullWidth
+                                />
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.submit}
+                                >
+                                    {t('login_submit')}
+                                </Button>
+                            </form>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} md className={classes.paper}>
-                        <Avatar className={classes.avatar}/>
-                        <Typography component="h1" variant="h5">{t('login_sign_in')}</Typography>
-                        <form onSubmit={this.handleSubmit}>
-                            <TextField
-                                autoFocus
-                                id="shared_password"
-                                label={t('login_shared_password')}
-                                variant="outlined"
-                                margin="normal"
-                                value={this.state.shared_password}
-                                onChange={(e) => this.setState({shared_password: e.target.value})}
-                                required
-                                fullWidth
-                            />
-                            <TextField
-                                autoComplete="email"
-                                id="email"
-                                label={t('login_email_address')}
-                                variant="outlined"
-                                margin="normal"
-                                value={this.state.email}
-                                onChange={(e) => this.setState({email: e.target.value})}
-                                required
-                                fullWidth
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                className={classes.submit}
-                            >
-                                {t('login_submit')}
-                            </Button>
-                        </form>
-                    </Grid>
-                </Grid>
-            </Container>
+                </Container>
+            </Box>
         );
     }
 }
