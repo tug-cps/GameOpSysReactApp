@@ -6,7 +6,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle,
+    DialogTitle, Fab,
     IconButton,
     List,
     ListItem,
@@ -24,9 +24,10 @@ import {withStyles} from "@material-ui/core/styles";
 import BackendService from "./service/BackendService";
 import DefaultAppBar from "./common/DefaultAppBar";
 import {ConsumerModel} from "./service/Model";
+import AddIcon from '@material-ui/icons/Add';
 
-const styles = ({palette}: Theme) => createStyles({
-    list: {},
+const styles = (theme: Theme) => createStyles({
+    list: {}
 });
 
 
@@ -112,13 +113,16 @@ class Consumers extends React.Component<Props, State> {
             <React.Fragment>
                 <DefaultAppBar title='Consumers'/>
                 <Container maxWidth="sm" disableGutters>
-                    <Typography paragraph component="h1" variant="h3">Consumers</Typography>
+                    <Typography paragraph component="h1" variant="h4">Consumers</Typography>
                     <Paper>
                         <List className={classes.list}>
                             {consumers.map(ConsumerCard)}
                         </List>
                     </Paper>
                 </Container>
+                <Fab color="primary" aria-label="add">
+                    <AddIcon />
+                </Fab>
                 <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Change consumer</DialogTitle>
                     <DialogContent>

@@ -15,6 +15,23 @@ const theme: ThemeOptions = createTheme({
             main: lightGreen[400]
         },
     },
+    props: {
+        MuiGrid: {
+            spacing: 1
+        },
+        MuiCard: {
+            variant: "outlined"
+        },
+    },
+    overrides: {
+        MuiFab: {
+            root: {
+                position: 'fixed',
+                bottom: '70px',
+                right: '10px'
+            }
+        }
+    }
 });
 
 const backendService = new BackendService(Config.backend);

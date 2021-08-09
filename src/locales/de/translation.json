@@ -9,7 +9,7 @@
   "card_power_title": "Energieverbrauch",
   "card_power_subtitle": "Meine Genauigkeit",
   "card_archive_title": "Archiv",
-  "card_archive_subtitle": "Meine vorherigen Prognosen",
+  "card_archive_subtitle": "Meine bisherigen Prognosen",
   "card_user_title": "Meine Daten",
   "card_user_subtitle": "Bearbeite meine Daten",
   "card_thermostats_title": "Thermostateinstellung",
@@ -23,5 +23,11 @@
   "login_sign_in": "Anmelden",
   "login_shared_password": "Geteiltes Passwort",
   "login_email_address": "Email Adresse",
-  "login_submit": "Sende Verifizierungscode"
+  "login_submit": "Sende Verifizierungscode",
+  "action_upload": "Hochladen",
+  "upload_instruction_upload": "Bitte laden Sie die Datei mit dem aktuellen Verbauch hier hoch",
+  "upload_title_upload": "2. Stromverbrauch hochladen",
+  "upload_instruction_download": "Bitte wählen Sie Ihren Stromnetzbetreiber um den aktuellen Verbrauch herunterzuladen",
+  "upload_title_download": "1. Stromverbrauch herunterladen"
+
 }

@@ -23,5 +23,10 @@
   "login_sign_in": "Sign in",
   "login_shared_password": "Shared password",
   "login_email_address": "Email address",
-  "login_submit": "Send verification code"
+  "login_submit": "Send verification code",
+  "action_upload": "Upload",
+  "upload_instruction_upload": "Please upload the file with the most recent consumptions here",
+  "upload_title_upload": "2. Upload your consumption",
+  "upload_instruction_download": "Please select your network operator to download the most recent consumption data",
+  "upload_title_download": "1. Download most recent data"
 }

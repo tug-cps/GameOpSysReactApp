@@ -4,6 +4,7 @@ import {withStyles} from "@material-ui/core/styles";
 import DefaultAppBar from "./common/DefaultAppBar";
 import BackendService from "./service/BackendService";
 import {Line} from "react-chartjs-2";
+import {ChartOptions} from "chart.js";
 
 interface EntryProps {
     backendService: BackendService;
@@ -14,16 +15,8 @@ interface EntryState {
     data: any;
 }
 
-const options = {
-    scales: {
-        yAxes: [
-            {
-                ticks: {
-                    beginAtZero: true,
-                },
-            },
-        ],
-    },
+const options: ChartOptions = {
+    animation: false
 };
 
 class PowerEntry extends React.Component<EntryProps, EntryState> {

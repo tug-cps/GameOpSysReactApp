@@ -3,6 +3,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
+import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import {useHistory} from "react-router-dom";
@@ -23,7 +24,7 @@ export default function SimpleBottomNavigation() {
     const history = useHistory();
     const {t} = useTranslation()
     const [value, setValue] = React.useState(0);
-    const destinations = ["/", "/behavior", "/user"];
+    const destinations = ["/", "/upload", "/behavior", "/user"];
 
     return (
         <React.Fragment>
@@ -41,6 +42,7 @@ export default function SimpleBottomNavigation() {
                     showLabels
                 >
                     <BottomNavigationAction label={t("home_link")} icon={<HomeOutlinedIcon/>}/>
+                    <BottomNavigationAction label={t("card_upload_title")} icon={<CloudUploadOutlinedIcon/>}/>
                     <BottomNavigationAction label={t("card_behavior_title")} icon={<EditOutlinedIcon/>}/>
                     <BottomNavigationAction label={t("card_user_title")} icon={<PersonOutlineIcon/>}/>
                 </BottomNavigation>
