@@ -21,25 +21,30 @@ class DefaultAppBar extends React.Component<Props> {
     render() {
         const {title, classes, history} = this.props;
         return (
-            <AppBar position="static">
-                <Toolbar>
-                    {this.props.hideBackButton !== true && (
-                        <IconButton
-                            edge="start"
-                            className={classes.menuButton}
-                            color="inherit"
-                            aria-label="back"
-                            onClick={() => history.go(-1)}
-                        >
-                            <ArrowBackIcon/>
-                        </IconButton>
-                    )}
-                    <Typography color="inherit" variant="h6">{title}</Typography>
-                    <Box mx="auto"/>
-                    {this.props.children}
-                </Toolbar>
-                {this.props.multiLine}
-            </AppBar>
+            <React.Fragment>
+                <AppBar position="fixed">
+                    <Toolbar>
+                        {this.props.hideBackButton !== true && (
+                            <IconButton
+                                edge="start"
+                                className={classes.menuButton}
+                                color="inherit"
+                                aria-label="back"
+                                onClick={() => history.go(-1)}
+                            >
+                                <ArrowBackIcon/>
+                            </IconButton>
+                        )}
+                        <Typography color="inherit" variant="h6">{title}</Typography>
+                        <Box mx="auto"/>
+                        {this.props.children}
+                    </Toolbar>
+                    {this.props.multiLine}
+                </AppBar>
+                <Toolbar style={{visibility: "hidden"}}/>
+            </React.Fragment>
+
+
         )
     }
 }

@@ -51,9 +51,15 @@ class FakeBackend implements Backend {
                 e.ok(db.user[user])
             } else if (url.endsWith('/consumer')) {
                 e.ok(db.consumer[user])
+            } else if (url.endsWith('/processedconsumption')) {
+                e.ok(Object.keys(db.processedConsumption[user]))
+            } else if (url.includes('/processedconsumption/')) {
+                const index = url.substring(url.lastIndexOf('/') + 1)
+                e.ok(db.processedConsumption[user][index])
             } else {
                 e.error()
             }
+
         })
     }
 

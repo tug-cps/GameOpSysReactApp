@@ -2,69 +2,44 @@ export function getFakeDB() {
     let db = localStorage.getItem("fake_db");
     if (db == null) {
         db = JSON.stringify({
-            user: {
-                "user@test.com": {
-                    userId: '1234',
-                    email: 'user@test.com',
-                    type: 'normal',
-                    creationDate: '01-01-2020',
-                    unlockDate: '01-01-2020',
-                    treatmentGroup: 'group_1'
-                }
-            },
-            consumer: {
-                "user@test.com":
-                    [
-                        {
-                            consumerId: 0,
+                user: {
+                    "user@test.com": {
+                        userId: '1234',
+                        email: 'user@test.com',
+                        type: 'normal',
+                        creationDate: '01-01-2020',
+                        unlockDate: '01-01-2020',
+                        treatmentGroup: 'group_1'
+                    }
+                },
+                consumer: {
+                    "user@test.com":
+                        ["Kochen", "Medien", "Wäsche", "Geschirrspülmaschine", "Eigenes Gerät A", "Eigenes Gerät B"].map((v, i) => ({
+                            consumerId: i,
                             owner: 0,
-                            name: 'Kochen',
+                            name: v,
                             variableName: 'something',
                             active: true
-                        },
-                        {
-                            consumerId: 1,
-                            owner: 0,
-                            name: 'Medien',
-                            variableName: 'something else',
-                            active: true
-                        },
-                        {
-                            consumerId: 2,
-                            owner: 0,
-                            name: 'Wäsche',
-                            variableName: 'something else',
-                            active: true
-                        },
-                        {
-                            consumerId: 3,
-                            owner: 0,
-                            name: 'Geschirrspülmaschine',
-                            variableName: 'something else',
-                            active: true
-                        },
-                        {
-                            consumerId: 4,
-                            owner: 0,
-                            name: 'Eigenes Gerät A',
-                            variableName: 'something else',
-                            active: true
-                        },
-                        {
-                            consumerId: 5,
-                            owner: 0,
-                            name: 'Eigenes Gerät B',
-                            variableName: 'something else',
-                            active: true
-                        },
-                    ]
-            },
-            token: {
-                "fakeToken.thistokenisfake": "user@test.com"
+                        }))
+                },
+                processedConsumption: {
+                    "user@test.com":
+                        ["01-01-2020", "02-01-2020", "03-01-2020"].reduce((map: any, val: any) => {
+                            map[val] = ["actual", "predicted"].map((type) => ({
+                                "type": type,
+                                "data": [...Array(24)].map(() => Math.random() * 10)
+                            }));
+                            return map
+                        }, {})
+                },
+                token: {
+                    "fakeToken.thistokenisfake": "user@test.com"
+                }
             }
-        });
+        );
         localStorage.setItem("fake_db", db);
     }
+
     return JSON.parse(db);
 }
 

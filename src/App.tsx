@@ -1,21 +1,18 @@
 import React from "react";
-import {createTheme, CssBaseline, LinearProgress, ThemeProvider,} from "@material-ui/core";
+import {createTheme, CssBaseline, LinearProgress, ThemeOptions, ThemeProvider,} from "@material-ui/core";
 import ReactRouter from "./Routes";
 import BackendService from "./service/BackendService";
 import Config from "./Config";
+import {lightGreen} from "@material-ui/core/colors";
 
-const theme = createTheme({
+const theme: ThemeOptions = createTheme({
     palette: {
         primary: {
-            main: '#7cb342',
-            light: '#aee571',
-            dark: '#4b830d',
+            main: lightGreen[600],
             contrastText: '#fff'
         },
         secondary: {
-            main: '#9ccc65',
-            light: '#cfff95',
-            dark: '#6b9b37'
+            main: lightGreen[400]
         },
     },
 });
