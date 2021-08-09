@@ -49,7 +49,7 @@ const HomeCard = withStyles(styles)(
 
             return (
                 <Grid item xs={12} sm={item.header ? 12 : 6} xl={item.header ? 12 : 4} key={item.title}>
-                    <Card variant="outlined">
+                    <Card>
                         <CardActionArea component={RouterLink} to={item.destination}>
                             <Box display="flex">
                                 <CardMedia className={classes.media}>
@@ -75,27 +75,6 @@ class Home extends React.Component<WithTranslation> {
 
         const items: Item[] = [
             {
-                title: t('card_upload_title'),
-                subtitle: t('card_upload_subtitle'),
-                icon: 'cloud_upload',
-                destination: '/upload',
-                header: false
-            },
-            {
-                title: t('card_behavior_title'),
-                subtitle: t('card_behavior_subtitle'),
-                icon: 'edit',
-                destination: '/behavior',
-                header: false
-            },
-            {
-                title: t('card_thermostats_title'),
-                subtitle: t('card_thermostats_subtitle'),
-                icon: 'ac_unit',
-                destination: '/thermostats',
-                header: false
-            },
-            {
                 title: t('card_power_title'),
                 subtitle: t('card_power_subtitle'),
                 icon: 'show_chart',
@@ -116,7 +95,7 @@ class Home extends React.Component<WithTranslation> {
                 <DefaultAppBar hideBackButton title={t('home_title')}/>
                 <Container maxWidth="lg" disableGutters>
                     <Box padding={1}>
-                        <Grid container spacing={1}>
+                        <Grid container>
                             {items.map((item: Item, index: number) => <HomeCard item={item} key={index}/>)}
                         </Grid>
                     </Box>
