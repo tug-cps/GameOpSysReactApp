@@ -1,66 +1,65 @@
 import React from 'react';
-import {
-    Card,
-    CardActionArea,
-    CardContent,
-    Container,
-    createStyles,
-    Theme,
-    Typography,
-    WithStyles
-} from "@material-ui/core";
+import {Card, CardContent, Container, createStyles, Theme, Typography, WithStyles} from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import {Chart, LineAdvance} from "bizcharts";
 import DefaultAppBar from "./common/DefaultAppBar";
 import BackendService from "./service/BackendService";
+import {Line} from "react-chartjs-2";
 
 interface EntryProps {
     backendService: BackendService;
     date: string;
 }
 
-interface ChartData {
-    type: string;
-    time: number;
-    value: number;
+interface EntryState {
+    data: any;
 }
 
-interface EntryState {
-    data: ChartData[]
-}
+const options = {
+    scales: {
+        yAxes: [
+            {
+                ticks: {
+                    beginAtZero: true,
+                },
+            },
+        ],
+    },
+};
 
 class PowerEntry extends React.Component<EntryProps, EntryState> {
     constructor(props: Readonly<EntryProps>) {
         super(props);
         this.state = {
-            data: []
+            data: {}
         }
     }
 
     componentDidMount() {
-        this.props.backendService.getProcessedConsumption(this.props.date).then((consumptions) => {
-            this.setState({
-                data: consumptions.map((c) => {
-                    return c.data.map((value, idx) => {
-                        return {type: c.type, time: idx, value: value}
-                    })
-                }).flat()
+        const {backendService, date} = this.props;
+        backendService.getProcessedConsumption(date)
+            .then((consumptions) => {
+                this.setState({
+                    data: {
+                        labels: Array.from(Array(24).keys()),
+                        datasets: consumptions.map((c) => ({
+                                label: c.type,
+                                data: c.data,
+                                fill: false,
+                                backgroundColor: (c.type === 'actual') ? 'rgb(255, 99, 132)' : 'green',
+                                borderColor: 'rgba(255, 99, 132, 0.2)',
+                            })
+                        )
+                    }
+                })
             })
-        })
+            .catch(console.log)
     }
 
     render() {
         const {data} = this.state;
+        console.log(data)
         return (
-            <Chart height={300} autoFit data={data}>
-                <LineAdvance
-                    shape="smooth"
-                    point
-                    area
-                    position="time*value"
-                    color="type"
-                />
-            </Chart>
+            <Line data={data} options={options}/>
         )
     }
 }
@@ -98,7 +97,7 @@ class Power extends React.Component<Props, State> {
     }
 
     render() {
-        const {classes} = this.props;
+        const {classes, backendService} = this.props;
         const {dates} = this.state;
         return (
             <div className={classes.root}>
@@ -107,12 +106,12 @@ class Power extends React.Component<Props, State> {
                     {dates.map((value) => {
                         return (
                             <Card variant="outlined" key={value} className={classes.card}>
-                                <CardActionArea>
-                                    <CardContent>
-                                        <Typography variant="h6">{value}</Typography>
-                                        <PowerEntry date={value} backendService={this.props.backendService}/>
-                                    </CardContent>
-                                </CardActionArea>
+                                <CardContent>
+                                    <Typography variant="h6">{value}</Typography>
+                                    {
+                                        <PowerEntry date={value} backendService={backendService}/>
+                                    }
+                                </CardContent>
                             </Card>
                         )
                     })}
