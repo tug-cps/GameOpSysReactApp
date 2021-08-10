@@ -3,20 +3,27 @@ import {
     Button,
     Container,
     FormControl,
-    Icon,
     InputLabel,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
     MenuItem,
-    Select
+    Select,
+    SvgIcon
 } from "@material-ui/core";
 import {Link as RouterLink} from "react-router-dom";
 import DefaultAppBar from "./common/DefaultAppBar";
 import i18n from "i18next";
 import BackendService from "./service/BackendService";
 import {withTranslation, WithTranslation} from "react-i18next";
+
+import EmailIcon from '@material-ui/icons/Email';
+import GroupIcon from '@material-ui/icons/Group';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import PowerIcon from '@material-ui/icons/Power';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import LanguageIcon from '@material-ui/icons/Language';
 
 interface Props extends WithTranslation {
     backendService: BackendService
@@ -68,10 +75,10 @@ class User extends React.Component<Props, State> {
             })
         };
         const items = [
-            {icon: 'email', text: state.email},
-            {icon: 'group', text: state.treatmentGroup},
-            {icon: 'access_time', text: t('user_created', {text: state.creationDate})},
-            {icon: '', text: t('user_unlocked', {text: state.unlockDate})}
+            {icon: EmailIcon, text: state.email},
+            {icon: GroupIcon, text: state.treatmentGroup},
+            {icon: AccessTimeIcon, text: t('user_created', {text: state.creationDate})},
+            {icon: null, text: t('user_unlocked', {text: state.unlockDate})}
         ]
         return (
             <React.Fragment>
@@ -83,19 +90,19 @@ class User extends React.Component<Props, State> {
                         {items.map((it) => {
                             return (
                                 <ListItem>
-                                    <ListItemIcon><Icon>{it.icon}</Icon></ListItemIcon>
+                                    <ListItemIcon>{it.icon ? <SvgIcon component={it.icon}/> : null}</ListItemIcon>
                                     <ListItemText>{it.text}</ListItemText>
                                 </ListItem>
                             )
                         })}
                         <ListItem/>
                         <ListItem button component={RouterLink} to={"/consumers"}>
-                            <ListItemIcon><Icon>power</Icon></ListItemIcon>
+                            <ListItemIcon><PowerIcon/></ListItemIcon>
                             <ListItemText>{t('user_consumer', {count: state.consumersCount})}</ListItemText>
-                            <ListItemIcon><Icon>arrow_right</Icon></ListItemIcon>
+                            <ListItemIcon><ArrowRightIcon/></ListItemIcon>
                         </ListItem>
                         <ListItem>
-                            <ListItemIcon><Icon>language</Icon></ListItemIcon>
+                            <ListItemIcon><LanguageIcon/></ListItemIcon>
                             <FormControl fullWidth variant="outlined">
                                 <InputLabel>Language</InputLabel>
                                 <Select
