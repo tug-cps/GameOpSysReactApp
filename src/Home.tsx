@@ -8,15 +8,17 @@ import {
     Container,
     createStyles,
     Grid,
+    SvgIcon,
     Theme,
     Typography,
     withStyles,
     WithStyles
 } from "@material-ui/core";
-import Icon from "@material-ui/core/Icon";
 import {Link as RouterLink} from "react-router-dom";
 import {WithTranslation, withTranslation} from "react-i18next";
 import DefaultAppBar from "./common/DefaultAppBar";
+import ShowChartIcon from '@material-ui/icons/ShowChart';
+import HistoryIcon from '@material-ui/icons/History';
 
 const styles = ({palette}: Theme) => createStyles({
     media: {
@@ -33,7 +35,7 @@ const styles = ({palette}: Theme) => createStyles({
 interface Item {
     title: string;
     subtitle: string;
-    icon: string;
+    icon: any;
     destination: string;
     header: boolean
 }
@@ -53,7 +55,7 @@ const HomeCard = withStyles(styles)(
                         <CardActionArea component={RouterLink} to={item.destination}>
                             <Box display="flex">
                                 <CardMedia className={classes.media}>
-                                    <Icon className={classes.icon}>{item.icon}</Icon>
+                                    <SvgIcon component={item.icon} className={classes.icon}/>
                                 </CardMedia>
                                 <CardContent>
                                     <Typography variant="h6">{item.title}</Typography>
@@ -77,14 +79,14 @@ class Home extends React.Component<WithTranslation> {
             {
                 title: t('card_power_title'),
                 subtitle: t('card_power_subtitle'),
-                icon: 'show_chart',
+                icon: ShowChartIcon,
                 destination: '/power',
                 header: false
             },
             {
                 title: t('card_archive_title'),
                 subtitle: t('card_archive_subtitle'),
-                icon: 'history',
+                icon: HistoryIcon,
                 destination: '/archive',
                 header: false
             },

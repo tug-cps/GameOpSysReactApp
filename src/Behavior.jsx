@@ -1,9 +1,10 @@
 import React from "react";
 import TableDragSelect from "react-table-drag-select";
-import {Box, Container, Icon, IconButton, TableCell, TableContainer} from "@material-ui/core";
+import {Box, Container, IconButton, TableCell, TableContainer} from "@material-ui/core";
 import DefaultAppBar from "./common/DefaultAppBar";
 import {withTranslation} from "react-i18next";
 import {Link as RouterLink} from 'react-router-dom';
+import AcUnitIcon from "@material-ui/icons/AcUnit";
 
 const formatTime = (v) => {
     if (v < 10) {
@@ -38,7 +39,7 @@ class Behavior extends React.Component<> {
             <div>
                 <DefaultAppBar hideBackButton title={t('card_behavior_title')}>
                     <IconButton color="inherit" component={RouterLink} to={"/thermostats"}>
-                        <Icon>ac_unit</Icon>
+                        <AcUnitIcon/>
                     </IconButton>
                 </DefaultAppBar>
                 <Container>
