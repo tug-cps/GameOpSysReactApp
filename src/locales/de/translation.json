@@ -28,6 +28,7 @@
   "upload_instruction_upload": "Bitte laden Sie die Datei mit dem aktuellen Verbrauch hier hoch",
   "upload_title_upload": "2. Stromverbrauch hochladen",
   "upload_instruction_download": "Bitte wählen Sie Ihren Stromnetzbetreiber um den aktuellen Verbrauch herunterzuladen",
-  "upload_title_download": "1. Stromverbrauch herunterladen"
-
+  "upload_title_download": "1. Stromverbrauch herunterladen",
+  "verify_title": "Verifizieren",
+  "verify_login": "Anmelden"
 }

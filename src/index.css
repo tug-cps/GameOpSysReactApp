@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+.table-drag-select {
+  user-select: none;
+}
+
 /* Cells that can be interacted with */
 .table-drag-select td.cell-enabled {
   color: #806E52;

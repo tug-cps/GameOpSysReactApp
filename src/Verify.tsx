@@ -1,18 +1,10 @@
 import React from 'react';
-import {
-    Avatar,
-    Button,
-    Container,
-    createStyles,
-    TextField,
-    Theme,
-    Typography,
-    WithStyles
-} from "@material-ui/core";
+import {Avatar, Button, Container, createStyles, TextField, Theme, Typography, WithStyles} from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
 import {RouteComponentProps} from "react-router-dom";
 import BackendService from "./service/BackendService";
 import {withRouter} from "react-router";
+import {withTranslation, WithTranslation} from "react-i18next";
 
 const styles = ({palette, spacing}: Theme) => createStyles({
     paper: {
@@ -34,17 +26,14 @@ const styles = ({palette, spacing}: Theme) => createStyles({
     },
 });
 
-interface Props extends WithStyles<typeof styles>, RouteComponentProps {
+interface Props extends WithStyles<typeof styles>, RouteComponentProps, WithTranslation {
     backendService: BackendService
 }
 
 class Verify extends React.Component<Props, { email?: string, password: string }> {
     constructor(props: Props) {
         super(props);
-        this.state = {
-            password: ''
-        };
-
+        this.state = {password: ''};
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -57,22 +46,23 @@ class Verify extends React.Component<Props, { email?: string, password: string }
 
     handleSubmit(e: React.FormEvent) {
         const {password} = this.state;
-        const {email} = this.props.location.state;
+        const {location, history} = this.props;
+        const {email} = location.state;
 
         e.preventDefault();
         this.props.backendService
             .login(email, password)
-            .then(() => {this.props.history.push('/')})
+            .then(() => history.push('/'))
             .catch((error) => console.log(error))
     }
 
     render() {
-        const {classes} = this.props;
+        const {classes, t} = this.props;
         return (
             <Container component="main" maxWidth="sm">
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}/>
-                    <Typography component="h1" variant="h5">Verify</Typography>
+                    <Typography component="h1" variant="h5">{t('verify_title')}</Typography>
                     <form className={classes.form} onSubmit={this.handleSubmit}>
                         <TextField
                             autoFocus
@@ -83,9 +73,12 @@ class Verify extends React.Component<Props, { email?: string, password: string }
                             value={this.state.password}
                             onChange={(e) => this.setState({password: e.target.value})}
                             required
-                            fullWidth
-                        />
-                        <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>Log in</Button>
+                            fullWidth/>
+                        <Button type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                className={classes.submit}>{t('verify_login')}</Button>
                     </form>
                 </div>
             </Container>
@@ -93,4 +86,4 @@ class Verify extends React.Component<Props, { email?: string, password: string }
     }
 }
 
-export default withRouter(withStyles(styles)(Verify));
+export default withRouter(withStyles(styles)(withTranslation()(Verify)));

@@ -28,5 +28,7 @@
   "upload_instruction_upload": "Please upload the file with the most recent consumptions here",
   "upload_title_upload": "2. Upload your consumption",
   "upload_instruction_download": "Please select your network operator to download the most recent consumption data",
-  "upload_title_download": "1. Download most recent data"
+  "upload_title_download": "1. Download most recent data",
+  "verify_title": "Verify",
+  "verify_login": "Log in"
 }

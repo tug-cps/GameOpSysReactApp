@@ -1,12 +1,14 @@
 import React from 'react';
 import {
+    Box,
     Button,
     Container,
     createStyles,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle, Fab,
+    DialogTitle,
+    Fab,
     IconButton,
     List,
     ListItem,
@@ -15,7 +17,6 @@ import {
     Paper,
     TextField,
     Theme,
-    Typography,
     WithStyles
 } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
@@ -25,9 +26,10 @@ import BackendService from "./service/BackendService";
 import DefaultAppBar from "./common/DefaultAppBar";
 import {ConsumerModel} from "./service/Model";
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const styles = (theme: Theme) => createStyles({
-    list: {}
+    secondaryAction: {}
 });
 
 
@@ -92,16 +94,35 @@ class Consumers extends React.Component<Props, State> {
         const handleChangeActive = (consumer: ConsumerModel) => {
             const {backendService} = this.props;
             backendService.putConsumer({...consumer, active: !consumer.active})
-                .then(this.refresh);
+                .then(this.refresh)
+                .catch(console.log)
+        }
+
+        const handleDelete = (consumer: ConsumerModel) => {
+            const {backendService} = this.props;
+            backendService.removeConsumer(consumer.consumerId)
+                .then(this.refresh)
+                .catch(console.log)
         }
 
         const ConsumerCard = (consumer: ConsumerModel) => {
             return (
                 <ListItem key={consumer.consumerId} role={undefined} button onClick={() => handleClickOpen(consumer)}>
                     <ListItemText primary={consumer.name}/>
-                    <ListItemSecondaryAction onClick={() => handleChangeActive(consumer)}>
-                        <IconButton edge="end" arial-label="show or hide">
+                    <ListItemSecondaryAction>
+                        <IconButton
+                            edge="end"
+                            arial-label="show or hide"
+                            onClick={() => handleChangeActive(consumer)}
+                            className={classes.secondaryAction}>
                             {consumer.active ? <VisibilityIcon/> : <VisibilityOffIcon/>}
+                        </IconButton>
+                        <IconButton
+                            edge="end"
+                            arial-label="delete"
+                            onClick={() => handleDelete(consumer)}
+                            className={classes.secondaryAction}>
+                            <DeleteIcon/>
                         </IconButton>
                     </ListItemSecondaryAction>
                 </ListItem>
@@ -113,16 +134,13 @@ class Consumers extends React.Component<Props, State> {
             <React.Fragment>
                 <DefaultAppBar title='Consumers'/>
                 <Container maxWidth="sm" disableGutters>
-                    <Typography paragraph component="h1" variant="h4">Consumers</Typography>
-                    <Paper>
-                        <List className={classes.list}>
-                            {consumers.map(ConsumerCard)}
-                        </List>
-                    </Paper>
+                    <Box my={1}>
+                        <Paper variant="outlined">
+                            <List>{consumers.map(ConsumerCard)}</List>
+                        </Paper>
+                    </Box>
                 </Container>
-                <Fab color="primary" aria-label="add">
-                    <AddIcon />
-                </Fab>
+                <Fab color="primary" aria-label="add"><AddIcon/></Fab>
                 <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Change consumer</DialogTitle>
                     <DialogContent>
@@ -137,12 +155,8 @@ class Consumers extends React.Component<Props, State> {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={handleChangeName} color="primary">
-                            Rename
-                        </Button>
+                        <Button onClick={handleClose} color="primary">Cancel</Button>
+                        <Button onClick={handleChangeName} color="primary">Rename</Button>
                     </DialogActions>
                 </Dialog>
             </React.Fragment>
