@@ -2,6 +2,7 @@ import {Backend} from "./Backend";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {getFakeDB, resetFakeDB, saveFakeDB} from "./FakeDB";
 import {Executor} from "./Executor";
+import {v4 as uuidv4} from 'uuid';
 
 function findInDict(dict: any, matcher: (value: any) => boolean): any {
     for (let key in dict) {
@@ -17,7 +18,7 @@ class FakeBackend implements Backend {
         return new Promise<R>((resolve, reject) => {
             const e = new Executor(resolve, reject);
 
-            console.log(`GET Fake backend call to ${url}`, config)
+            console.log(`DELETE Fake backend call to ${url}`, config)
             if (config == null) return e.error();
             const db = getFakeDB();
 
@@ -27,7 +28,7 @@ class FakeBackend implements Backend {
 
             if (url.includes('/consumer/')) {
                 const id = url.substring(url.lastIndexOf('/') + 1)
-                const index = db.consumer[user].findIndex((it: any) => it.consumerId === +id)
+                const index = db.consumer[user].findIndex((it: any) => it.consumerId.toString() === id.toString())
                 if (index < 0) return e.error()
                 db.consumer[user].splice(index, 1)
 
@@ -85,6 +86,31 @@ class FakeBackend implements Backend {
 
     post<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: AxiosRequestConfig): Promise<R> {
         return new Promise<R>((resolve, reject) => {
+            const e = new Executor(resolve, reject);
+
+            console.log(`POST Fake backend call to ${url}`, config)
+            if (config == null) return e.error();
+            const db = getFakeDB();
+
+            const token = config.headers.Authorization;
+            const user = db.token[token]
+            if (user == null) return e.error()
+
+            if (url.endsWith('/consumer')) {
+                const {consumer_name} = config.params;
+                if (consumer_name == null) return e.error();
+                db.consumer[user].push({
+                    consumerId: uuidv4(),
+                    owner: 0,
+                    name: consumer_name,
+                    variable_name: "something",
+                    active: true
+                });
+                saveFakeDB(db)
+                return e.ok({});
+            }
+
+            return e.error();
         })
     }
 
@@ -104,7 +130,7 @@ class FakeBackend implements Backend {
             if (url.startsWith('/consumer')) {
                 const {consumer_name, consumer_active} = config.params;
                 meldArrayElement(db.consumer[user],
-                    (v: any) => v.consumerId === +id,
+                    (v: any) => v.consumerId.toString() === id.toString(),
                     {name: consumer_name, active: consumer_active}
                 )
                 saveFakeDB(db)
