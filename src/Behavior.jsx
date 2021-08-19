@@ -52,8 +52,7 @@ class Behavior extends React.Component<> {
                                 </tr>
                                 <tr>
                                     <td disabled/>
-                                    {energyAvailable.map((v) =>
-                                        <TableCell style={{backgroundColor: v}} disabled/>)}
+                                    {energyAvailable.map((v) => <TableCell style={{backgroundColor: v}} disabled/>)}
                                 </tr>
                                 {/* Content */}
                                 {consumers.map((value) =>

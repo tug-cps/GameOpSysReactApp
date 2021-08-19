@@ -74,6 +74,11 @@ class BackendService {
             }))
     }
 
+    removeConsumer(consumerId: String) {
+        return this.backend
+            .delete('/consumer/' + consumerId, this.addAuth())
+    }
+
     getProcessedConsumptions(): Promise<string[]> {
         return this.backend
             .get<string[]>('/processedconsumption', this.addAuth())

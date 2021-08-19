@@ -15,6 +15,26 @@ function findInDict(dict: any, matcher: (value: any) => boolean): any {
 class FakeBackend implements Backend {
     delete<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
         return new Promise<R>((resolve, reject) => {
+            const e = new Executor(resolve, reject);
+
+            console.log(`GET Fake backend call to ${url}`, config)
+            if (config == null) return e.error();
+            const db = getFakeDB();
+
+            const token = config.headers.Authorization;
+            const user = db.token[token]
+            if (user == null) return e.error()
+
+            if (url.includes('/consumer/')) {
+                const id = url.substring(url.lastIndexOf('/') + 1)
+                const index = db.consumer[user].findIndex((it: any) => it.consumerId === +id)
+                if (index < 0) return e.error()
+                db.consumer[user].splice(index, 1)
+
+                saveFakeDB(db)
+                return e.ok({})
+            }
+            return e.error()
         })
     }
 
