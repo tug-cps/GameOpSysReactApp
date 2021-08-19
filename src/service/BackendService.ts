@@ -26,7 +26,7 @@ class BackendService {
         })
     }
 
-    isLoggedIn() : Observable<boolean>{
+    isLoggedIn(): Observable<boolean> {
         return this.isLoggedInObservable
     }
 
@@ -62,6 +62,11 @@ class BackendService {
         return this.backend
             .get<ConsumerModel[]>('/consumer', this.addAuth())
             .then(unpack);
+    }
+
+    postConsumer(consumer_name: string) {
+        return this.backend
+            .post('/consumer', null, this.addAuth({params: {consumer_name: consumer_name}}))
     }
 
     putConsumer(consumer: ConsumerModel) {

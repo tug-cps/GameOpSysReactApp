@@ -7,6 +7,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
+    DialogContentText,
     DialogTitle,
     Fab,
     IconButton,
@@ -37,23 +38,28 @@ interface Props extends WithStyles<typeof styles> {
     backendService: BackendService
 }
 
-interface State {
-    consumers: ConsumerModel[]
-    open: boolean
+interface EditState {
+    consumer: ConsumerModel
     consumerName: string
-    selectedConsumer?: ConsumerModel
+    open: boolean
+}
+
+interface CreateState {
+    consumerName: string
+    open: boolean
+}
+
+interface State {
+    consumers?: ConsumerModel[]
+    editState?: EditState,
+    createState?: CreateState,
 }
 
 class Consumers extends React.Component<Props, State> {
 
     constructor(props: Readonly<Props>) {
         super(props);
-        this.state = {
-            consumers: [],
-            open: false,
-            consumerName: ""
-        }
-
+        this.state = {}
         this.refresh = this.refresh.bind(this);
     }
 
@@ -70,57 +76,85 @@ class Consumers extends React.Component<Props, State> {
         this.refresh()
     }
 
+    handleClickOpenEdit(consumer: ConsumerModel) {
+        this.setState({
+            editState: {
+                consumer: consumer,
+                consumerName: consumer.name,
+                open: true
+            }
+        });
+    }
+
+    handleCloseEdit() {
+        this.setState({editState: {...this.state.editState!, open: false}});
+    }
+
+    handleClickOpenCreate() {
+        this.setState({
+            createState: {
+                consumerName: "",
+                open: true
+            }
+        });
+    }
+
+    handleCloseCreate() {
+        this.setState({createState: {...this.state.createState!, open: false}});
+    }
+
+    applyEditConsumer() {
+        const {consumer, consumerName} = this.state.editState!;
+        const {backendService} = this.props;
+        backendService.putConsumer({...consumer, name: consumerName})
+            .then(this.refresh)
+            .catch(console.log);
+        this.handleCloseEdit();
+    }
+
+    applyCreateConsumer() {
+        const {consumerName} = this.state.createState!;
+        const {backendService} = this.props;
+        backendService.postConsumer(consumerName)
+            .then(this.refresh)
+            .catch(console.log);
+        this.handleCloseCreate();
+    }
+
+    applyChangeActive(consumer: ConsumerModel) {
+        const {backendService} = this.props;
+        backendService.putConsumer({...consumer, active: !consumer.active})
+            .then(this.refresh)
+            .catch(console.log);
+    }
+
+    applyDelete(consumer: ConsumerModel) {
+        const {backendService} = this.props;
+        backendService.removeConsumer(consumer.consumerId)
+            .then(this.refresh)
+            .catch(console.log)
+    }
+
     render() {
         const {classes} = this.props;
 
-        const handleClickOpen = (consumer: ConsumerModel) => {
-            this.setState({consumerName: consumer.name, selectedConsumer: consumer, open: true})
-        };
-
-        const handleClose = () => {
-            this.setState({open: false})
-        };
-
-        const handleChangeName = () => {
-            const {selectedConsumer, consumerName} = this.state;
-            const {backendService} = this.props;
-            if (selectedConsumer != null) {
-                backendService.putConsumer({...selectedConsumer, name: consumerName})
-                    .then(this.refresh);
-                handleClose();
-            }
-        }
-
-        const handleChangeActive = (consumer: ConsumerModel) => {
-            const {backendService} = this.props;
-            backendService.putConsumer({...consumer, active: !consumer.active})
-                .then(this.refresh)
-                .catch(console.log)
-        }
-
-        const handleDelete = (consumer: ConsumerModel) => {
-            const {backendService} = this.props;
-            backendService.removeConsumer(consumer.consumerId)
-                .then(this.refresh)
-                .catch(console.log)
-        }
-
         const ConsumerCard = (consumer: ConsumerModel) => {
             return (
-                <ListItem key={consumer.consumerId} role={undefined} button onClick={() => handleClickOpen(consumer)}>
+                <ListItem key={consumer.consumerId} role={undefined} button
+                          onClick={() => this.handleClickOpenEdit(consumer)}>
                     <ListItemText primary={consumer.name}/>
                     <ListItemSecondaryAction>
                         <IconButton
                             edge="end"
                             arial-label="show or hide"
-                            onClick={() => handleChangeActive(consumer)}
+                            onClick={() => this.applyChangeActive(consumer)}
                             className={classes.secondaryAction}>
                             {consumer.active ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                         </IconButton>
                         <IconButton
                             edge="end"
                             arial-label="delete"
-                            onClick={() => handleDelete(consumer)}
+                            onClick={() => this.applyDelete(consumer)}
                             className={classes.secondaryAction}>
                             <DeleteIcon/>
                         </IconButton>
@@ -129,19 +163,23 @@ class Consumers extends React.Component<Props, State> {
             )
         };
 
-        const {consumers, open, consumerName} = this.state;
+        const {consumers, editState, createState} = this.state;
+        const openEdit = editState != null && editState.open;
+        const openCreate = createState != null && createState.open;
+
         return (
             <React.Fragment>
                 <DefaultAppBar title='Consumers'/>
                 <Container maxWidth="sm" disableGutters>
                     <Box my={1}>
                         <Paper variant="outlined">
-                            <List>{consumers.map(ConsumerCard)}</List>
+                            {consumers && <List>{consumers.map(ConsumerCard)}</List>}
                         </Paper>
                     </Box>
                 </Container>
-                <Fab color="primary" aria-label="add"><AddIcon/></Fab>
-                <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                <Fab color="primary" aria-label="add" onClick={() => this.handleClickOpenCreate()}><AddIcon/></Fab>
+
+                <Dialog open={openEdit} onClose={() => this.handleCloseEdit()} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Change consumer</DialogTitle>
                     <DialogContent>
                         <TextField
@@ -150,13 +188,38 @@ class Consumers extends React.Component<Props, State> {
                             id="name"
                             label="Consumer name"
                             fullWidth
-                            value={consumerName}
-                            onChange={(e) => this.setState({consumerName: e.target.value})}
+                            value={editState?.consumerName}
+                            onChange={(e) => this.setState(
+                                {editState: {...editState!, consumerName: e.target.value}}
+                            )}
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose} color="primary">Cancel</Button>
-                        <Button onClick={handleChangeName} color="primary">Rename</Button>
+                        <Button onClick={() => this.handleCloseEdit()} color="primary">Cancel</Button>
+                        <Button onClick={() => this.applyEditConsumer()} color="primary">Rename</Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog open={openCreate} onClose={() => this.handleCloseCreate()} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Add consumer</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Please enter a meaningful name
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Consumer name"
+                            fullWidth
+                            value={createState?.consumerName}
+                            onChange={(e) => this.setState(
+                                {createState: {...createState!, consumerName: e.target.value}}
+                            )}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => this.handleCloseCreate()} color="primary">Cancel</Button>
+                        <Button onClick={() => this.applyCreateConsumer()} color="primary">Create</Button>
                     </DialogActions>
                 </Dialog>
             </React.Fragment>
