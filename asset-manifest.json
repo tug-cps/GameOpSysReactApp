@@ -1,24 +1,24 @@
 {
   "files": {
     "main.css": "/GameOpSysReactApp/static/css/main.83ac234e.chunk.css",
-    "main.js": "/GameOpSysReactApp/static/js/main.c2d36c94.chunk.js",
-    "main.js.map": "/GameOpSysReactApp/static/js/main.c2d36c94.chunk.js.map",
-    "runtime-main.js": "/GameOpSysReactApp/static/js/runtime-main.b93b6e59.js",
-    "runtime-main.js.map": "/GameOpSysReactApp/static/js/runtime-main.b93b6e59.js.map",
-    "static/js/2.2de71dad.chunk.js": "/GameOpSysReactApp/static/js/2.2de71dad.chunk.js",
-    "static/js/2.2de71dad.chunk.js.map": "/GameOpSysReactApp/static/js/2.2de71dad.chunk.js.map",
-    "static/js/3.390e1780.chunk.js": "/GameOpSysReactApp/static/js/3.390e1780.chunk.js",
-    "static/js/3.390e1780.chunk.js.map": "/GameOpSysReactApp/static/js/3.390e1780.chunk.js.map",
-    "static/js/4.e58703ff.chunk.js": "/GameOpSysReactApp/static/js/4.e58703ff.chunk.js",
-    "static/js/4.e58703ff.chunk.js.map": "/GameOpSysReactApp/static/js/4.e58703ff.chunk.js.map",
+    "main.js": "/GameOpSysReactApp/static/js/main.b252e0c6.chunk.js",
+    "main.js.map": "/GameOpSysReactApp/static/js/main.b252e0c6.chunk.js.map",
+    "runtime-main.js": "/GameOpSysReactApp/static/js/runtime-main.08d96584.js",
+    "runtime-main.js.map": "/GameOpSysReactApp/static/js/runtime-main.08d96584.js.map",
+    "static/js/2.eaaa4a99.chunk.js": "/GameOpSysReactApp/static/js/2.eaaa4a99.chunk.js",
+    "static/js/2.eaaa4a99.chunk.js.map": "/GameOpSysReactApp/static/js/2.eaaa4a99.chunk.js.map",
+    "static/js/3.b3d79704.chunk.js": "/GameOpSysReactApp/static/js/3.b3d79704.chunk.js",
+    "static/js/3.b3d79704.chunk.js.map": "/GameOpSysReactApp/static/js/3.b3d79704.chunk.js.map",
+    "static/js/4.104f8528.chunk.js": "/GameOpSysReactApp/static/js/4.104f8528.chunk.js",
+    "static/js/4.104f8528.chunk.js.map": "/GameOpSysReactApp/static/js/4.104f8528.chunk.js.map",
     "index.html": "/GameOpSysReactApp/index.html",
     "static/css/main.83ac234e.chunk.css.map": "/GameOpSysReactApp/static/css/main.83ac234e.chunk.css.map",
-    "static/js/2.2de71dad.chunk.js.LICENSE.txt": "/GameOpSysReactApp/static/js/2.2de71dad.chunk.js.LICENSE.txt"
+    "static/js/2.eaaa4a99.chunk.js.LICENSE.txt": "/GameOpSysReactApp/static/js/2.eaaa4a99.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.b93b6e59.js",
-    "static/js/2.2de71dad.chunk.js",
+    "static/js/runtime-main.08d96584.js",
+    "static/js/2.eaaa4a99.chunk.js",
     "static/css/main.83ac234e.chunk.css",
-    "static/js/main.c2d36c94.chunk.js"
+    "static/js/main.b252e0c6.chunk.js"
   ]
 }
