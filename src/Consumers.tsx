@@ -49,10 +49,16 @@ interface CreateState {
     open: boolean
 }
 
+interface DeleteState {
+    consumer: ConsumerModel
+    open: boolean
+}
+
 interface State {
     consumers?: ConsumerModel[]
     editState?: EditState,
     createState?: CreateState,
+    deleteState?: DeleteState
 }
 
 class Consumers extends React.Component<Props, State> {
@@ -63,6 +69,10 @@ class Consumers extends React.Component<Props, State> {
         this.refresh = this.refresh.bind(this);
     }
 
+    componentDidMount() {
+        this.refresh()
+    }
+
     refresh() {
         const {backendService} = this.props;
         backendService.getConsumers()
@@ -70,10 +80,6 @@ class Consumers extends React.Component<Props, State> {
             .catch((reason) => {
                 console.log(reason)
             })
-    }
-
-    componentDidMount() {
-        this.refresh()
     }
 
     handleClickOpenEdit(consumer: ConsumerModel) {
@@ -86,7 +92,7 @@ class Consumers extends React.Component<Props, State> {
         });
     }
 
-    handleCloseEdit() {
+    handleClickCloseEdit() {
         this.setState({editState: {...this.state.editState!, open: false}});
     }
 
@@ -99,8 +105,21 @@ class Consumers extends React.Component<Props, State> {
         });
     }
 
-    handleCloseCreate() {
+    handleClickCloseCreate() {
         this.setState({createState: {...this.state.createState!, open: false}});
+    }
+
+    handleClickOpenDelete(consumer: ConsumerModel) {
+        this.setState({
+            deleteState: {
+                consumer: consumer,
+                open: true
+            }
+        });
+    }
+
+    handleClickCloseDelete() {
+        this.setState({deleteState: {...this.state.deleteState!, open: false}});
     }
 
     applyEditConsumer() {
@@ -109,7 +128,7 @@ class Consumers extends React.Component<Props, State> {
         backendService.putConsumer({...consumer, name: consumerName})
             .then(this.refresh)
             .catch(console.log);
-        this.handleCloseEdit();
+        this.handleClickCloseEdit();
     }
 
     applyCreateConsumer() {
@@ -118,7 +137,7 @@ class Consumers extends React.Component<Props, State> {
         backendService.postConsumer(consumerName)
             .then(this.refresh)
             .catch(console.log);
-        this.handleCloseCreate();
+        this.handleClickCloseCreate();
     }
 
     applyChangeActive(consumer: ConsumerModel) {
@@ -128,9 +147,11 @@ class Consumers extends React.Component<Props, State> {
             .catch(console.log);
     }
 
-    applyDelete(consumer: ConsumerModel) {
+    applyDelete() {
         const {backendService} = this.props;
-        backendService.removeConsumer(consumer.consumerId)
+        const {deleteState} = this.state;
+        backendService.removeConsumer(deleteState!.consumer.consumerId)
+            .then(() => this.handleClickCloseDelete())
             .then(this.refresh)
             .catch(console.log)
     }
@@ -154,7 +175,7 @@ class Consumers extends React.Component<Props, State> {
                         <IconButton
                             edge="end"
                             arial-label="delete"
-                            onClick={() => this.applyDelete(consumer)}
+                            onClick={() => this.handleClickOpenDelete(consumer)}
                             className={classes.secondaryAction}>
                             <DeleteIcon/>
                         </IconButton>
@@ -163,9 +184,10 @@ class Consumers extends React.Component<Props, State> {
             )
         };
 
-        const {consumers, editState, createState} = this.state;
+        const {consumers, editState, createState, deleteState} = this.state;
         const openEdit = editState != null && editState.open;
         const openCreate = createState != null && createState.open;
+        const openDelete = deleteState != null && deleteState.open;
 
         return (
             <React.Fragment>
@@ -179,7 +201,7 @@ class Consumers extends React.Component<Props, State> {
                 </Container>
                 <Fab color="primary" aria-label="add" onClick={() => this.handleClickOpenCreate()}><AddIcon/></Fab>
 
-                <Dialog open={openEdit} onClose={() => this.handleCloseEdit()} aria-labelledby="form-dialog-title">
+                <Dialog open={openEdit} onClose={() => this.handleClickCloseEdit()} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Change consumer</DialogTitle>
                     <DialogContent>
                         <TextField
@@ -188,6 +210,7 @@ class Consumers extends React.Component<Props, State> {
                             id="name"
                             label="Consumer name"
                             fullWidth
+                            variant="filled"
                             value={editState?.consumerName}
                             onChange={(e) => this.setState(
                                 {editState: {...editState!, consumerName: e.target.value}}
@@ -195,11 +218,11 @@ class Consumers extends React.Component<Props, State> {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => this.handleCloseEdit()} color="primary">Cancel</Button>
+                        <Button onClick={() => this.handleClickCloseEdit()} color="primary">Cancel</Button>
                         <Button onClick={() => this.applyEditConsumer()} color="primary">Rename</Button>
                     </DialogActions>
                 </Dialog>
-                <Dialog open={openCreate} onClose={() => this.handleCloseCreate()} aria-labelledby="form-dialog-title">
+                <Dialog open={openCreate} onClose={() => this.handleClickCloseCreate()} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Add consumer</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -211,6 +234,7 @@ class Consumers extends React.Component<Props, State> {
                             id="name"
                             label="Consumer name"
                             fullWidth
+                            variant="filled"
                             value={createState?.consumerName}
                             onChange={(e) => this.setState(
                                 {createState: {...createState!, consumerName: e.target.value}}
@@ -218,8 +242,20 @@ class Consumers extends React.Component<Props, State> {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => this.handleCloseCreate()} color="primary">Cancel</Button>
+                        <Button onClick={() => this.handleClickCloseCreate()} color="primary">Cancel</Button>
                         <Button onClick={() => this.applyCreateConsumer()} color="primary">Create</Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog open={openDelete} onClose={() => this.handleClickCloseDelete()} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Confirm delete</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Are you sure you want to delete "{deleteState?.consumer.name}"?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => this.handleClickCloseDelete()} color="primary">Cancel</Button>
+                        <Button onClick={() => this.applyDelete()} color="primary">Delete</Button>
                     </DialogActions>
                 </Dialog>
             </React.Fragment>

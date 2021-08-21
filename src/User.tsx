@@ -2,15 +2,13 @@ import React from 'react';
 import {
     Button,
     Container,
-    FormControl,
-    InputLabel,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
     MenuItem,
-    Select,
-    SvgIcon
+    SvgIcon,
+    TextField
 } from "@material-ui/core";
 import {Link as RouterLink} from "react-router-dom";
 import DefaultAppBar from "./common/DefaultAppBar";
@@ -103,17 +101,17 @@ class User extends React.Component<Props, State> {
                         </ListItem>
                         <ListItem>
                             <ListItemIcon><LanguageIcon/></ListItemIcon>
-                            <FormControl fullWidth variant="outlined">
-                                <InputLabel>Language</InputLabel>
-                                <Select
-                                    value={state.language}
-                                    label="Language"
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value={"de"}>German</MenuItem>
-                                    <MenuItem value={"en"}>English</MenuItem>
-                                </Select>
-                            </FormControl>
+                            <TextField
+                                label="Language"
+                                select
+                                variant="outlined"
+                                fullWidth
+                                value={state.language}
+                                onChange={handleChange}
+                            >
+                                <MenuItem value={"de"}>German</MenuItem>
+                                <MenuItem value={"en"}>English</MenuItem>
+                            </TextField>
                         </ListItem>
                     </List>
                 </Container>
