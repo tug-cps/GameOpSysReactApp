@@ -15,11 +15,16 @@ const useStyles = makeStyles({
         width: '100%',
         position: 'fixed',
         bottom: 0,
-        overflow: "hidden"
-    }
+        overflow: 'hidden',
+        zIndex: 100
+    },
+    spacer: {
+        marginTop: '60px'
+
+    },
 });
 
-export default function SimpleBottomNavigation() {
+function DefaultBottomNavigation() {
     const classes = useStyles();
     const history = useHistory();
     const {t} = useTranslation()
@@ -28,7 +33,7 @@ export default function SimpleBottomNavigation() {
 
     return (
         <React.Fragment>
-            <div style={{marginTop: "60px"}}/>
+            <div className={classes.spacer}/>
             <Paper className={classes.root} elevation={3}>
                 <BottomNavigation
                     value={value}
@@ -50,3 +55,5 @@ export default function SimpleBottomNavigation() {
         </React.Fragment>
     );
 }
+
+export default DefaultBottomNavigation;

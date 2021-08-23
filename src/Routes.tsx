@@ -13,7 +13,7 @@ import Home from "./Home";
 import Thermostats from "./Thermostats";
 import BackendService from "./service/BackendService";
 import {Box, Button, LinearProgress, Typography} from "@material-ui/core";
-import SimpleBottomNavigation from "./common/SimpleBottomNavigation";
+import DefaultBottomNavigation from "./common/DefaultBottomNavigation";
 
 const ReactRouter = (props: { backendService: BackendService }) => {
     const {backendService} = props;
@@ -56,7 +56,7 @@ const ReactRouter = (props: { backendService: BackendService }) => {
                 <Route path="/power"><Power backendService={backendService}/></Route>
                 <Route path="/archive"><Archive backendService={backendService}/></Route>
                 <Route path="/consumers"><Consumers backendService={backendService}/></Route>
-                <Route path="/behavior"><Behavior/></Route>
+                <Route path="/behavior"><Behavior backendService={backendService}/></Route>
                 <Route path="/thermostats"><Thermostats/></Route>
                 <Route exact path="/"><Home/></Route>
                 <Route exact path={`${process.env.PUBLIC_URL}`}><Home/></Route>
@@ -71,7 +71,7 @@ const ReactRouter = (props: { backendService: BackendService }) => {
             {!isLoggedIn && <Redirect to="/login"/>}
             {!isLoggedIn && publicPaths()}
             {isLoggedIn && privatePaths()}
-            {isLoggedIn && (<SimpleBottomNavigation/>)}
+            {isLoggedIn && (<DefaultBottomNavigation/>)}
         </React.Fragment>
     )
 }
