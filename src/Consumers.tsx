@@ -3,38 +3,23 @@ import {
     Box,
     Button,
     Container,
-    createStyles,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
     Fab,
-    IconButton,
     List,
-    ListItem,
-    ListItemSecondaryAction,
-    ListItemText,
     Paper,
-    TextField,
-    Theme,
-    WithStyles
+    TextField
 } from "@material-ui/core";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
-import {withStyles} from "@material-ui/core/styles";
 import BackendService from "./service/BackendService";
 import DefaultAppBar from "./common/DefaultAppBar";
 import {ConsumerModel} from "./service/Model";
 import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
+import ConsumerCard from "./ConsumerCard";
 
-const styles = (theme: Theme) => createStyles({
-    secondaryAction: {}
-});
-
-
-interface Props extends WithStyles<typeof styles> {
+interface Props {
     backendService: BackendService
 }
 
@@ -56,17 +41,15 @@ interface DeleteState {
 
 interface State {
     consumers?: ConsumerModel[]
-    editState?: EditState,
-    createState?: CreateState,
+    editState?: EditState
+    createState?: CreateState
     deleteState?: DeleteState
 }
 
 class Consumers extends React.Component<Props, State> {
-
     constructor(props: Readonly<Props>) {
         super(props);
         this.state = {}
-        this.refresh = this.refresh.bind(this);
     }
 
     componentDidMount() {
@@ -126,7 +109,7 @@ class Consumers extends React.Component<Props, State> {
         const {consumer, consumerName} = this.state.editState!;
         const {backendService} = this.props;
         backendService.putConsumer({...consumer, name: consumerName})
-            .then(this.refresh)
+            .then(() => this.refresh())
             .catch(console.log);
         this.handleClickCloseEdit();
     }
@@ -135,7 +118,7 @@ class Consumers extends React.Component<Props, State> {
         const {consumerName} = this.state.createState!;
         const {backendService} = this.props;
         backendService.postConsumer(consumerName)
-            .then(this.refresh)
+            .then(() => this.refresh())
             .catch(console.log);
         this.handleClickCloseCreate();
     }
@@ -143,7 +126,7 @@ class Consumers extends React.Component<Props, State> {
     applyChangeActive(consumer: ConsumerModel) {
         const {backendService} = this.props;
         backendService.putConsumer({...consumer, active: !consumer.active})
-            .then(this.refresh)
+            .then(() => this.refresh())
             .catch(console.log);
     }
 
@@ -152,38 +135,11 @@ class Consumers extends React.Component<Props, State> {
         const {deleteState} = this.state;
         backendService.removeConsumer(deleteState!.consumer.consumerId)
             .then(() => this.handleClickCloseDelete())
-            .then(this.refresh)
+            .then(() => this.refresh())
             .catch(console.log)
     }
 
     render() {
-        const {classes} = this.props;
-
-        const ConsumerCard = (consumer: ConsumerModel) => {
-            return (
-                <ListItem key={consumer.consumerId} role={undefined} button
-                          onClick={() => this.handleClickOpenEdit(consumer)}>
-                    <ListItemText primary={consumer.name}/>
-                    <ListItemSecondaryAction>
-                        <IconButton
-                            edge="end"
-                            arial-label="show or hide"
-                            onClick={() => this.applyChangeActive(consumer)}
-                            className={classes.secondaryAction}>
-                            {consumer.active ? <VisibilityIcon/> : <VisibilityOffIcon/>}
-                        </IconButton>
-                        <IconButton
-                            edge="end"
-                            arial-label="delete"
-                            onClick={() => this.handleClickOpenDelete(consumer)}
-                            className={classes.secondaryAction}>
-                            <DeleteIcon/>
-                        </IconButton>
-                    </ListItemSecondaryAction>
-                </ListItem>
-            )
-        };
-
         const {consumers, editState, createState, deleteState} = this.state;
         const openEdit = editState != null && editState.open;
         const openCreate = createState != null && createState.open;
@@ -195,7 +151,16 @@ class Consumers extends React.Component<Props, State> {
                 <Container maxWidth="sm" disableGutters>
                     <Box my={1}>
                         <Paper variant="outlined">
-                            {consumers && <List>{consumers.map(ConsumerCard)}</List>}
+                            {consumers && <List>
+                                {consumers.map((it) =>
+                                    <ConsumerCard
+                                        consumer={it}
+                                        clickEdit={(c) => this.handleClickOpenEdit(c)}
+                                        clickActive={(c) => this.applyChangeActive(c)}
+                                        clickDelete={(c) => this.handleClickOpenDelete(c)}
+                                    />
+                                )}
+                            </List>}
                         </Paper>
                     </Box>
                 </Container>
@@ -222,7 +187,8 @@ class Consumers extends React.Component<Props, State> {
                         <Button onClick={() => this.applyEditConsumer()} color="primary">Rename</Button>
                     </DialogActions>
                 </Dialog>
-                <Dialog open={openCreate} onClose={() => this.handleClickCloseCreate()} aria-labelledby="form-dialog-title">
+                <Dialog open={openCreate} onClose={() => this.handleClickCloseCreate()}
+                        aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Add consumer</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -246,7 +212,8 @@ class Consumers extends React.Component<Props, State> {
                         <Button onClick={() => this.applyCreateConsumer()} color="primary">Create</Button>
                     </DialogActions>
                 </Dialog>
-                <Dialog open={openDelete} onClose={() => this.handleClickCloseDelete()} aria-labelledby="form-dialog-title">
+                <Dialog open={openDelete} onClose={() => this.handleClickCloseDelete()}
+                        aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Confirm delete</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -263,4 +230,4 @@ class Consumers extends React.Component<Props, State> {
     }
 }
 
-export default withStyles(styles)(Consumers);
+export default Consumers;
