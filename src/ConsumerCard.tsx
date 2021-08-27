@@ -1,5 +1,5 @@
 import {ConsumerModel} from "./service/Model";
-import {IconButton, ListItem, ListItemSecondaryAction, ListItemText} from "@material-ui/core";
+import {Avatar, IconButton, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText} from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -13,8 +13,8 @@ function ConsumerCard(props: {
 }) {
     const {consumer} = props;
     return (
-        <ListItem key={consumer.consumerId} role={undefined} button
-                  onClick={() => props.clickEdit(consumer)}>
+        <ListItem key={consumer.consumerId} role={undefined} button onClick={() => props.clickEdit(consumer)}>
+            <ListItemAvatar><Avatar>{consumer.name.slice(0, 2)}</Avatar></ListItemAvatar>
             <ListItemText primary={consumer.name}/>
             <ListItemSecondaryAction>
                 <IconButton

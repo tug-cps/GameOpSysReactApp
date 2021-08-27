@@ -3,6 +3,7 @@ import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {getFakeDB, resetFakeDB, saveFakeDB} from "./FakeDB";
 import {Executor} from "./Executor";
 import {v4 as uuidv4} from 'uuid';
+import {ConsumerModel} from "./Model";
 
 function findInDict(dict: any, matcher: (value: any) => boolean): any {
     for (let key in dict) {
@@ -77,6 +78,11 @@ class FakeBackend implements Backend {
             } else if (url.includes('/processedconsumption/')) {
                 const index = url.substring(url.lastIndexOf('/') + 1)
                 e.ok(db.processedConsumption[user][index])
+            } else if (url.endsWith('/predictions')) {
+                e.ok(Object.keys(db.predictions[user]))
+            } else if (url.includes('/predictions/')) {
+                const index = url.substring(url.lastIndexOf('/') + 1)
+                e.ok(db.predictions[user][index] ?? [])
             } else {
                 e.error()
             }
@@ -130,10 +136,19 @@ class FakeBackend implements Backend {
             if (url.startsWith('/consumer')) {
                 const {consumer_name, consumer_active} = config.params;
                 meldArrayElement(db.consumer[user],
-                    (v: any) => v.consumerId.toString() === id.toString(),
+                    (c: ConsumerModel) => c.consumerId.toString() === id.toString(),
                     {name: consumer_name, active: consumer_active}
                 )
-                saveFakeDB(db)
+                saveFakeDB(db);
+
+                return e.ok({})
+            } else if (url.startsWith('/predictions')) {
+                const date = url.substring(url.lastIndexOf('/') + 1)
+                console.log('before', db)
+                db.predictions[user][date] = data['predictions'];
+                console.log('data', data)
+                console.log('after', db)
+                saveFakeDB(db);
 
                 return e.ok({})
             }

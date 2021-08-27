@@ -15,7 +15,7 @@ export function getFakeDB() {
                 consumer: {
                     "user@test.com":
                         ["Kochen", "Medien", "Wäsche", "Geschirrspülmaschine", "Eigenes Gerät A", "Eigenes Gerät B"].map((v, i) => ({
-                            consumerId: i,
+                            consumerId: i.toString(),
                             owner: 0,
                             name: v,
                             variableName: 'something',
@@ -31,6 +31,18 @@ export function getFakeDB() {
                             }));
                             return map
                         }, {})
+                },
+                predictions: {
+                    "user@test.com":
+                        [new Date(), new Date(Date.now() - 86400000 /*1 day*/)]
+                            .map((d) => d.toISOString().slice(0, 10))
+                            .reduce((map: any, val: any) => {
+                                map[val] = [...Array(6)].map((v, id) => ({
+                                    "consumerId": id.toString(),
+                                    "data": [...Array(24)].map(() => true)
+                                }));
+                                return map
+                            }, {})
                 },
                 token: {
                     "fakeToken.thistokenisfake": "user@test.com"

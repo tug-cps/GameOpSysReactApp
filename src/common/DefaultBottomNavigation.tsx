@@ -2,51 +2,54 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {Paper} from "@material-ui/core";
+import {Paper, useMediaQuery, useTheme} from "@material-ui/core";
+import {bottomBarDestinations} from "./BottomBarDestinations";
 
 const useStyles = makeStyles({
     root: {
         width: '100%',
         position: 'fixed',
         bottom: 0,
-        overflow: "hidden"
-    }
+        overflow: 'hidden',
+        zIndex: 100
+    },
+    spacer: {
+        marginTop: '60px'
+
+    },
 });
 
-export default function SimpleBottomNavigation() {
+function DefaultBottomNavigation() {
     const classes = useStyles();
     const history = useHistory();
     const {t} = useTranslation()
     const [value, setValue] = React.useState(0);
-    const destinations = ["/", "/upload", "/behavior", "/user"];
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.down('xs'));
+    if (!matches) return null;
 
     return (
         <React.Fragment>
-            <div style={{marginTop: "60px"}}/>
+            <div className={classes.spacer}/>
             <Paper className={classes.root} elevation={3}>
                 <BottomNavigation
                     value={value}
                     onChange={(event, newValue) => {
                         setValue(newValue);
-                        const destination = destinations[newValue];
+                        const destination = bottomBarDestinations[newValue];
                         if (destination != null) {
-                            history.push(destination);
+                            history.push(destination.to);
                         }
                     }}
                     showLabels
                 >
-                    <BottomNavigationAction label={t("home_link")} icon={<HomeOutlinedIcon/>}/>
-                    <BottomNavigationAction label={t("card_upload_title")} icon={<CloudUploadOutlinedIcon/>}/>
-                    <BottomNavigationAction label={t("card_behavior_title")} icon={<EditOutlinedIcon/>}/>
-                    <BottomNavigationAction label={t("card_user_title")} icon={<PersonOutlineIcon/>}/>
+                    {bottomBarDestinations.map((d) => <BottomNavigationAction label={t(d.label)} icon={d.icon}/>)}
                 </BottomNavigation>
             </Paper>
         </React.Fragment>
     );
 }
+
+export default DefaultBottomNavigation;
