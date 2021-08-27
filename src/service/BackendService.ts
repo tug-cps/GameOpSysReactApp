@@ -79,7 +79,7 @@ class BackendService {
             }))
     }
 
-    removeConsumer(consumerId: String) {
+    removeConsumer(consumerId: String): Promise<AxiosResponse> {
         return this.backend
             .delete('/consumer/' + consumerId, this.addAuth())
     }
@@ -106,6 +106,11 @@ class BackendService {
         return this.backend
             .get<UserPredictionModel[]>('/predictions/' + date, this.addAuth())
             .then(unpack)
+    }
+
+    putPrediction(date: string, predictions: UserPredictionModel[]): Promise<AxiosResponse> {
+        return this.backend
+            .put('/predictions/' + date, {predictions: predictions}, this.addAuth())
     }
 
     postConsumption(file: File) {

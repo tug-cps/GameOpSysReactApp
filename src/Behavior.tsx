@@ -3,7 +3,6 @@ import BehaviorDragSelect, {Row} from "./BehaviorDragSelect"
 import {
     Box,
     Container,
-    createStyles,
     IconButton,
     Table,
     TableBody,
@@ -11,16 +10,16 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Theme,
     WithStyles
 } from "@material-ui/core";
 import DefaultAppBar from "./common/DefaultAppBar";
 import {WithTranslation, withTranslation} from "react-i18next";
-import {Link as RouterLink} from 'react-router-dom';
+import {Link as RouterLink, Prompt} from 'react-router-dom';
 import AcUnitIcon from "@material-ui/icons/AcUnit";
 import SaveIcon from "@material-ui/icons/Save";
 import BackendService from "./service/BackendService";
 import {withStyles} from "@material-ui/core/styles";
+import {styles} from "./BehaviorStyles";
 
 const formatTime = (v: number) => {
     if (v < 10) {
@@ -32,43 +31,19 @@ const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
 const colors = ['lightgreen', 'yellow', 'red']
 const energyAvailable = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0].map(v => colors[v])
 
-const styles = ({palette}: Theme) => createStyles({
-    container: {
-        overflow: 'auto',
-        maxHeight: 'calc(100vh - 140px)'
-    },
-    tableDragSelect: {
-        userSelect: "none",
-        borderCollapse: "collapse",
-        "& thead th": {
-            position: "sticky",
-            top: "0px",
-            zIndex: 1,
-        },
-        "& thead>tr:nth-child(2) th": {
-            top: "37px"
-        },
-        "& td": {
-            border: "1px solid " + palette.divider
-        },
-        "& td.cell-selected": {
-            backgroundColor: palette.secondary.main
-        },
-        "& td.cell-being-selected": {
-            backgroundColor: palette.primary.main
-        },
-        "& td.cell-disabled": {
-            backgroundColor: "red"
-        }
-    }
-});
+const date = new Date().toISOString().slice(0, 10)
 
 interface Props extends WithTranslation, WithStyles<typeof styles> {
     backendService: BackendService
 }
 
+interface ExtendedRow extends Row {
+    consumerId: string
+}
+
 interface State {
-    rows: Row[]
+    rows: ExtendedRow[],
+    modified: boolean
 }
 
 class Behavior extends React.Component<Props, State> {
@@ -77,34 +52,53 @@ class Behavior extends React.Component<Props, State> {
 
         this.state = {
             rows: [],
+            modified: false
         };
     }
 
     componentDidMount() {
-        this.props.backendService.getConsumers()
-            .then((v) => {
-                this.setState({rows: v.map((c) => ({header: c.name, cellStates: hours.map(() => false)}))})
+
+        const {backendService} = this.props;
+        Promise.all([backendService.getConsumers(), backendService.getPrediction(date)])
+            .then(([consumers, predictions]) => {
+                const cellStates = consumers.map((c) => ({
+                    header: c.name,
+                    consumerId: c.consumerId,
+                    cellStates: predictions.find((p) => p.consumerId === c.consumerId)?.data ?? hours.map(() => false)
+                }));
+                this.setState({rows: cellStates, modified: false})
             })
             .catch(console.log)
     }
 
     handleChange = (cells: boolean[][]) => {
+        const {rows} = this.state;
         this.setState({
-            rows: this.state.rows.map((row, i) => {
-                return {header: row.header, cellStates: cells[i]}
-            })
+            rows: rows.map((row, i) => ({...row, cellStates: cells[i]})),
+            modified: true
         })
     };
 
+    handleSave = () => {
+        const {backendService} = this.props;
+        backendService.putPrediction(date, this.state.rows.map((r) => ({
+            consumerId: r.consumerId,
+            data: r.cellStates
+        }))).then(() => {
+            this.setState({modified: false})
+        }).catch(console.log);
+    }
+
     render() {
         const {t, classes} = this.props;
-        const {rows} = this.state;
+        const {rows, modified} = this.state;
         return (
             <React.Fragment>
+                <Prompt when={modified} message="You have unsaved changes, are you sure you want to leave?"/>
                 <DefaultAppBar hideBackButton title={t('card_behavior_title')}>
                     <IconButton color="inherit" component={RouterLink}
                                 to={"/thermostats"}><AcUnitIcon/></IconButton>
-                    <IconButton color="inherit"><SaveIcon/></IconButton>
+                    <IconButton color="inherit" onClick={this.handleSave}><SaveIcon/></IconButton>
                 </DefaultAppBar>
                 <Container maxWidth="xl" disableGutters>
                     <Box p={1}>

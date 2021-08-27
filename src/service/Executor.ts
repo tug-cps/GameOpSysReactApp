@@ -3,7 +3,7 @@ export class Executor<R> {
     }
 
     ok(data: {}) {
-        console.log("Resolving call with OK")
+        console.log("Resolving call with OK", data)
         this.resolve({
             data: data,
             status: 200,
