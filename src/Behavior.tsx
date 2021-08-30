@@ -16,10 +16,11 @@ import DefaultAppBar from "./common/DefaultAppBar";
 import {WithTranslation, withTranslation} from "react-i18next";
 import {Link as RouterLink, Prompt} from 'react-router-dom';
 import AcUnitIcon from "@material-ui/icons/AcUnit";
-import SaveIcon from "@material-ui/icons/Save";
 import BackendService from "./service/BackendService";
 import {withStyles} from "@material-ui/core/styles";
 import {styles} from "./BehaviorStyles";
+import {SaveAlt} from "@material-ui/icons";
+import {iconLookup, translate} from "./common/ConsumerTools";
 
 const formatTime = (v: number) => {
     if (v < 10) {
@@ -62,7 +63,8 @@ class Behavior extends React.Component<Props, State> {
         Promise.all([backendService.getConsumers(), backendService.getPrediction(date)])
             .then(([consumers, predictions]) => {
                 const cellStates = consumers.map((c) => ({
-                    header: c.name,
+                    header: iconLookup(c.type),
+                    headerTooltip: translate(c.name, c.customName),
                     consumerId: c.consumerId,
                     cellStates: predictions.find((p) => p.consumerId === c.consumerId)?.data ?? hours.map(() => false)
                 }));
@@ -94,11 +96,11 @@ class Behavior extends React.Component<Props, State> {
         const {rows, modified} = this.state;
         return (
             <React.Fragment>
-                <Prompt when={modified} message="You have unsaved changes, are you sure you want to leave?"/>
+                <Prompt when={modified} message={t('unsaved_changes')}/>
                 <DefaultAppBar hideBackButton title={t('card_behavior_title')}>
                     <IconButton color="inherit" component={RouterLink}
                                 to={"/thermostats"}><AcUnitIcon/></IconButton>
-                    <IconButton color="inherit" onClick={this.handleSave}><SaveIcon/></IconButton>
+                    <IconButton color="inherit" onClick={this.handleSave}><SaveAlt/></IconButton>
                 </DefaultAppBar>
                 <Container maxWidth="xl" disableGutters>
                     <Box p={1}>

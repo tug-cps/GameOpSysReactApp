@@ -8,7 +8,7 @@ import {
     ListItemText,
     MenuItem,
     SvgIcon,
-    TextField
+    TextField, Typography
 } from "@material-ui/core";
 import {Link as RouterLink} from "react-router-dom";
 import DefaultAppBar from "./common/DefaultAppBar";
@@ -63,15 +63,17 @@ class User extends React.Component<Props, State> {
             .catch((error) => console.log(error))
     }
 
+    changeLanguage = (event: React.ChangeEvent<{ value: unknown }>) => {
+        i18n.changeLanguage(event.target.value as string).then(() => {
+            this.setState({language: event.target.value as string});
+        })
+    };
+
     render() {
         const {t} = this.props;
         const state = this.state;
 
-        const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-            i18n.changeLanguage(event.target.value as string).then(() => {
-                this.setState({language: event.target.value as string});
-            })
-        };
+
         const items = [
             {icon: EmailIcon, text: state.email},
             {icon: GroupIcon, text: state.treatmentGroup},
@@ -107,13 +109,14 @@ class User extends React.Component<Props, State> {
                                 variant="outlined"
                                 fullWidth
                                 value={state.language}
-                                onChange={handleChange}
+                                onChange={this.changeLanguage}
                             >
                                 <MenuItem value={"de"}>German</MenuItem>
                                 <MenuItem value={"en"}>English</MenuItem>
                             </TextField>
                         </ListItem>
                     </List>
+                    {process.env.REACT_APP_BUILD_SHA && <Typography>{process.env.REACT_APP_BUILD_SHA}</Typography>}
                 </Container>
             </React.Fragment>
         )

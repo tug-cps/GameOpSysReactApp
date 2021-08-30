@@ -27,11 +27,15 @@ const theme: ThemeOptions = createTheme({
         MuiFab: {
             root: {
                 position: 'fixed',
-                bottom: '70px',
-                right: '10px'
+                bottom: '10px',
+                right: '10px',
+                // When bottom bar is show, raise FAB position
+                '@media (max-width:599.95px)': {
+                    bottom: '70px'
+                }
             }
         }
-    }
+    },
 });
 
 const backendService = new BackendService(Config.backend);

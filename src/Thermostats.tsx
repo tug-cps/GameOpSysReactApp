@@ -1,85 +1,7 @@
-import React from 'react';
-import {
-    Box,
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    Container,
-    Grid,
-    GridSize,
-    IconButton,
-    Paper,
-    Tab,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Tabs, Toolbar,
-    Typography
-} from "@material-ui/core";
+import React, {useState} from 'react';
+import {Box, Button, Container, Grid, GridSize, Tab, Tabs, Toolbar} from "@material-ui/core";
 import DefaultAppBar from "./common/DefaultAppBar";
-import DeleteIcon from "@material-ui/icons/Delete"
-import EditIcon from "@material-ui/icons/Edit"
-
-interface TimeItem {
-    time: string;
-    temperature: number;
-}
-
-interface DayProps {
-    title: string;
-    items: TimeItem[];
-}
-
-interface DayState {
-}
-
-class ThermostatDaySetting extends React.Component<DayProps, DayState> {
-    render() {
-        const {title, items} = this.props;
-        return (
-            <Card variant="outlined">
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">{title}</Typography>
-                    <Paper square>
-                        <Table size="small">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Zeitraum</TableCell>
-                                    <TableCell colSpan={2}>Temperatur</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {
-                                    items.map((item) => {
-                                        return (
-                                            <TableRow>
-                                                <TableCell>{item.time}</TableCell>
-                                                <TableCell>{item.temperature} °C</TableCell>
-                                                <TableCell align="right">
-                                                    <IconButton><EditIcon/></IconButton>
-                                                    <IconButton><DeleteIcon/></IconButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    })
-                                }
-                            </TableBody>
-                        </Table>
-                    </Paper>
-
-                    <CardActions>
-                        <Button style={{flexShrink: 0}} color="primary">Zeitraum hinzufügen</Button>
-                        <Box mx="auto"/>
-                        <Button color="primary">Kopieren von ...</Button>
-                    </CardActions>
-                </CardContent>
-            </Card>
-        )
-    }
-}
+import {ThermostatDaySetting, TimeItem} from "./ThermostatDaySetting";
 
 interface Props {
 
@@ -125,72 +47,70 @@ interface TabModel {
     xl: GridSize
 }
 
-class Thermostats extends React.Component<Props, State> {
-    render() {
-        const items: TimeItem[] = [
-            {
-                time: '0:00 - 12:00',
-                temperature: 18
-            },
-            {
-                time: '12:00 - 15:00',
-                temperature: 21
-            },
-            {
-                time: '15:00 - 18:00',
-                temperature: 25
-            },
-            {
-                time: '18:00 - 24:00',
-                temperature: 21
-            },
-        ]
+function Thermostats(props: Props) {
+    const [state, setState] = useState({viewType: 0} as State);
+    const items: TimeItem[] = [
+        {
+            time: '0:00',
+            temperature: 18
+        },
+        {
+            time: '12:00',
+            temperature: 21
+        },
+        {
+            time: '15:00',
+            temperature: 25
+        },
+        {
+            time: '18:00',
+            temperature: 21
+        },
+    ]
 
-        const viewType = this.state?.viewType | 0;
+    const viewType = state.viewType | 0;
+    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+        setState({viewType: newValue})
+    };
 
-        const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-            this.setState({viewType: newValue})
-        };
+    const simpleDays = ["Werktage", "Wochenende"]
+    const days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
+    const tabs: TabModel[] = [
+        {days: simpleDays, md: 6, lg: 6, xl: 6},
+        {days: days, md: 6, lg: 4, xl: 3}
+    ]
 
-        const simpleDays = ["Werktage", "Wochenende"]
-        const days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
-        const tabs: TabModel[] = [
-            {days: simpleDays, md: 6, lg: 6, xl: 6},
-            {days: days, md: 6, lg: 4, xl: 3}
-        ]
-
-        return (
-            <React.Fragment>
-                <DefaultAppBar title='Thermostats'>
-                    <Button color="inherit">Speichern</Button>
-                </DefaultAppBar>
-                <Toolbar>
-                    <Box mx="auto"/>
-                    <Tabs value={viewType} variant="fullWidth" onChange={handleChange}>
-                        <Tab label="Einfach" {...a11yProps(0)}/>
-                        <Tab label="Erweitert" {...a11yProps(1)}/>
-                    </Tabs>
-                    <Box mx="auto"/>
-                </Toolbar>
-                <Container disableGutters maxWidth="xl">
-                    <Box p={1}>
-                        {tabs.map((tab, index) => (
-                            <TabPanel index={index} value={viewType}>
-                                <Grid container spacing={1}>
-                                    {tab.days.map((day) => (
-                                        <Grid item xs={12} md={tab.md} lg={tab.lg} xl={tab.xl}>
-                                            <ThermostatDaySetting title={day} items={items}/>
-                                        </Grid>
-                                    ))}
-                                </Grid>
-                            </TabPanel>
-                        ))}
-                    </Box>
-                </Container>
-
-            </React.Fragment>
-        )
-    }
+    return (
+        <React.Fragment>
+            <DefaultAppBar title='Thermostats'>
+                <Button color="inherit">Ausprobieren</Button>
+                <Button color="inherit">Speichern</Button>
+            </DefaultAppBar>
+            <Toolbar>
+                <Box mx="auto"/>
+                <Tabs value={viewType} variant="fullWidth" onChange={handleChange}>
+                    <Tab label="Einfach" {...a11yProps(0)}/>
+                    <Tab label="Erweitert" {...a11yProps(1)}/>
+                </Tabs>
+                <Box mx="auto"/>
+            </Toolbar>
+            <Container disableGutters maxWidth="xl">
+                <Box p={1}>
+                    {tabs.map((tab, index) => (
+                        <TabPanel index={index} value={viewType} key={index}>
+                            <Grid container spacing={1}>
+                                {tab.days.map((day) => (
+                                    <Grid item xs={12} md={tab.md} lg={tab.lg} xl={tab.xl} key={day}>
+                                        <ThermostatDaySetting title={day} items={items}/>
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </TabPanel>
+                    ))}
+                </Box>
+            </Container>
+        </React.Fragment>
+    )
 }
 
 export default Thermostats;
