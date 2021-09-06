@@ -1,11 +1,12 @@
 /*  Adapted from https://github.com/mcjohnalds/react-table-drag-select */
 
 import React from "react";
-import {Avatar, TableCell, TableRow} from "@material-ui/core";
+import {Avatar, TableCell, TableRow, Tooltip} from "@material-ui/core";
 
 export interface Row {
-    header: string
-    cellStates: boolean[]
+    header: JSX.Element;
+    headerTooltip: string;
+    cellStates: boolean[];
 }
 
 interface Props {
@@ -64,7 +65,11 @@ class BehaviorDragSelect extends React.Component<React.PropsWithChildren<Props> 
     render() {
         return this.props.rows.map((row, i) =>
             <TableRow>
-                <TableCell variant="head"><Avatar>{row.header.slice(0, 2)}</Avatar></TableCell>
+                <TableCell variant="head">
+                    <Tooltip title={row.headerTooltip}>
+                        <Avatar>{row.header}</Avatar>
+                    </Tooltip>
+                </TableCell>
                 {row.cellStates.map((selected, j) =>
                     <Cell
                         disabled={false}

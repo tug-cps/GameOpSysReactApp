@@ -14,9 +14,15 @@ export interface UserModel {
 export interface ConsumerModel {
     consumerId: string;
     owner: string;
-    name: string;
-    variableName: string;
+    name?: TranslatedString;
+    customName?: string;
+    type: string;
     active: boolean;
+}
+
+export interface TranslatedString {
+    de: string;
+    en: string;
 }
 
 export interface UserPredictionModel {

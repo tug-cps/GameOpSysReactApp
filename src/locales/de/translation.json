@@ -30,5 +30,16 @@
   "upload_instruction_download": "Bitte wählen Sie Ihren Stromnetzbetreiber um den aktuellen Verbrauch herunterzuladen",
   "upload_title_download": "1. Stromverbrauch herunterladen",
   "verify_title": "Verifizieren",
-  "verify_login": "Anmelden"
+  "verify_login": "Anmelden",
+  "consumer_name": "Verbraucherbezeichnung",
+  "description_consumer_name": "Bitte wählen Sie eine zutreffende Bezeichnung",
+  "title_create_consumer": "Energieverbraucher hinzufügen",
+  "title_edit_consumer": "Energieverbraucher verändern",
+  "unsaved_changes": "Ungespeicherte Änderungen werden verworfen, wollen Sie die Seite wirklich verlassen?",
+  "dialog_button_cancel": "Abbrechen",
+  "dialog_button_create": "Hinzufügen",
+  "confirm_dialog_title": "Löschen bestätigen",
+  "confirm_dialog_content": "Sind Sie sicher, dass Sie \"{{text}}\" löschen möchten?",
+  "dialog_button_delete": "Löschen",
+  "dialog_button_rename": "Umbenennen"
 }

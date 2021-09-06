@@ -18,8 +18,10 @@ import DefaultAppBar from "./common/DefaultAppBar";
 import {ConsumerModel} from "./service/Model";
 import AddIcon from '@material-ui/icons/Add';
 import ConsumerCard from "./ConsumerCard";
+import {WithTranslation, withTranslation} from "react-i18next";
+import {translate} from "./common/ConsumerTools";
 
-interface Props {
+interface Props extends WithTranslation {
     backendService: BackendService
 }
 
@@ -60,16 +62,14 @@ class Consumers extends React.Component<Props, State> {
         const {backendService} = this.props;
         backendService.getConsumers()
             .then((consumers) => this.setState({consumers: consumers}))
-            .catch((reason) => {
-                console.log(reason)
-            })
+            .catch(console.log)
     }
 
     handleClickOpenEdit(consumer: ConsumerModel) {
         this.setState({
             editState: {
                 consumer: consumer,
-                consumerName: consumer.name,
+                consumerName: translate(consumer.name, consumer.customName),
                 open: true
             }
         });
@@ -108,7 +108,7 @@ class Consumers extends React.Component<Props, State> {
     applyEditConsumer() {
         const {consumer, consumerName} = this.state.editState!;
         const {backendService} = this.props;
-        backendService.putConsumer({...consumer, name: consumerName})
+        backendService.putConsumer({...consumer, customName: consumerName})
             .then(() => this.refresh())
             .catch(console.log);
         this.handleClickCloseEdit();
@@ -141,18 +141,19 @@ class Consumers extends React.Component<Props, State> {
 
     render() {
         const {consumers, editState, createState, deleteState} = this.state;
+        const {t} = this.props;
         const openEdit = editState != null && editState.open;
         const openCreate = createState != null && createState.open;
         const openDelete = deleteState != null && deleteState.open;
 
         return (
             <React.Fragment>
-                <DefaultAppBar title='Consumers'/>
+                <DefaultAppBar title={t('edit_consumers')}/>
                 <Container maxWidth="sm" disableGutters>
                     <Box my={1}>
                         <Paper variant="outlined">
-                            {consumers && <List>
-                                {consumers.map((it) =>
+                            <List>
+                                {consumers && consumers.map((it) =>
                                     <ConsumerCard
                                         consumer={it}
                                         clickEdit={(c) => this.handleClickOpenEdit(c)}
@@ -160,20 +161,20 @@ class Consumers extends React.Component<Props, State> {
                                         clickDelete={(c) => this.handleClickOpenDelete(c)}
                                     />
                                 )}
-                            </List>}
+                            </List>
                         </Paper>
                     </Box>
                 </Container>
                 <Fab color="primary" aria-label="add" onClick={() => this.handleClickOpenCreate()}><AddIcon/></Fab>
 
                 <Dialog open={openEdit} onClose={() => this.handleClickCloseEdit()} aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Change consumer</DialogTitle>
+                    <DialogTitle id="form-dialog-title">{t('title_edit_consumer')}</DialogTitle>
                     <DialogContent>
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Consumer name"
+                            label={t('consumer_name')}
                             fullWidth
                             variant="filled"
                             value={editState?.consumerName}
@@ -183,22 +184,23 @@ class Consumers extends React.Component<Props, State> {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => this.handleClickCloseEdit()} color="primary">Cancel</Button>
-                        <Button onClick={() => this.applyEditConsumer()} color="primary">Rename</Button>
+                        <Button onClick={() => this.handleClickCloseEdit()}
+                                color="primary">{t('dialog_button_cancel')}</Button>
+                        <Button onClick={() => this.applyEditConsumer()}
+                                color="primary">{t('dialog_button_rename')}</Button>
                     </DialogActions>
                 </Dialog>
                 <Dialog open={openCreate} onClose={() => this.handleClickCloseCreate()}
                         aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Add consumer</DialogTitle>
+                    <DialogTitle id="form-dialog-title">{t('title_create_consumer')}</DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
-                            Please enter a meaningful name
+                        <DialogContentText>{t('description_consumer_name')}
                         </DialogContentText>
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Consumer name"
+                            label={t('consumer_name')}
                             fullWidth
                             variant="filled"
                             value={createState?.consumerName}
@@ -208,21 +210,22 @@ class Consumers extends React.Component<Props, State> {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => this.handleClickCloseCreate()} color="primary">Cancel</Button>
-                        <Button onClick={() => this.applyCreateConsumer()} color="primary">Create</Button>
+                        <Button onClick={() => this.handleClickCloseCreate()}
+                                color="primary">{t('dialog_button_cancel')}</Button>
+                        <Button onClick={() => this.applyCreateConsumer()}
+                                color="primary">{t('dialog_button_create')}</Button>
                     </DialogActions>
                 </Dialog>
                 <Dialog open={openDelete} onClose={() => this.handleClickCloseDelete()}
                         aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Confirm delete</DialogTitle>
+                    <DialogTitle id="form-dialog-title">{t('confirm_dialog_title')}</DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
-                            Are you sure you want to delete "{deleteState?.consumer.name}"?
-                        </DialogContentText>
+                        <DialogContentText>{t('confirm_dialog_content', {text: translate(deleteState?.consumer.name, deleteState?.consumer.customName)})}</DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => this.handleClickCloseDelete()} color="primary">Cancel</Button>
-                        <Button onClick={() => this.applyDelete()} color="primary">Delete</Button>
+                        <Button onClick={() => this.handleClickCloseDelete()}
+                                color="primary">{t('dialog_button_cancel')}</Button>
+                        <Button onClick={() => this.applyDelete()} color="primary">{t('dialog_button_delete')}</Button>
                     </DialogActions>
                 </Dialog>
             </React.Fragment>
@@ -230,4 +233,4 @@ class Consumers extends React.Component<Props, State> {
     }
 }
 
-export default Consumers;
+export default withTranslation()(Consumers);

@@ -1,4 +1,14 @@
-import {AppBar, Box, IconButton, Toolbar, Typography, useMediaQuery, useTheme} from "@material-ui/core";
+import {
+    AppBar,
+    Box,
+    IconButton,
+    Slide,
+    Toolbar,
+    Typography,
+    useMediaQuery,
+    useScrollTrigger,
+    useTheme
+} from "@material-ui/core";
 import {Link as RouterLink, useHistory} from "react-router-dom";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
@@ -10,7 +20,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import {useTranslation} from "react-i18next";
-import {bottomBarDestinations} from "./BottomBarDestinations";
+import {navDrawerDestinations} from "./BottomBarDestinations";
 
 const useStyles = makeStyles(theme => ({
         menuButton: {
@@ -43,7 +53,6 @@ function MenuButton(props: { hideBackButton?: boolean }) {
         setState({...state, open: open});
     };
 
-
     if (props.hideBackButton === true) {
         if (!matches) {
             return (
@@ -61,7 +70,7 @@ function MenuButton(props: { hideBackButton?: boolean }) {
                             className={classes.menu}
                         >
                             <List>
-                                {bottomBarDestinations.map((d) => (
+                                {navDrawerDestinations.map((d) => (
                                     <ListItem button key={d.label} component={RouterLink} to={d.to}>
                                         <ListItemIcon>{d.icon}</ListItemIcon>
                                         <ListItemText primary={t(d.label)}/>
@@ -99,19 +108,23 @@ function MenuButton(props: { hideBackButton?: boolean }) {
     )
 }
 
+
 function DefaultAppBar(props: React.PropsWithChildren<Props>) {
     const {title} = props;
+    const trigger = useScrollTrigger();
     return (
         <React.Fragment>
-            <AppBar position="fixed">
-                <Toolbar>
-                    <MenuButton hideBackButton={props.hideBackButton}/>
-                    <Typography color="inherit" variant="h6">{title}</Typography>
-                    <Box mx="auto"/>
-                    {props.children}
-                </Toolbar>
-                {props.multiLine}
-            </AppBar>
+            <Slide appear={false} direction="down" in={!trigger}>
+                <AppBar>
+                    <Toolbar>
+                        <MenuButton hideBackButton={props.hideBackButton}/>
+                        <Typography color="inherit" variant="h6">{title}</Typography>
+                        <Box mx="auto"/>
+                        {props.children}
+                    </Toolbar>
+                    {props.multiLine}
+                </AppBar>
+            </Slide>
             <Toolbar style={{visibility: "hidden"}}/>
         </React.Fragment>
     )

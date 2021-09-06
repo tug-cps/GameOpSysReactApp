@@ -1,9 +1,9 @@
 import {ConsumerModel} from "./service/Model";
 import {Avatar, IconButton, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText} from "@material-ui/core";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import DeleteIcon from "@material-ui/icons/Delete";
 import React from "react";
+import {iconLookup, translate} from "./common/ConsumerTools";
+import {Visibility, VisibilityOff} from "@material-ui/icons";
 
 function ConsumerCard(props: {
     consumer: ConsumerModel,
@@ -14,15 +14,15 @@ function ConsumerCard(props: {
     const {consumer} = props;
     return (
         <ListItem key={consumer.consumerId} role={undefined} button onClick={() => props.clickEdit(consumer)}>
-            <ListItemAvatar><Avatar>{consumer.name.slice(0, 2)}</Avatar></ListItemAvatar>
-            <ListItemText primary={consumer.name}/>
+            <ListItemAvatar><Avatar>{iconLookup(consumer.type)}</Avatar></ListItemAvatar>
+            <ListItemText primary={translate(consumer.name, consumer.customName)}/>
             <ListItemSecondaryAction>
-                <IconButton
+                {<IconButton
                     edge="end"
                     arial-label="show or hide"
                     onClick={() => props.clickActive(consumer)}>
-                    {consumer.active ? <VisibilityIcon/> : <VisibilityOffIcon/>}
-                </IconButton>
+                    {consumer.active ? <Visibility/> : <VisibilityOff/>}
+                </IconButton>}
                 <IconButton
                     edge="end"
                     arial-label="delete"
