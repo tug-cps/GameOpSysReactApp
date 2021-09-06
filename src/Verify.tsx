@@ -39,6 +39,7 @@ class Verify extends React.Component<Props, { email?: string, password: string }
 
     componentDidMount() {
         const {location, history} = this.props;
+        // @ts-ignore
         if (location == null || location.state == null || location.state.email == null) {
             history.push('/')
         }
@@ -47,6 +48,7 @@ class Verify extends React.Component<Props, { email?: string, password: string }
     handleSubmit(e: React.FormEvent) {
         const {password} = this.state;
         const {location, history} = this.props;
+        // @ts-ignore
         const {email} = location.state;
 
         e.preventDefault();

@@ -7,28 +7,32 @@ import {Visibility, VisibilityOff} from "@material-ui/icons";
 
 function ConsumerCard(props: {
     consumer: ConsumerModel,
-    clickEdit: (consumer: ConsumerModel) => void,
-    clickActive: (consumer: ConsumerModel) => void,
-    clickDelete: (consumer: ConsumerModel) => void
+    clickEdit?: (consumer: ConsumerModel) => void,
+    clickActive?: (consumer: ConsumerModel) => void,
+    clickDelete?: (consumer: ConsumerModel) => void
 }) {
-    const {consumer} = props;
+    const {consumer, clickEdit, clickActive, clickDelete} = props;
+    const button = !!clickEdit
     return (
-        <ListItem key={consumer.consumerId} role={undefined} button onClick={() => props.clickEdit(consumer)}>
+        <ListItem key={consumer.consumerId}
+                  role={undefined}
+                  button={button as false | undefined}
+                  onClick={() => clickEdit && clickEdit(consumer)}>
             <ListItemAvatar><Avatar>{iconLookup(consumer.type)}</Avatar></ListItemAvatar>
             <ListItemText primary={translate(consumer.name, consumer.customName)}/>
             <ListItemSecondaryAction>
-                {<IconButton
+                {clickActive && <IconButton
                     edge="end"
                     arial-label="show or hide"
-                    onClick={() => props.clickActive(consumer)}>
+                    onClick={() => clickActive(consumer)}>
                     {consumer.active ? <Visibility/> : <VisibilityOff/>}
                 </IconButton>}
-                <IconButton
+                {clickDelete && <IconButton
                     edge="end"
                     arial-label="delete"
-                    onClick={() => props.clickDelete(consumer)}>
+                    onClick={() => clickDelete(consumer)}>
                     <DeleteIcon/>
-                </IconButton>
+                </IconButton>}
             </ListItemSecondaryAction>
         </ListItem>
     )

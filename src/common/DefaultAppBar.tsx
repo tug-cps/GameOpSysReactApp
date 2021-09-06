@@ -39,7 +39,7 @@ export interface Props {
 }
 
 function MenuButton(props: { hideBackButton?: boolean }) {
-    const history = useHistory();
+    const {goBack} = useHistory();
     const classes = useStyles();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('xs'));
@@ -54,46 +54,40 @@ function MenuButton(props: { hideBackButton?: boolean }) {
     };
 
     if (props.hideBackButton === true) {
-        if (!matches) {
-            return (
-                <React.Fragment>
-                    <SwipeableDrawer
-                        anchor="left"
-                        open={state.open}
-                        onClose={toggleDrawer(false)}
-                        onOpen={toggleDrawer(true)}
-                    >
-                        <Box
-                            onClick={toggleDrawer(false)}
-                            onKeyDown={toggleDrawer(false)}
-                            role="presentation"
-                            className={classes.menu}
-                        >
-                            <List>
-                                {navDrawerDestinations.map((d) => (
-                                    <ListItem button key={d.label} component={RouterLink} to={d.to}>
-                                        <ListItemIcon>{d.icon}</ListItemIcon>
-                                        <ListItemText primary={t(d.label)}/>
-                                    </ListItem>
-                                ))}
-                            </List>
-                        </Box>
+        if (matches) return null;
+        return <React.Fragment>
+            <SwipeableDrawer
+                anchor="left"
+                open={state.open}
+                onClose={toggleDrawer(false)}
+                onOpen={toggleDrawer(true)}
+            >
+                <Box
+                    onClick={toggleDrawer(false)}
+                    onKeyDown={toggleDrawer(false)}
+                    role="presentation"
+                    className={classes.menu}
+                >
+                    <List>
+                        {navDrawerDestinations.map((d) => <ListItem button key={d.label} component={RouterLink}
+                                                                    to={d.to}>
+                            <ListItemIcon>{d.icon}</ListItemIcon>
+                            <ListItemText primary={t(d.label)}/>
+                        </ListItem>)}
+                    </List>
+                </Box>
 
-                    </SwipeableDrawer>
-                    <IconButton
-                        edge="start"
-                        className={classes.menuButton}
-                        color="inherit"
-                        aria-label="open Menu"
-                        onClick={toggleDrawer(true)}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
-                </React.Fragment>
-            )
-        } else {
-            return null;
-        }
+            </SwipeableDrawer>
+            <IconButton
+                edge="start"
+                className={classes.menuButton}
+                color="inherit"
+                aria-label="open Menu"
+                onClick={toggleDrawer(true)}
+            >
+                <MenuIcon/>
+            </IconButton>
+        </React.Fragment>
     }
     return (
         <IconButton
@@ -101,7 +95,7 @@ function MenuButton(props: { hideBackButton?: boolean }) {
             className={classes.menuButton}
             color="inherit"
             aria-label="back"
-            onClick={() => history.go(-1)}
+            onClick={goBack}
         >
             <ArrowBackIcon/>
         </IconButton>

@@ -1,19 +1,21 @@
 import {useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 import BackendService from "./service/BackendService";
+import {LinearProgress} from "@material-ui/core";
 
 
-function Logout(props: {backendService: BackendService}) {
-    const history = useHistory();
+function Logout(props: { backendService: BackendService }) {
+    const {push} = useHistory();
+    const {backendService} = props;
 
     useEffect(() => {
-        props.backendService
+        backendService
             .logout()
-            .catch((error) => console.log(error))
-            .then(() => history.push("/login"))
-    });
+            .catch(console.log)
+            .then(() => push("/login"))
+    }, [backendService, push]);
 
-    return null;
+    return <LinearProgress/>;
 }
 
 export default Logout;

@@ -29,7 +29,15 @@ const theme: ThemeOptions = createTheme({
                 position: 'fixed',
                 bottom: '10px',
                 right: '10px',
-                // When bottom bar is show, raise FAB position
+                // When bottom bar is shown, raise FAB position
+                '@media (max-width:599.95px)': {
+                    bottom: '70px'
+                }
+            }
+        },
+        MuiSnackbar: {
+            anchorOriginBottomCenter: {
+                // When bottom bar is shown, raise Snackbar position
                 '@media (max-width:599.95px)': {
                     bottom: '70px'
                 }
