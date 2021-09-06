@@ -41,5 +41,6 @@
   "confirm_dialog_title": "Löschen bestätigen",
   "confirm_dialog_content": "Sind Sie sicher, dass Sie \"{{text}}\" löschen möchten?",
   "dialog_button_delete": "Löschen",
-  "dialog_button_rename": "Umbenennen"
+  "dialog_button_rename": "Umbenennen",
+  "behavior_changes_saved": "Änderungen gespeichert"
 }

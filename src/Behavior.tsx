@@ -1,15 +1,18 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import BehaviorDragSelect, {Row} from "./BehaviorDragSelect"
 import {
+    Avatar,
     Box,
     Container,
     IconButton,
+    Snackbar,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
+    Tooltip,
     WithStyles
 } from "@material-ui/core";
 import DefaultAppBar from "./common/DefaultAppBar";
@@ -21,6 +24,7 @@ import {withStyles} from "@material-ui/core/styles";
 import {styles} from "./BehaviorStyles";
 import {SaveAlt} from "@material-ui/icons";
 import {iconLookup, translate} from "./common/ConsumerTools";
+import {Alert} from "@material-ui/lab";
 
 const formatTime = (v: number) => {
     if (v < 10) {
@@ -44,87 +48,89 @@ interface ExtendedRow extends Row {
 
 interface State {
     rows: ExtendedRow[],
-    modified: boolean
+    modified: boolean,
+    savedOpen: boolean,
 }
 
-class Behavior extends React.Component<Props, State> {
-    constructor(props: Readonly<Props> | Props) {
-        super(props);
+function Behavior(props: Props) {
+    const [state, setState] = useState<State>({rows: [], modified: false, savedOpen: false});
+    const {backendService} = props;
+    const {t, classes} = props;
 
-        this.state = {
-            rows: [],
-            modified: false
-        };
-    }
-
-    componentDidMount() {
-
-        const {backendService} = this.props;
+    useEffect(() => {
         Promise.all([backendService.getConsumers(), backendService.getPrediction(date)])
             .then(([consumers, predictions]) => {
-                const cellStates = consumers.map((c) => ({
-                    header: iconLookup(c.type),
-                    headerTooltip: translate(c.name, c.customName),
-                    consumerId: c.consumerId,
-                    cellStates: predictions.find((p) => p.consumerId === c.consumerId)?.data ?? hours.map(() => false)
-                }));
-                this.setState({rows: cellStates, modified: false})
+                const cellStates = consumers
+                    .filter((c) => c.active)
+                    .map((c) => ({
+                        header: (
+                            <Tooltip title={translate(c.name, c.customName)} enterTouchDelay={0}>
+                                <Avatar variant="rounded" className={classes.avatar}>{iconLookup(c.type)}</Avatar>
+                            </Tooltip>
+                        ),
+                        consumerId: c.consumerId,
+                        cellStates: predictions.find((p) => p.consumerId === c.consumerId)?.data ?? hours.map(() => false)
+                    }));
+                setState({rows: cellStates, modified: false, savedOpen: false})
             })
             .catch(console.log)
-    }
+    }, [backendService, classes.avatar]);
 
-    handleChange = (cells: boolean[][]) => {
-        const {rows} = this.state;
-        this.setState({
-            rows: rows.map((row, i) => ({...row, cellStates: cells[i]})),
+    const handleChange = (cells: boolean[][]) => {
+        setState({
+            ...state,
+            rows: state.rows.map((row, i) => ({...row, cellStates: cells[i]})),
             modified: true
         })
     };
 
-    handleSave = () => {
-        const {backendService} = this.props;
-        backendService.putPrediction(date, this.state.rows.map((r) => ({
+    const handleSave = () => {
+        backendService.putPrediction(date, state.rows.map((r) => ({
             consumerId: r.consumerId,
             data: r.cellStates
         }))).then(() => {
-            this.setState({modified: false})
+            setState({...state, modified: false, savedOpen: true})
         }).catch(console.log);
     }
 
-    render() {
-        const {t, classes} = this.props;
-        const {rows, modified} = this.state;
-        return (
-            <React.Fragment>
-                <Prompt when={modified} message={t('unsaved_changes')}/>
-                <DefaultAppBar hideBackButton title={t('card_behavior_title')}>
-                    <IconButton color="inherit" component={RouterLink}
-                                to={"/thermostats"}><AcUnitIcon/></IconButton>
-                    <IconButton color="inherit" onClick={this.handleSave}><SaveAlt/></IconButton>
-                </DefaultAppBar>
-                <Container maxWidth="xl" disableGutters>
-                    <Box p={1}>
-                        <TableContainer className={classes.container}>
-                            <Table stickyHeader size="small" className={classes.tableDragSelect}>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell variant="head"/>
-                                        {hours.map((value) => <TableCell>{String(value)}</TableCell>)}
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell/>
-                                        {energyAvailable.map((v) => <TableCell style={{backgroundColor: v}}/>)}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    <BehaviorDragSelect rows={rows} onChange={this.handleChange}/>
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Box>
-                </Container>
-            </React.Fragment>)
-    };
+    const handleClose = () => {
+        setState({...state, savedOpen: false});
+    }
+
+    const {rows, modified} = state;
+    return (
+        <React.Fragment>
+            <Prompt when={modified} message={t('unsaved_changes')}/>
+            <DefaultAppBar hideBackButton title={t('card_behavior_title')}>
+                <IconButton color="inherit" component={RouterLink}
+                            to={"/thermostats"}><AcUnitIcon/></IconButton>
+                <IconButton color="inherit" onClick={handleSave}><SaveAlt/></IconButton>
+            </DefaultAppBar>
+            <Container maxWidth="xl" disableGutters>
+                <Box p={1}>
+                    <TableContainer className={classes.container}>
+                        <Table stickyHeader size="small" className={classes.tableDragSelect}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell variant="head"/>
+                                    {hours.map((value) => <TableCell align="center">{String(value)}⁰⁰</TableCell>)}
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell/>
+                                    {energyAvailable.map((v) => <TableCell style={{backgroundColor: v}}/>)}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <BehaviorDragSelect rows={rows} onChange={handleChange}/>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
+            </Container>
+            <Snackbar open={state.savedOpen} autoHideDuration={3000} onClose={handleClose}>
+                <Alert variant="filled" onClose={handleClose} severity="success">{t('behavior_changes_saved')}</Alert>
+            </Snackbar>
+        </React.Fragment>)
 }
 
 export default withStyles(styles)(withTranslation()(Behavior));

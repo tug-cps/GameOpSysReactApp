@@ -73,7 +73,7 @@ class BackendService {
         return this.backend
             .put('/consumer/' + consumer.consumerId, null, this.addAuth({
                 params: {
-                    consumer_name: consumer.name,
+                    consumer_name: consumer.customName,
                     consumer_active: consumer.active
                 }
             }))

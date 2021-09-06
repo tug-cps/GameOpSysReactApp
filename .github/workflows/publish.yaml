@@ -25,7 +25,7 @@ jobs:
       - run: npm ci
       - run: npm run build:local
         env:
-          REACT_APP_BUILD_SHA: ${{ env.GITHUB_SHA }}
+          REACT_APP_BUILD_SHA: '${{ env.GITHUB_SHA }}'
       - uses: peaceiris/actions-gh-pages@v3
         name: Deploy to GitHub Pages
         with:

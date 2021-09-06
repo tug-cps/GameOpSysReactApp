@@ -1,9 +1,13 @@
 import {createStyles, Theme} from "@material-ui/core";
 
-export const styles = ({palette}: Theme) => createStyles({
+export const styles = ({spacing, palette}: Theme) => createStyles({
     container: {
         overflow: 'auto',
         maxHeight: 'calc(100vh - 140px)'
+    },
+    avatar: {
+        width: spacing(4),
+        height: spacing(4),
     },
     tableDragSelect: {
         userSelect: "none",

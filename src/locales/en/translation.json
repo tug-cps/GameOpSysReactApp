@@ -41,5 +41,6 @@
   "dialog_button_delete": "Delete",
   "dialog_button_create": "Create",
   "confirm_dialog_title": "Confirm delete",
-  "dialog_button_rename": "Rename"
+  "dialog_button_rename": "Rename",
+  "behavior_changes_saved": "Changes Saved"
 }

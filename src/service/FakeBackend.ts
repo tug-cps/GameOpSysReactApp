@@ -107,11 +107,11 @@ class FakeBackend implements Backend {
                 if (consumer_name == null) return e.error();
                 db.consumer[user].push({
                     consumerId: uuidv4(),
-                    owner: 0,
-                    name: consumer_name,
-                    variable_name: "something",
+                    owner: '0',
+                    customName: consumer_name,
+                    type: 'misc',
                     active: true
-                });
+                } as ConsumerModel);
                 saveFakeDB(db)
                 return e.ok({});
             }
@@ -137,7 +137,7 @@ class FakeBackend implements Backend {
                 const {consumer_name, consumer_active} = config.params;
                 meldArrayElement(db.consumer[user],
                     (c: ConsumerModel) => c.consumerId.toString() === id.toString(),
-                    {name: consumer_name, active: consumer_active}
+                    {customName: consumer_name, active: consumer_active}
                 )
                 saveFakeDB(db);
 

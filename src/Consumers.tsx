@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box,
     Button,
@@ -48,25 +48,19 @@ interface State {
     deleteState?: DeleteState
 }
 
-class Consumers extends React.Component<Props, State> {
-    constructor(props: Readonly<Props>) {
-        super(props);
-        this.state = {}
-    }
+function Consumers(props: Props) {
+    const [state, setState] = useState<State>({});
+    const {backendService} = props;
 
-    componentDidMount() {
-        this.refresh()
-    }
-
-    refresh() {
-        const {backendService} = this.props;
+    const refresh = () => {
         backendService.getConsumers()
-            .then((consumers) => this.setState({consumers: consumers}))
+            .then((consumers) => setState({consumers: consumers}))
             .catch(console.log)
     }
 
-    handleClickOpenEdit(consumer: ConsumerModel) {
-        this.setState({
+    const handleClickOpenEdit = (consumer: ConsumerModel) => {
+        setState({
+            ...state,
             editState: {
                 consumer: consumer,
                 consumerName: translate(consumer.name, consumer.customName),
@@ -74,26 +68,22 @@ class Consumers extends React.Component<Props, State> {
             }
         });
     }
+    const handleClickCloseEdit = () => setState({...state, editState: {...state.editState!, open: false}})
 
-    handleClickCloseEdit() {
-        this.setState({editState: {...this.state.editState!, open: false}});
-    }
-
-    handleClickOpenCreate() {
-        this.setState({
+    const handleClickOpenCreate = () => {
+        setState({
+            ...state,
             createState: {
                 consumerName: "",
                 open: true
             }
         });
     }
+    const handleClickCloseCreate = () => setState({...state, createState: {...state.createState!, open: false}})
 
-    handleClickCloseCreate() {
-        this.setState({createState: {...this.state.createState!, open: false}});
-    }
-
-    handleClickOpenDelete(consumer: ConsumerModel) {
-        this.setState({
+    const handleClickOpenDelete = (consumer: ConsumerModel) => {
+        setState({
+            ...state,
             deleteState: {
                 consumer: consumer,
                 open: true
@@ -101,136 +91,141 @@ class Consumers extends React.Component<Props, State> {
         });
     }
 
-    handleClickCloseDelete() {
-        this.setState({deleteState: {...this.state.deleteState!, open: false}});
-    }
+    const handleClickCloseDelete = () => setState({...state, deleteState: {...state.deleteState!, open: false}})
 
-    applyEditConsumer() {
-        const {consumer, consumerName} = this.state.editState!;
-        const {backendService} = this.props;
+    const applyEditConsumer = () => {
+        const {consumer, consumerName} = state.editState!;
         backendService.putConsumer({...consumer, customName: consumerName})
-            .then(() => this.refresh())
+            .then(refresh)
             .catch(console.log);
-        this.handleClickCloseEdit();
+        handleClickCloseEdit();
     }
 
-    applyCreateConsumer() {
-        const {consumerName} = this.state.createState!;
-        const {backendService} = this.props;
+    const applyCreateConsumer = () => {
+        const {consumerName} = state.createState!;
         backendService.postConsumer(consumerName)
-            .then(() => this.refresh())
+            .then(refresh)
             .catch(console.log);
-        this.handleClickCloseCreate();
+        handleClickCloseCreate();
     }
 
-    applyChangeActive(consumer: ConsumerModel) {
-        const {backendService} = this.props;
+    const applyChangeActive = (consumer: ConsumerModel) => {
         backendService.putConsumer({...consumer, active: !consumer.active})
-            .then(() => this.refresh())
+            .then(refresh)
             .catch(console.log);
     }
 
-    applyDelete() {
-        const {backendService} = this.props;
-        const {deleteState} = this.state;
+    const applyDelete = () => {
+        const {deleteState} = state;
         backendService.removeConsumer(deleteState!.consumer.consumerId)
-            .then(() => this.handleClickCloseDelete())
-            .then(() => this.refresh())
+            .then(handleClickCloseDelete)
+            .then(refresh)
             .catch(console.log)
     }
 
-    render() {
-        const {consumers, editState, createState, deleteState} = this.state;
-        const {t} = this.props;
-        const openEdit = editState != null && editState.open;
-        const openCreate = createState != null && createState.open;
-        const openDelete = deleteState != null && deleteState.open;
+    useEffect(() => {
+        backendService.getConsumers()
+            .then((consumers) => setState({consumers: consumers}))
+            .catch(console.log)
+    }, [backendService])
 
-        return (
-            <React.Fragment>
-                <DefaultAppBar title={t('edit_consumers')}/>
-                <Container maxWidth="sm" disableGutters>
-                    <Box my={1}>
-                        <Paper variant="outlined">
-                            <List>
-                                {consumers && consumers.map((it) =>
-                                    <ConsumerCard
-                                        consumer={it}
-                                        clickEdit={(c) => this.handleClickOpenEdit(c)}
-                                        clickActive={(c) => this.applyChangeActive(c)}
-                                        clickDelete={(c) => this.handleClickOpenDelete(c)}
-                                    />
-                                )}
-                            </List>
-                        </Paper>
-                    </Box>
-                </Container>
-                <Fab color="primary" aria-label="add" onClick={() => this.handleClickOpenCreate()}><AddIcon/></Fab>
+    const {consumers, editState, createState, deleteState} = state;
+    const {t} = props;
+    const openEdit = editState != null && editState.open;
+    const openCreate = createState != null && createState.open;
+    const openDelete = deleteState != null && deleteState.open;
 
-                <Dialog open={openEdit} onClose={() => this.handleClickCloseEdit()} aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">{t('title_edit_consumer')}</DialogTitle>
-                    <DialogContent>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label={t('consumer_name')}
-                            fullWidth
-                            variant="filled"
-                            value={editState?.consumerName}
-                            onChange={(e) => this.setState(
-                                {editState: {...editState!, consumerName: e.target.value}}
+    return (
+        <React.Fragment>
+            <DefaultAppBar title={t('edit_consumers')}/>
+            <Container maxWidth="sm" disableGutters>
+                <Box my={1}>
+                    <Paper variant="outlined">
+                        <List>
+                            {consumers && consumers.map((it) =>
+                                <ConsumerCard
+                                    consumer={it}
+                                    clickEdit={(c) => handleClickOpenEdit(c)}
+                                    clickActive={(c) => applyChangeActive(c)}
+                                    clickDelete={(c) => handleClickOpenDelete(c)}
+                                />
                             )}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => this.handleClickCloseEdit()}
-                                color="primary">{t('dialog_button_cancel')}</Button>
-                        <Button onClick={() => this.applyEditConsumer()}
-                                color="primary">{t('dialog_button_rename')}</Button>
-                    </DialogActions>
-                </Dialog>
-                <Dialog open={openCreate} onClose={() => this.handleClickCloseCreate()}
-                        aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">{t('title_create_consumer')}</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>{t('description_consumer_name')}
-                        </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label={t('consumer_name')}
-                            fullWidth
-                            variant="filled"
-                            value={createState?.consumerName}
-                            onChange={(e) => this.setState(
-                                {createState: {...createState!, consumerName: e.target.value}}
-                            )}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => this.handleClickCloseCreate()}
-                                color="primary">{t('dialog_button_cancel')}</Button>
-                        <Button onClick={() => this.applyCreateConsumer()}
-                                color="primary">{t('dialog_button_create')}</Button>
-                    </DialogActions>
-                </Dialog>
-                <Dialog open={openDelete} onClose={() => this.handleClickCloseDelete()}
-                        aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">{t('confirm_dialog_title')}</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>{t('confirm_dialog_content', {text: translate(deleteState?.consumer.name, deleteState?.consumer.customName)})}</DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => this.handleClickCloseDelete()}
-                                color="primary">{t('dialog_button_cancel')}</Button>
-                        <Button onClick={() => this.applyDelete()} color="primary">{t('dialog_button_delete')}</Button>
-                    </DialogActions>
-                </Dialog>
-            </React.Fragment>
-        );
-    }
+                        </List>
+                    </Paper>
+                </Box>
+            </Container>
+            <Fab color="primary" aria-label="add" onClick={() => handleClickOpenCreate()}><AddIcon/></Fab>
+
+            <Dialog open={openEdit} onClose={() => handleClickCloseEdit()} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">{t('title_edit_consumer')}</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label={t('consumer_name')}
+                        fullWidth
+                        variant="filled"
+                        value={editState?.consumerName}
+                        onChange={(e) => setState(
+                            {...state, editState: {...editState!, consumerName: e.target.value}}
+                        )}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => handleClickCloseEdit()}
+                            color="primary">{t('dialog_button_cancel')}</Button>
+                    <Button onClick={() => applyEditConsumer()}
+                            color="primary">{t('dialog_button_rename')}</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={openCreate} onClose={() => handleClickCloseCreate()}
+                    aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">{t('title_create_consumer')}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>{t('description_consumer_name')}
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label={t('consumer_name')}
+                        fullWidth
+                        variant="filled"
+                        value={createState?.consumerName}
+                        onChange={(e) => setState(
+                            {...state, createState: {...createState!, consumerName: e.target.value}}
+                        )}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => handleClickCloseCreate()}
+                            color="primary">{t('dialog_button_cancel')}</Button>
+                    <Button onClick={() => applyCreateConsumer()}
+                            color="primary">{t('dialog_button_create')}</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={openDelete} onClose={handleClickCloseDelete}
+                    aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">{t('confirm_dialog_title')}</DialogTitle>
+                <DialogContent>
+                    <Paper variant="outlined">
+                        <List>
+                            {deleteState?.consumer && <ConsumerCard consumer={deleteState?.consumer}/>}
+                        </List>
+                    </Paper>
+                </DialogContent>
+                <DialogContent>
+                    <DialogContentText>{t('confirm_dialog_content', {text: translate(deleteState?.consumer.name, deleteState?.consumer.customName)})}</DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClickCloseDelete}
+                            color="primary">{t('dialog_button_cancel')}</Button>
+                    <Button onClick={applyDelete} color="primary">{t('dialog_button_delete')}</Button>
+                </DialogActions>
+            </Dialog>
+        </React.Fragment>
+    );
 }
 
 export default withTranslation()(Consumers);
