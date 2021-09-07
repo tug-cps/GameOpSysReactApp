@@ -14,6 +14,7 @@ import Thermostats from "./Thermostats";
 import BackendService from "./service/BackendService";
 import {Box, Button, LinearProgress, Typography} from "@material-ui/core";
 import DefaultBottomNavigation from "./common/DefaultBottomNavigation";
+import Mood from "./Mood";
 
 const ReactRouter = (props: { backendService: BackendService }) => {
     const {backendService} = props;
@@ -58,6 +59,7 @@ const ReactRouter = (props: { backendService: BackendService }) => {
                 <Route path="/consumers"><Consumers backendService={backendService}/></Route>
                 <Route path="/behavior"><Behavior backendService={backendService}/></Route>
                 <Route path="/thermostats"><Thermostats/></Route>
+                <Route path="/mood"><Mood/></Route>
                 <Route exact path="/"><Home/></Route>
                 <Route exact path={`${process.env.PUBLIC_URL}`}><Home/></Route>
                 <Route>{_404("/")}</Route>
