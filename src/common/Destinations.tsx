@@ -9,6 +9,7 @@ export const bottomBarDestinations = [
     {label: 'home_link', icon: <HomeOutlinedIcon/>, to: '/'},
     {label: 'card_upload_title', icon: <CloudUploadOutlinedIcon/>, to: '/upload'},
     {label: 'card_behavior_title', icon: <EditOutlinedIcon/>, to: '/behavior'},
+    {label: 'card_thermostats_title', icon: <AcUnitIcon/>, to: '/thermostats'},
     {label: 'card_user_title', icon: <PersonOutlineIcon/>, to: '/user'},
 ]
 

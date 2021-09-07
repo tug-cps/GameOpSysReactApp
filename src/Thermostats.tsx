@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Box, Button, Container, Grid, GridSize, Tab, Tabs, Toolbar} from "@material-ui/core";
 import DefaultAppBar from "./common/DefaultAppBar";
-import {ThermostatDaySetting, TimeItem} from "./ThermostatDaySetting";
+import {ThermostatDaySetting, TimeItem} from "./thermostats/ThermostatDaySetting";
 
 interface Props {
 

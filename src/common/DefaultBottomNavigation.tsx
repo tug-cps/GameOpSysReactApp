@@ -5,7 +5,7 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {Paper, useMediaQuery, useTheme} from "@material-ui/core";
-import {bottomBarDestinations} from "./BottomBarDestinations";
+import {bottomBarDestinations} from "./Destinations";
 
 const useStyles = makeStyles({
     root: {

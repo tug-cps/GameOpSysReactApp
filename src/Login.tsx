@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Avatar,
     Box,
@@ -16,6 +16,8 @@ import {RouteComponentProps} from 'react-router-dom';
 import BackendService from "./service/BackendService";
 import {withRouter} from "react-router";
 import {withTranslation, WithTranslation} from "react-i18next";
+import {AlertSnackbar} from "./common/AlertSnackbar";
+import {useSnackBar} from "./common/UseSnackBar";
 
 const styles = ({palette, spacing}: Theme) => createStyles({
     paper: {
@@ -43,32 +45,20 @@ interface State {
     email: string;
 }
 
-class Login extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            shared_password: '',
-            email: ''
-        };
+function Login(props: Props) {
+    const [state, setState] = useState<State>({shared_password: '', email: ''});
+    const [error, setError] = useSnackBar();
+    const {classes, t, backendService, history} = props;
 
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleSubmit(e: React.FormEvent) {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        this.props.backendService
-            .requestPin(this.state.shared_password, this.state.email)
-            .then(() => {
-                this.props.history.push('/verify', {email: this.state.email})
-            })
-            .catch((error) => {
-                console.log(error.response)
-            })
+        backendService.requestPin(state.shared_password, state.email)
+            .then(() => history.push('/verify', {email: state.email}))
+            .catch(setError)
     }
 
-    render() {
-        const {classes, t} = this.props;
-        return (
+    return (
+        <React.Fragment>
             <Box display="flex" alignItems="center" height="100vh">
                 <Container maxWidth="lg">
                     <Grid container spacing={2}>
@@ -82,15 +72,15 @@ class Login extends React.Component<Props, State> {
                         <Grid item xs={12} md className={classes.paper}>
                             <Avatar className={classes.avatar}/>
                             <Typography component="h1" variant="h5">{t('login_sign_in')}</Typography>
-                            <form onSubmit={this.handleSubmit}>
+                            <form onSubmit={handleSubmit}>
                                 <TextField
                                     autoFocus
                                     id="shared_password"
                                     label={t('login_shared_password')}
                                     variant="outlined"
                                     margin="normal"
-                                    value={this.state.shared_password}
-                                    onChange={(e) => this.setState({shared_password: e.target.value})}
+                                    value={state.shared_password}
+                                    onChange={(e) => setState({...state, shared_password: e.target.value})}
                                     required
                                     fullWidth
                                 />
@@ -100,8 +90,8 @@ class Login extends React.Component<Props, State> {
                                     label={t('login_email_address')}
                                     variant="outlined"
                                     margin="normal"
-                                    value={this.state.email}
-                                    onChange={(e) => this.setState({email: e.target.value})}
+                                    value={state.email}
+                                    onChange={(e) => setState({...state, email: e.target.value})}
                                     required
                                     fullWidth
                                 />
@@ -119,8 +109,9 @@ class Login extends React.Component<Props, State> {
                     </Grid>
                 </Container>
             </Box>
-        );
-    }
+            <AlertSnackbar {...error} />
+        </React.Fragment>
+    );
 }
 
 export default withRouter(withStyles(styles)(withTranslation()(Login)));

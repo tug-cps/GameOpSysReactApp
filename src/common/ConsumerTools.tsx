@@ -22,7 +22,7 @@ export function translate(str: TranslatedString | undefined, override: string | 
     return str.en;
 }
 
-export function iconLookup(name: string): JSX.Element {
+export function iconLookup(name?: string): JSX.Element {
     switch (name) {
         case 'laundry':
             return <LocalLaundryService/>
