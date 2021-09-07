@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Button,
     Container,
@@ -8,7 +8,8 @@ import {
     ListItemText,
     MenuItem,
     SvgIcon,
-    TextField, Typography
+    TextField,
+    Typography
 } from "@material-ui/core";
 import {Link as RouterLink} from "react-router-dom";
 import DefaultAppBar from "./common/DefaultAppBar";
@@ -22,6 +23,8 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import PowerIcon from '@material-ui/icons/Power';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import LanguageIcon from '@material-ui/icons/Language';
+import {AlertSnackbar} from "./common/AlertSnackbar";
+import {useSnackBar} from "./common/UseSnackBar";
 
 interface Props extends WithTranslation {
     backendService: BackendService
@@ -38,89 +41,83 @@ interface State {
     language: string
 }
 
-class User extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            userId: '',
-            email: '',
-            type: '',
-            creationDate: '',
-            unlockDate: '',
-            treatmentGroup: '',
-            consumersCount: 0,
-            language: i18n.language
-        };
-    }
+function User(props: Props) {
+    const [state, setState] = useState<State>({
+        userId: '',
+        email: '',
+        type: '',
+        creationDate: '',
+        unlockDate: '',
+        treatmentGroup: '',
+        consumersCount: 0,
+        language: i18n.languages[0]
+    });
 
-    componentDidMount() {
-        const {backendService} = this.props;
+    const [error, setError] = useSnackBar();
+    const {backendService, t} = props;
+
+    useEffect(() => {
         backendService.getUser()
-            .then((user) => this.setState(user))
-            .catch((error) => console.log(error))
+            .then((user) => setState(prevState => ({...prevState, ...user})))
+            .catch(setError)
         backendService.getConsumers()
-            .then((consumers) => this.setState({consumersCount: consumers.length}))
-            .catch((error) => console.log(error))
-    }
+            .then((consumers) => setState(prevState => ({...prevState, consumersCount: consumers.length})))
+            .catch(setError)
+    }, [backendService, setError])
 
-    changeLanguage = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const changeLanguage = (event: React.ChangeEvent<{ value: unknown }>) => {
         i18n.changeLanguage(event.target.value as string).then(() => {
-            this.setState({language: event.target.value as string});
+            setState({...state, language: event.target.value as string});
         })
     };
 
-    render() {
-        const {t} = this.props;
-        const state = this.state;
-
-
-        const items = [
-            {icon: EmailIcon, text: state.email},
-            {icon: GroupIcon, text: state.treatmentGroup},
-            {icon: AccessTimeIcon, text: t('user_created', {text: state.creationDate})},
-            {icon: null, text: t('user_unlocked', {text: state.unlockDate})}
-        ]
-        return (
-            <React.Fragment>
-                <DefaultAppBar hideBackButton title={t('card_user_title')}>
-                    <Button color="inherit" component={RouterLink} to="/logout">{t('logout')}</Button>
-                </DefaultAppBar>
-                <Container maxWidth="sm">
-                    <List>
-                        {items.map((it) => {
-                            return (
-                                <ListItem>
-                                    <ListItemIcon>{it.icon ? <SvgIcon component={it.icon}/> : null}</ListItemIcon>
-                                    <ListItemText>{it.text}</ListItemText>
-                                </ListItem>
-                            )
-                        })}
-                        <ListItem/>
-                        <ListItem button component={RouterLink} to={"/consumers"}>
-                            <ListItemIcon><PowerIcon/></ListItemIcon>
-                            <ListItemText>{t('user_consumer', {count: state.consumersCount})}</ListItemText>
-                            <ListItemIcon><ArrowRightIcon/></ListItemIcon>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemIcon><LanguageIcon/></ListItemIcon>
-                            <TextField
-                                label="Language"
-                                select
-                                variant="outlined"
-                                fullWidth
-                                value={state.language}
-                                onChange={this.changeLanguage}
-                            >
-                                <MenuItem value={"de"}>German</MenuItem>
-                                <MenuItem value={"en"}>English</MenuItem>
-                            </TextField>
-                        </ListItem>
-                    </List>
-                    {process.env.REACT_APP_BUILD_SHA && <Typography>{process.env.REACT_APP_BUILD_SHA}</Typography>}
-                </Container>
-            </React.Fragment>
-        )
-    }
+    const items = [
+        {icon: EmailIcon, text: state.email},
+        {icon: GroupIcon, text: state.treatmentGroup},
+        {icon: AccessTimeIcon, text: t('user_created', {text: state.creationDate})},
+        {icon: null, text: t('user_unlocked', {text: state.unlockDate})}
+    ]
+    return (
+        <React.Fragment>
+            <DefaultAppBar hideBackButton title={t('card_user_title')}>
+                <Button color="inherit" component={RouterLink} to="/logout">{t('logout')}</Button>
+            </DefaultAppBar>
+            <Container maxWidth="sm">
+                <List>
+                    {items.map((it) => {
+                        return (
+                            <ListItem>
+                                <ListItemIcon>{it.icon ? <SvgIcon component={it.icon}/> : null}</ListItemIcon>
+                                <ListItemText>{it.text}</ListItemText>
+                            </ListItem>
+                        )
+                    })}
+                    <ListItem/>
+                    <ListItem button component={RouterLink} to={"/consumers"}>
+                        <ListItemIcon><PowerIcon/></ListItemIcon>
+                        <ListItemText>{t('user_consumer', {count: state.consumersCount})}</ListItemText>
+                        <ListItemIcon><ArrowRightIcon/></ListItemIcon>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemIcon><LanguageIcon/></ListItemIcon>
+                        <TextField
+                            label="Language"
+                            select
+                            variant="outlined"
+                            fullWidth
+                            value={state.language}
+                            onChange={changeLanguage}
+                        >
+                            <MenuItem value={"de"}>German</MenuItem>
+                            <MenuItem value={"en"}>English</MenuItem>
+                        </TextField>
+                    </ListItem>
+                </List>
+                {process.env.REACT_APP_BUILD_SHA && <Typography>{process.env.REACT_APP_BUILD_SHA}</Typography>}
+            </Container>
+            <AlertSnackbar {...error}/>
+        </React.Fragment>
+    )
 }
 
 export default withTranslation()(User);

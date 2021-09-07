@@ -1,7 +1,7 @@
 import {Backend} from "./Backend";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {getFakeDB, resetFakeDB, saveFakeDB} from "./FakeDB";
-import {Executor} from "./Executor";
+import {DefaultExecutor} from "./Executor";
 import {v4 as uuidv4} from 'uuid';
 import {ConsumerModel} from "./Model";
 
@@ -17,7 +17,7 @@ function findInDict(dict: any, matcher: (value: any) => boolean): any {
 class FakeBackend implements Backend {
     delete<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
         return new Promise<R>((resolve, reject) => {
-            const e = new Executor(resolve, reject);
+            const e = new DefaultExecutor(resolve, reject);
 
             console.log(`DELETE Fake backend call to ${url}`, config)
             if (config == null) return e.error();
@@ -42,7 +42,7 @@ class FakeBackend implements Backend {
 
     get<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
         return new Promise<R>((resolve, reject) => {
-            const e = new Executor(resolve, reject);
+            const e = new DefaultExecutor(resolve, reject);
 
             console.log(`GET Fake backend call to ${url}`, config)
             if (config == null) return e.error();
@@ -92,7 +92,7 @@ class FakeBackend implements Backend {
 
     post<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: AxiosRequestConfig): Promise<R> {
         return new Promise<R>((resolve, reject) => {
-            const e = new Executor(resolve, reject);
+            const e = new DefaultExecutor(resolve, reject);
 
             console.log(`POST Fake backend call to ${url}`, config)
             if (config == null) return e.error();
@@ -122,7 +122,7 @@ class FakeBackend implements Backend {
 
     put<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: AxiosRequestConfig): Promise<R> {
         return new Promise<R>((resolve, reject) => {
-            const e = new Executor(resolve, reject);
+            const e = new DefaultExecutor(resolve, reject);
             console.log(`PUT Fake backend call to ${url}`, config)
             if (config == null) return e.error();
             const db = getFakeDB();

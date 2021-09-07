@@ -1,4 +1,9 @@
-export class Executor<R> {
+export interface Executor {
+    ok(data: {}): void
+    error(): void
+}
+
+export class DefaultExecutor<R> implements Executor{
     constructor(private resolve: (value: (PromiseLike<R> | R)) => void, private reject: (reason?: any) => void) {
     }
 
@@ -26,5 +31,18 @@ export class Executor<R> {
                 request: {}
             }
         })
+    }
+}
+
+export class FaultyExecutor implements Executor {
+    constructor(private executor: Executor) {
+    }
+
+    ok(data: {}) {
+        Math.random() > 0.2 ? this.executor.ok(data) : this.error();
+    }
+
+    error() {
+        this.executor.error();
     }
 }

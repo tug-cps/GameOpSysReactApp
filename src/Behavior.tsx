@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from "react";
-import BehaviorDragSelect, {Row} from "./BehaviorDragSelect"
+import BehaviorDragSelect, {Row} from "./behavior/BehaviorDragSelect"
 import {
     Avatar,
     Box,
     Container,
     IconButton,
-    Snackbar,
     Table,
     TableBody,
     TableCell,
@@ -16,15 +15,16 @@ import {
     WithStyles
 } from "@material-ui/core";
 import DefaultAppBar from "./common/DefaultAppBar";
-import {WithTranslation, withTranslation} from "react-i18next";
+import {useTranslation} from "react-i18next";
 import {Link as RouterLink, Prompt} from 'react-router-dom';
 import AcUnitIcon from "@material-ui/icons/AcUnit";
 import BackendService from "./service/BackendService";
 import {withStyles} from "@material-ui/core/styles";
-import {styles} from "./BehaviorStyles";
+import {styles} from "./behavior/BehaviorStyles";
 import {SaveAlt} from "@material-ui/icons";
 import {iconLookup, translate} from "./common/ConsumerTools";
-import {Alert} from "@material-ui/lab";
+import {AlertSnackbar} from "./common/AlertSnackbar";
+import {useSnackBar} from "./common/UseSnackBar";
 
 const formatTime = (v: number) => {
     if (v < 10) {
@@ -38,7 +38,7 @@ const energyAvailable = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1
 
 const date = new Date().toISOString().slice(0, 10)
 
-interface Props extends WithTranslation, WithStyles<typeof styles> {
+interface Props extends WithStyles<typeof styles> {
     backendService: BackendService
 }
 
@@ -49,13 +49,15 @@ interface ExtendedRow extends Row {
 interface State {
     rows: ExtendedRow[],
     modified: boolean,
-    savedOpen: boolean,
 }
 
 function Behavior(props: Props) {
-    const [state, setState] = useState<State>({rows: [], modified: false, savedOpen: false});
+    const [state, setState] = useState<State>({rows: [], modified: false});
+    const [error, setError] = useSnackBar();
+    const [success, setSuccess] = useSnackBar();
     const {backendService} = props;
-    const {t, classes} = props;
+    const {t} = useTranslation();
+    const {classes} = props;
 
     useEffect(() => {
         Promise.all([backendService.getConsumers(), backendService.getPrediction(date)])
@@ -71,10 +73,10 @@ function Behavior(props: Props) {
                         consumerId: c.consumerId,
                         cellStates: predictions.find((p) => p.consumerId === c.consumerId)?.data ?? hours.map(() => false)
                     }));
-                setState({rows: cellStates, modified: false, savedOpen: false})
-            })
+                setState({rows: cellStates, modified: false})
+            }, setError)
             .catch(console.log)
-    }, [backendService, classes.avatar]);
+    }, [backendService, classes.avatar, setError]);
 
     const handleChange = (cells: boolean[][]) => {
         setState({
@@ -84,18 +86,18 @@ function Behavior(props: Props) {
         })
     };
 
-    const handleSave = () => {
-        backendService.putPrediction(date, state.rows.map((r) => ({
-            consumerId: r.consumerId,
-            data: r.cellStates
-        }))).then(() => {
-            setState({...state, modified: false, savedOpen: true})
-        }).catch(console.log);
-    }
-
-    const handleClose = () => {
-        setState({...state, savedOpen: false});
-    }
+    const handleSave = () =>
+        backendService.putPrediction(
+            date,
+            state.rows.map((r) => ({
+                consumerId: r.consumerId,
+                data: r.cellStates
+            })))
+            .then(() => {
+                setSuccess(t('behavior_changes_saved'));
+            })
+            .then(() => setState({...state, modified: false}), setError)
+            .catch(console.log)
 
     const {rows, modified} = state;
     return (
@@ -127,10 +129,9 @@ function Behavior(props: Props) {
                     </TableContainer>
                 </Box>
             </Container>
-            <Snackbar open={state.savedOpen} autoHideDuration={3000} onClose={handleClose}>
-                <Alert variant="filled" onClose={handleClose} severity="success">{t('behavior_changes_saved')}</Alert>
-            </Snackbar>
+            <AlertSnackbar {...success} severity="success"/>
+            <AlertSnackbar {...error} />
         </React.Fragment>)
 }
 
-export default withStyles(styles)(withTranslation()(Behavior));
+export default withStyles(styles)(Behavior);
