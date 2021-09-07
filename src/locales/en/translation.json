@@ -42,5 +42,8 @@
   "dialog_button_create": "Create",
   "confirm_dialog_title": "Confirm delete",
   "dialog_button_rename": "Rename",
-  "behavior_changes_saved": "Changes Saved"
+  "behavior_changes_saved": "Changes Saved",
+  "card_mood_title": "Mood",
+  "card_mood_subtitle": "My well-being",
+  "save": "Save"
 }

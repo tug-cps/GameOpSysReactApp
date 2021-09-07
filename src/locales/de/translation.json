@@ -42,5 +42,8 @@
   "confirm_dialog_content": "Sind Sie sicher, dass Sie \"{{text}}\" löschen möchten?",
   "dialog_button_delete": "Löschen",
   "dialog_button_rename": "Umbenennen",
-  "behavior_changes_saved": "Änderungen gespeichert"
+  "behavior_changes_saved": "Änderungen gespeichert",
+  "card_mood_title": "Stimmung",
+  "card_mood_subtitle": "Mein tägliches Wohlbefinden",
+  "save": "Speichern"
 }
