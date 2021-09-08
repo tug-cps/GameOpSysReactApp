@@ -4,8 +4,8 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {Paper, useMediaQuery, useTheme} from "@material-ui/core";
-import {bottomBarDestinations} from "./Destinations";
+import {Paper, SvgIcon, useMediaQuery, useTheme} from "@material-ui/core";
+import {useBottomBarDestinations} from "./Destinations";
 
 const useStyles = makeStyles({
     root: {
@@ -17,7 +17,6 @@ const useStyles = makeStyles({
     },
     spacer: {
         marginTop: '60px'
-
     },
 });
 
@@ -28,8 +27,9 @@ function DefaultBottomNavigation() {
     const [value, setValue] = React.useState(0);
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('xs'));
-    if (!matches) return null;
+    const destinations = useBottomBarDestinations();
 
+    if (!matches) return null;
     return (
         <React.Fragment>
             <div className={classes.spacer}/>
@@ -38,14 +38,16 @@ function DefaultBottomNavigation() {
                     value={value}
                     onChange={(event, newValue) => {
                         setValue(newValue);
-                        const destination = bottomBarDestinations[newValue];
+                        const destination = destinations[newValue];
                         if (destination != null) {
                             history.push(destination.to);
                         }
                     }}
                     showLabels
                 >
-                    {bottomBarDestinations.map((d) => <BottomNavigationAction id={d.title} label={t(d.title)} icon={d.icon}/>)}
+                    {destinations.map((d) =>
+                        <BottomNavigationAction id={d.title} label={t(d.title)} icon={<SvgIcon component={d.icon}/>}/>)
+                    }
                 </BottomNavigation>
             </Paper>
         </React.Fragment>

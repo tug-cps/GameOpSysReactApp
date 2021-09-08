@@ -15,9 +15,9 @@ import {
     WithStyles
 } from "@material-ui/core";
 import {Link as RouterLink} from "react-router-dom";
-import {useTranslation, WithTranslation, withTranslation} from "react-i18next";
+import {useTranslation} from "react-i18next";
 import DefaultAppBar from "./common/DefaultAppBar";
-import {homeDestinations} from "./common/Destinations";
+import {useHomeDestinations} from "./common/Destinations";
 
 const styles = ({palette}: Theme) => createStyles({
     media: {
@@ -67,23 +67,21 @@ const HomeCard = withStyles(styles)(
     }
 )
 
-class Home extends React.Component<WithTranslation> {
-
-    render() {
-        const {t} = this.props;
-        return (
-            <React.Fragment>
-                <DefaultAppBar hideBackButton title={t('home_title')}/>
-                <Container maxWidth="lg" disableGutters>
-                    <Box padding={1}>
-                        <Grid container>
-                            {homeDestinations.map((item: Item, index: number) => <HomeCard item={item} key={index}/>)}
-                        </Grid>
-                    </Box>
-                </Container>
-            </React.Fragment>
-        );
-    }
+function Home() {
+    const homeDestinations = useHomeDestinations();
+    const {t} = useTranslation();
+    return (
+        <React.Fragment>
+            <DefaultAppBar hideBackButton title={t('home_title')}/>
+            <Container maxWidth="lg" disableGutters>
+                <Box padding={1}>
+                    <Grid container>
+                        {homeDestinations.map((item: Item, index: number) => <HomeCard item={item} key={index}/>)}
+                    </Grid>
+                </Box>
+            </Container>
+        </React.Fragment>
+    );
 }
 
-export default withTranslation()(Home);
+export default Home;
