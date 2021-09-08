@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {
     Button,
     Container,
+    Divider,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
     MenuItem,
-    SvgIcon,
     TextField,
     Typography
 } from "@material-ui/core";
@@ -19,24 +19,19 @@ import {withTranslation, WithTranslation} from "react-i18next";
 
 import EmailIcon from '@material-ui/icons/Email';
 import GroupIcon from '@material-ui/icons/Group';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import PowerIcon from '@material-ui/icons/Power';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import LanguageIcon from '@material-ui/icons/Language';
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
+import {MyLocation} from "@material-ui/icons";
+import {UserModel} from "./service/Model";
 
 interface Props extends WithTranslation {
     backendService: BackendService
 }
 
-interface State {
-    userId: string
-    email: string
-    type: string
-    creationDate: string
-    unlockDate: string
-    treatmentGroup: string
+interface State extends UserModel {
     consumersCount: number
     language: string
 }
@@ -45,10 +40,8 @@ function User(props: Props) {
     const [state, setState] = useState<State>({
         userId: '',
         email: '',
+        location: '',
         type: '',
-        creationDate: '',
-        unlockDate: '',
-        treatmentGroup: '',
         consumersCount: 0,
         language: i18n.languages[0]
     });
@@ -57,12 +50,10 @@ function User(props: Props) {
     const {backendService, t} = props;
 
     useEffect(() => {
-        backendService.getUser()
-            .then((user) => setState(prevState => ({...prevState, ...user})))
-            .catch(setError)
-        backendService.getConsumers()
-            .then((consumers) => setState(prevState => ({...prevState, consumersCount: consumers.length})))
-            .catch(setError)
+        Promise.all([backendService.getUser(), backendService.getConsumers()])
+            .then(([user, consumers]) =>
+                setState(prevState => ({...prevState, ...user, consumersCount: consumers.length})), setError)
+            .catch(console.log)
     }, [backendService, setError])
 
     const changeLanguage = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -72,11 +63,11 @@ function User(props: Props) {
     };
 
     const items = [
-        {icon: EmailIcon, text: state.email},
-        {icon: GroupIcon, text: state.treatmentGroup},
-        {icon: AccessTimeIcon, text: t('user_created', {text: state.creationDate})},
-        {icon: null, text: t('user_unlocked', {text: state.unlockDate})}
+        {icon: <EmailIcon/>, text: state.email},
+        {icon: <MyLocation/>, text: state.location},
+        {icon: <GroupIcon/>, text: state.type},
     ]
+
     return (
         <React.Fragment>
             <DefaultAppBar hideBackButton title={t('card_user_title')}>
@@ -87,12 +78,12 @@ function User(props: Props) {
                     {items.map((it) => {
                         return (
                             <ListItem>
-                                <ListItemIcon>{it.icon ? <SvgIcon component={it.icon}/> : null}</ListItemIcon>
+                                <ListItemIcon>{it.icon}</ListItemIcon>
                                 <ListItemText>{it.text}</ListItemText>
                             </ListItem>
                         )
                     })}
-                    <ListItem/>
+                    <Divider/>
                     <ListItem button component={RouterLink} to={"/consumers"}>
                         <ListItemIcon><PowerIcon/></ListItemIcon>
                         <ListItemText>{t('user_consumer', {count: state.consumersCount})}</ListItemText>

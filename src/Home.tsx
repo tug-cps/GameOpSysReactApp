@@ -32,11 +32,10 @@ const styles = ({palette}: Theme) => createStyles({
 });
 
 interface Item {
-    title: string;
-    subtitle: string;
-    icon: any;
-    to: string;
-    header: boolean
+    title: string
+    subtitle: string
+    icon: any
+    to: string
 }
 
 interface CardProps {
@@ -49,7 +48,7 @@ const HomeCard = withStyles(styles)(
         const {t} = useTranslation()
 
         return (
-            <Grid item xs={12} sm={item.header ? 12 : 6} xl={item.header ? 12 : 4} key={item.title}>
+            <Grid item xs={12} sm={6} xl={4} key={item.title}>
                 <Card>
                     <CardActionArea component={RouterLink} to={item.to}>
                         <Box display="flex">

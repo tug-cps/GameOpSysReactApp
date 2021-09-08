@@ -69,11 +69,11 @@ function MenuButton(props: { hideBackButton?: boolean }) {
                     className={classes.menu}
                 >
                     <List>
-                        {navDrawerDestinations.map((d) => <ListItem button key={d.label} component={RouterLink}
-                                                                    to={d.to}>
-                            <ListItemIcon>{d.icon}</ListItemIcon>
-                            <ListItemText primary={t(d.label)}/>
-                        </ListItem>)}
+                        {navDrawerDestinations.map((d) =>
+                            <ListItem button key={d.title} component={RouterLink} to={d.to}>
+                                <ListItemIcon>{d.icon}</ListItemIcon>
+                                <ListItemText primary={t(d.title)}/>
+                            </ListItem>)}
                     </List>
                 </Box>
 

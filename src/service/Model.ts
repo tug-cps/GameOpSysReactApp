@@ -5,10 +5,8 @@ export interface LoginResponse {
 export interface UserModel {
     userId: string;
     email: string;
+    location: string;
     type: string;
-    creationDate: string;
-    unlockDate: string;
-    treatmentGroup: string;
 }
 
 export interface ConsumerModel {
