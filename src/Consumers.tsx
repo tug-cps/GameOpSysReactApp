@@ -3,7 +3,6 @@ import {Box, Container, Fab, List, Paper} from "@material-ui/core";
 import BackendService from "./service/BackendService";
 import DefaultAppBar from "./common/DefaultAppBar";
 import {ConsumerModel} from "./service/Model";
-import AddIcon from '@material-ui/icons/Add';
 import ConsumerCard from "./consumers/ConsumerCard";
 import {useTranslation} from "react-i18next";
 import {AlertSnackbar} from "./common/AlertSnackbar";
@@ -11,6 +10,7 @@ import {DeleteConsumerDialog, useDeleteConsumerDialog} from "./consumers/DeleteC
 import {EditConsumerDialog, useEditConsumerDialog} from "./consumers/EditConsumerDialog";
 import {CreateConsumerDialog, useCreateConsumerDialog} from "./consumers/CreateConsumerDialog";
 import {useSnackBar} from "./common/UseSnackBar";
+import {Add} from "@material-ui/icons";
 
 interface Props {
     backendService: BackendService
@@ -79,7 +79,7 @@ function Consumers(props: Props) {
                     </Paper>
                 </Box>
             </Container>
-            <Fab color="primary" aria-label="add" onClick={setCreate}><AddIcon/></Fab>
+            <Fab color="primary" aria-label="add" onClick={setCreate}><Add/></Fab>
             <AlertSnackbar {...error}/>
             <CreateConsumerDialog {...createProps} />
             <EditConsumerDialog {...editProps} />

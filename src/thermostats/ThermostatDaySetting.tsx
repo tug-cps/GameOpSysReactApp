@@ -15,9 +15,8 @@ import {
     Typography,
     useTheme
 } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
 import {Scatter} from "react-chartjs-2";
-import {Edit} from "@material-ui/icons";
+import {Delete, Edit} from "@material-ui/icons";
 
 export interface TimeItem {
     time: string;
@@ -100,7 +99,7 @@ export function ThermostatDaySetting(props: Props) {
                                     <TableCell>{item.temperature} °C</TableCell>
                                     <TableCell align="right">
                                         <IconButton size="small"><Edit/></IconButton>
-                                        <IconButton disabled={index < 1} size="small"><DeleteIcon/></IconButton>
+                                        <IconButton disabled={index < 1} size="small"><Delete/></IconButton>
                                     </TableCell>
                                 </TableRow>
                             ))}

@@ -1,4 +1,5 @@
 import {
+    AcUnit,
     Bathtub,
     Computer,
     FreeBreakfast,
@@ -6,13 +7,12 @@ import {
     Help,
     LocalLaundryService,
     Movie,
+    Power,
     Restaurant,
     Spa
 } from "@material-ui/icons";
-import AcUnitIcon from "@material-ui/icons/AcUnit";
 import {TranslatedString} from "../service/Model";
 import i18next from "i18next";
-import PowerIcon from "@material-ui/icons/Power";
 
 export function translate(str: TranslatedString | undefined, override: string | undefined): string {
     if (override && override !== '') return override;
@@ -32,9 +32,9 @@ const icons: any = {
     wellness: <Spa/>,
     homeoffice: <Computer/>,
     misc: <Help/>,
-    temperature: <AcUnitIcon/>,
+    temperature: <AcUnit/>,
     guests: <Group/>,
-    emobility: <PowerIcon />
+    emobility: <Power/>
 }
 
 export function iconLookup(name?: string): JSX.Element {

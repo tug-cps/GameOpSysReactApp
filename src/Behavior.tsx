@@ -17,21 +17,15 @@ import {
 import DefaultAppBar from "./common/DefaultAppBar";
 import {useTranslation} from "react-i18next";
 import {Link as RouterLink, Prompt} from 'react-router-dom';
-import AcUnitIcon from "@material-ui/icons/AcUnit";
 import BackendService from "./service/BackendService";
 import {withStyles} from "@material-ui/core/styles";
 import {styles} from "./behavior/BehaviorStyles";
-import {SaveAlt} from "@material-ui/icons";
+import {AcUnit, SaveAlt} from "@material-ui/icons";
 import {iconLookup, translate} from "./common/ConsumerTools";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
 
-const formatTime = (v: number) => {
-    if (v < 10) {
-        return '0' + v;
-    }
-    return '' + v;
-}
+const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
 const colors = ['lightgreen', 'yellow', 'red']
 const energyAvailable = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0].map(v => colors[v])
@@ -105,7 +99,7 @@ function Behavior(props: Props) {
             <Prompt when={modified} message={t('unsaved_changes')}/>
             <DefaultAppBar hideBackButton title={t('card_behavior_title')}>
                 <IconButton color="inherit" component={RouterLink}
-                            to={"/thermostats"}><AcUnitIcon/></IconButton>
+                            to={"/thermostats"}><AcUnit/></IconButton>
                 <IconButton color="inherit" onClick={handleSave}><SaveAlt/></IconButton>
             </DefaultAppBar>
             <Container maxWidth="xl" disableGutters>

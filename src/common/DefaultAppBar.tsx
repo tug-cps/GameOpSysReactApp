@@ -2,7 +2,9 @@ import {
     AppBar,
     Box,
     IconButton,
+    ListItemIcon,
     Slide,
+    SvgIcon,
     Toolbar,
     Typography,
     useMediaQuery,
@@ -12,15 +14,13 @@ import {
 import {Link as RouterLink, useHistory} from "react-router-dom";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import MenuIcon from '@material-ui/icons/Menu';
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import {useTranslation} from "react-i18next";
-import {navDrawerDestinations} from "./Destinations";
+import {useNavDrawerDestinations} from "./Destinations";
+import {ArrowBack, Menu} from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
         menuButton: {
@@ -45,6 +45,7 @@ function MenuButton(props: { hideBackButton?: boolean }) {
     const matches = useMediaQuery(theme.breakpoints.down('xs'));
     const [state, setState] = React.useState({open: false});
     const {t} = useTranslation();
+    const destinations = useNavDrawerDestinations();
 
     const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
         if (event && event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
@@ -69,11 +70,12 @@ function MenuButton(props: { hideBackButton?: boolean }) {
                     className={classes.menu}
                 >
                     <List>
-                        {navDrawerDestinations.map((d) =>
+                        {destinations.map((d) =>
                             <ListItem button key={d.title} component={RouterLink} to={d.to}>
-                                <ListItemIcon>{d.icon}</ListItemIcon>
+                                <ListItemIcon><SvgIcon component={d.icon}/></ListItemIcon>
                                 <ListItemText primary={t(d.title)}/>
-                            </ListItem>)}
+                            </ListItem>)
+                        }
                     </List>
                 </Box>
 
@@ -85,7 +87,7 @@ function MenuButton(props: { hideBackButton?: boolean }) {
                 aria-label="open Menu"
                 onClick={toggleDrawer(true)}
             >
-                <MenuIcon/>
+                <Menu/>
             </IconButton>
         </React.Fragment>
     }
@@ -97,7 +99,7 @@ function MenuButton(props: { hideBackButton?: boolean }) {
             aria-label="back"
             onClick={goBack}
         >
-            <ArrowBackIcon/>
+            <ArrowBack/>
         </IconButton>
     )
 }

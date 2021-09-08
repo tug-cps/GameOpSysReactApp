@@ -16,11 +16,11 @@ export function getFakeDB() {
                         location: 'greenbox COOLCITY',
                         type: 'student',
                     },
-                    "admin@test.com": {
-                        userId: 'user2',
-                        email: 'admin@test.com',
-                        location: 'location_1',
-                        type: 'admin',
+                    "faulty@test.com": {
+                        userId: 'faulty',
+                        email: 'faulty@test.com',
+                        location: 'greenbox COOLCITY',
+                        type: 'student',
                     },
                     "management@test.com": {
                         userId: 'user3',
@@ -82,9 +82,9 @@ export function getFakeDB() {
                 },
                 token: {
                     "fakeToken.thistokenisfake": "user@test.com",
-                    "fakeToken.thistokenisfake2": "admin@test.com",
                     "fakeToken.thistokenisfake3": "management@test.com",
-                    "fakeToken.thistokenisfake4": "homeowner@test.com"
+                    "fakeToken.thistokenisfake4": "homeowner@test.com",
+                    "fakeToken.thistokenisfake5": "faulty@test.com"
                 }
             }
         );

@@ -1,9 +1,8 @@
 import {ConsumerModel} from "../service/Model";
 import {Avatar, IconButton, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText} from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
 import React from "react";
 import {iconLookup, translate} from "../common/ConsumerTools";
-import {Visibility, VisibilityOff} from "@material-ui/icons";
+import {Delete, Visibility, VisibilityOff} from "@material-ui/icons";
 
 function ConsumerCard(props: {
     consumer: ConsumerModel,
@@ -31,7 +30,7 @@ function ConsumerCard(props: {
                     edge="end"
                     arial-label="delete"
                     onClick={() => clickDelete(consumer)}>
-                    <DeleteIcon/>
+                    <Delete/>
                 </IconButton>}
             </ListItemSecondaryAction>
         </ListItem>
