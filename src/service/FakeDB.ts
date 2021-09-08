@@ -4,14 +4,35 @@ export function getFakeDB() {
     let db = localStorage.getItem("fake_db");
     if (db == null) {
         db = JSON.stringify({
+                location: {
+                    "location_1": {
+                        name: "greenbox COOLCITY"
+                    }
+                },
                 user: {
                     "user@test.com": {
-                        userId: '1234',
+                        userId: 'user1',
                         email: 'user@test.com',
-                        type: 'normal',
-                        creationDate: '01-01-2020',
-                        unlockDate: '01-01-2020',
-                        treatmentGroup: 'group_1'
+                        location: 'greenbox COOLCITY',
+                        type: 'student',
+                    },
+                    "admin@test.com": {
+                        userId: 'user2',
+                        email: 'admin@test.com',
+                        location: 'location_1',
+                        type: 'admin',
+                    },
+                    "management@test.com": {
+                        userId: 'user3',
+                        email: 'management@test.com',
+                        location: 'location_1',
+                        type: 'management',
+                    },
+                    "homeowner@test.com": {
+                        userId: 'user4',
+                        email: 'homeowner@test.com',
+                        location: 'location_1',
+                        type: 'homeowner',
                     }
                 },
                 consumer: {
@@ -24,6 +45,7 @@ export function getFakeDB() {
                             {name: {'de': "Entertainment", 'en': "Entertainment"}, type: 'entertainment'},
                             {name: {'de': "Wellness", 'en': "Wellness"}, type: 'wellness'},
                             {name: {'de': "Home-Office", 'en': "Home office"}, type: 'homeoffice'},
+                            {name: {'de': "E-Mobilität", 'en': "E-Mobility"}, type: 'emobility'},
                             {name: {'de': "Sonstiges", 'en': "Miscellaneous"}, type: 'misc'},
                             {name: {'de': "Stromheizung/-kühlung", 'en': "Air conditioning"}, type: 'temperature'},
                             {name: {'de': "Gäste", 'en': "Guests"}, type: 'guests'},
@@ -59,7 +81,10 @@ export function getFakeDB() {
                             }, {})
                 },
                 token: {
-                    "fakeToken.thistokenisfake": "user@test.com"
+                    "fakeToken.thistokenisfake": "user@test.com",
+                    "fakeToken.thistokenisfake2": "admin@test.com",
+                    "fakeToken.thistokenisfake3": "management@test.com",
+                    "fakeToken.thistokenisfake4": "homeowner@test.com"
                 }
             }
         );

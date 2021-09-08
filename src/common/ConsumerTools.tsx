@@ -12,6 +12,7 @@ import {
 import AcUnitIcon from "@material-ui/icons/AcUnit";
 import {TranslatedString} from "../service/Model";
 import i18next from "i18next";
+import PowerIcon from "@material-ui/icons/Power";
 
 export function translate(str: TranslatedString | undefined, override: string | undefined): string {
     if (override && override !== '') return override;
@@ -22,29 +23,20 @@ export function translate(str: TranslatedString | undefined, override: string | 
     return str.en;
 }
 
+const icons: any = {
+    laundry: <LocalLaundryService/>,
+    cooking: <Restaurant/>,
+    dishes: <FreeBreakfast/>,
+    hygiene: <Bathtub/>,
+    entertainment: <Movie/>,
+    wellness: <Spa/>,
+    homeoffice: <Computer/>,
+    misc: <Help/>,
+    temperature: <AcUnitIcon/>,
+    guests: <Group/>,
+    emobility: <PowerIcon />
+}
+
 export function iconLookup(name?: string): JSX.Element {
-    switch (name) {
-        case 'laundry':
-            return <LocalLaundryService/>
-        case 'cooking':
-            return <Restaurant/>
-        case 'dishes':
-            return <FreeBreakfast/>
-        case 'hygiene':
-            return <Bathtub/>
-        case 'entertainment':
-            return <Movie/>
-        case 'wellness':
-            return <Spa/>
-        case 'homeoffice':
-            return <Computer/>
-        case 'misc':
-            return <Help/>
-        case 'temperature':
-            return <AcUnitIcon/>
-        case 'guests':
-            return <Group/>
-        default:
-            return <Help/>
-    }
+    return name && name in icons ? icons[name] : <Help/>
 }

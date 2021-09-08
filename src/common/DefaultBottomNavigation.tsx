@@ -45,7 +45,7 @@ function DefaultBottomNavigation() {
                     }}
                     showLabels
                 >
-                    {bottomBarDestinations.map((d) => <BottomNavigationAction label={t(d.label)} icon={d.icon}/>)}
+                    {bottomBarDestinations.map((d) => <BottomNavigationAction id={d.title} label={t(d.title)} icon={d.icon}/>)}
                 </BottomNavigation>
             </Paper>
         </React.Fragment>
