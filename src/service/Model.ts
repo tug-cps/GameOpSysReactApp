@@ -32,3 +32,9 @@ export interface ProcessedConsumptionModel {
     type: string;
     data: number[];
 }
+
+export interface MoodModel {
+    x: number,
+    y: number
+}
+

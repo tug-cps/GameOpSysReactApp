@@ -85,6 +85,9 @@ class FakeBackend implements Backend {
             } else if (url.includes('/predictions/')) {
                 const index = url.substring(url.lastIndexOf('/') + 1)
                 e.ok(db.predictions[user][index] ?? [])
+            } else if (url.includes('/mood/')) {
+                const index = url.substring(url.lastIndexOf('/') + 1)
+                e.ok(db.mood[user][index] ?? {x: 5, y: 5})
             } else {
                 e.error()
             }
@@ -148,10 +151,13 @@ class FakeBackend implements Backend {
                 return e.ok({})
             } else if (url.startsWith('/predictions')) {
                 const date = url.substring(url.lastIndexOf('/') + 1)
-                console.log('before', db)
                 db.predictions[user][date] = data['predictions'];
-                console.log('data', data)
-                console.log('after', db)
+                saveFakeDB(db);
+
+                return e.ok({})
+            } else if (url.startsWith('/mood')) {
+                const date = url.substring(url.lastIndexOf('/') + 1)
+                db.mood[user][date] = data['mood'];
                 saveFakeDB(db);
 
                 return e.ok({})

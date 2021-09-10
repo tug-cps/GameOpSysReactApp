@@ -67,7 +67,7 @@ const ReactRouter = (props: { backendService: BackendService }) => {
             archive: <Route path="/archive"><Archive backendService={backendService}/></Route>,
             consumers: <Route path="/consumers"><Consumers backendService={backendService}/></Route>,
             behavior: <Route path="/behavior"><Behavior backendService={backendService}/></Route>,
-            mood: <Route path="/mood"><Mood/></Route>,
+            mood: <Route path="/mood"><Mood backendService={backendService}/></Route>,
             thermostats: <Route path="/thermostats"><Thermostats/></Route>
         }
 
