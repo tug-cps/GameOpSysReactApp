@@ -45,5 +45,10 @@
   "behavior_changes_saved": "Änderungen gespeichert",
   "card_mood_title": "Stimmung",
   "card_mood_subtitle": "Mein tägliches Wohlbefinden",
-  "save": "Speichern"
+  "save": "Speichern",
+  "mood_please_select_mood": "Bitte wählen Sie Ihr aktuelles Wohlbefinden aus",
+  "mood_very_uncomfortable": "Sehr unangenehm",
+  "mood_very_comfortable": "Sehr angenehm",
+  "mood_very_cold": "Sehr kalt",
+  "mood_very_hot": "Sehr heiß"
 }
