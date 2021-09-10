@@ -1,45 +1,40 @@
 import React, {useEffect, useState} from 'react';
-import {Container, createStyles, Theme, WithStyles} from "@material-ui/core";
-import {withStyles} from "@material-ui/core/styles";
+import {Box, Container} from "@material-ui/core";
 import BackendService from "./service/BackendService";
 import DefaultAppBar from "./common/DefaultAppBar";
 import ArchiveEntry from "./ArchiveEntry";
+import {useTranslation} from "react-i18next";
+import {useSnackBar} from "./common/UseSnackBar";
+import {AlertSnackbar} from "./common/AlertSnackbar";
 
-const styles = ({spacing}: Theme) => createStyles({
-    root: {
-        flexGrow: 1,
-    },
-    card: {
-        marginTop: spacing(2)
-    },
-});
 
-interface Props extends WithStyles<typeof styles> {
+interface Props {
     backendService: BackendService
 }
 
 function Archive(props: Props) {
     const [dates, setDates] = useState(new Array<string>());
     const {backendService} = props;
+    const {t} = useTranslation();
+    const [error, setError] = useSnackBar();
 
     useEffect(() => {
         backendService.getPredictions()
-            .then((response) => {setDates(response);})
-            .catch((reason) => {
-                console.log(reason)
-            })
-    }, [backendService])
-    const {classes} = props;
+            .then(setDates, setError)
+            .catch(console.log)
+    }, [backendService, setError])
     return (
-        <div className={classes.root}>
-            <DefaultAppBar title='Predictions'/>
-            <Container maxWidth="md">
-                {dates.map((value) => {
-                    return (<ArchiveEntry date={value} key={value} backendService={props.backendService}/>)
-                })}
-            </Container>
-        </div>
+        <>
+            <DefaultAppBar title={t('card_archive_title')}/>
+            <Box py={1}>
+                <Container maxWidth="md">
+                    {dates.map((value) =>
+                        <ArchiveEntry date={value} key={value} backendService={props.backendService}/>)}
+                </Container>
+            </Box>
+            <AlertSnackbar {...error} />
+        </>
     )
 }
 
-export default withStyles(styles)(Archive);
+export default Archive;

@@ -45,5 +45,10 @@
   "behavior_changes_saved": "Changes Saved",
   "card_mood_title": "Mood",
   "card_mood_subtitle": "My well-being",
-  "save": "Save"
+  "save": "Save",
+  "mood_please_select_mood": "Please select your current mood",
+  "mood_very_uncomfortable": "very uncomfortable",
+  "mood_very_comfortable": "very comfortable",
+  "mood_very_cold": "very cold",
+  "mood_very_hot": "very hot"
 }

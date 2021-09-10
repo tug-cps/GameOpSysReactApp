@@ -13,6 +13,7 @@ import BackendService from "./service/BackendService";
 
 function DraggableGraph(props: { mood: { x: number, y: number }, onChange: (mood: { x: number, y: number }) => void }) {
     const theme = useTheme();
+    const {t} = useTranslation();
 
     defaults.borderColor = theme.palette.divider;
     defaults.color = theme.palette.text.primary;
@@ -46,7 +47,7 @@ function DraggableGraph(props: { mood: { x: number, y: number }, onChange: (mood
                     },
                     title: {
                         display: true,
-                        text: ['sehr unangenehm ←   --------------------------   → sehr angenehm'],
+                        text: [t('mood_very_uncomfortable') + '     ←--------------------------→     ' + t('mood_very_comfortable')],
                     },
                 },
                 x: {
@@ -59,7 +60,7 @@ function DraggableGraph(props: { mood: { x: number, y: number }, onChange: (mood
                     },
                     title: {
                         display: true,
-                        text: 'sehr kalt ←   --------------------------   → sehr heiß',
+                        text: t('mood_very_cold') + '     ←--------------------------→     ' + t('mood_very_hot'),
                     },
                 }
             },
@@ -103,18 +104,21 @@ function Mood(props: { backendService: BackendService }) {
     const {t} = useTranslation()
     const [success, setSuccess] = useSnackBar();
     const [error, setError] = useSnackBar();
-    const [mood, setMood] = useState({x: 5, y: 5});
+    const [mood, setMood] = useState<{ x: number, y: number }>();
 
     const {backendService} = props;
 
     useEffect(() => {
         backendService.getMood(date)
-            .then(setMood, setError)
+            .then(setMood, (e) => {
+                setError(e);
+                setMood({x: 5, y: 5});
+            })
             .catch(console.log);
     }, [backendService, setError])
 
     const onSaveClick = () => {
-        backendService.putMood(date, mood)
+        backendService.putMood(date, mood!)
             .then(() => setSuccess(t('behavior_changes_saved')), setError)
             .catch(console.log);
     }
@@ -128,13 +132,16 @@ function Mood(props: { backendService: BackendService }) {
         </DefaultAppBar>
         <Container maxWidth="sm">
             <Box py={3}>
-                <Typography variant="h5" align="center">Bitte wählen Sie Ihr aktuelles Wohlbefinden aus</Typography>
+                <Typography variant="h5" align="center">{t('mood_please_select_mood')}</Typography>
                 <Card>
+                    {mood &&
                     <CardContent>
                         <DraggableGraph mood={mood} onChange={setMood}/>
                     </CardContent>
+                    }
                 </Card>
             </Box>
+
         </Container>
         <AlertSnackbar {...success} severity="success"/>
         <AlertSnackbar {...error} />
