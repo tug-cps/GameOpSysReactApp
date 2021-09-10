@@ -80,6 +80,9 @@ export function getFakeDB() {
                                 return map
                             }, {})
                 },
+                mood: {
+                    "user@test.com": {}
+                },
                 token: {
                     "fakeToken.thistokenisfake": "user@test.com",
                     "fakeToken.thistokenisfake3": "management@test.com",

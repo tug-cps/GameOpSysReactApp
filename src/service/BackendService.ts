@@ -1,6 +1,13 @@
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {Backend} from "./Backend";
-import {ConsumerModel, LoginResponse, ProcessedConsumptionModel, UserModel, UserPredictionModel} from "./Model";
+import {
+    ConsumerModel,
+    LoginResponse,
+    MoodModel,
+    ProcessedConsumptionModel,
+    UserModel,
+    UserPredictionModel
+} from "./Model";
 import {BehaviorSubject, map, Observable} from "rxjs";
 
 function unpack<T>(response: AxiosResponse<T>): T {
@@ -111,6 +118,17 @@ class BackendService {
     putPrediction(date: string, predictions: UserPredictionModel[]): Promise<AxiosResponse> {
         return this.backend
             .put('/predictions/' + date, {predictions: predictions}, this.addAuth())
+    }
+
+    putMood(date: string, mood: MoodModel): Promise<AxiosResponse> {
+        return this.backend
+            .put('/mood/' + date, {mood: mood}, this.addAuth())
+    }
+
+    getMood(date: string): Promise<MoodModel> {
+        return this.backend
+            .get('/mood/' + date, this.addAuth())
+            .then(unpack)
     }
 
     postConsumption(file: File) {
