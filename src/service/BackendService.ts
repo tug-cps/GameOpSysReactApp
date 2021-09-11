@@ -138,6 +138,11 @@ class BackendService {
             .post('/consumption', formData, this.addAuth())
     }
 
+    postTracking(data: any): Promise<AxiosResponse> {
+        return this.backend
+            .post("/tracking", JSON.stringify(data), {})
+    }
+
     private addAuth(config?: AxiosRequestConfig): AxiosRequestConfig {
         return {...config, headers: {Authorization: `${this.accessToken.value}`}}
     }

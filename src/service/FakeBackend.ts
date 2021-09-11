@@ -103,6 +103,11 @@ class FakeBackend implements Backend {
             if (!config) return e.error();
             const db = getFakeDB();
 
+            if (url.endsWith('/tracking')) {
+                console.log('Tracking data:', data);
+                return e.ok({});
+            }
+
             const token = config.headers.Authorization;
             const user = db.token[token]
             if (user == null) return e.error()
