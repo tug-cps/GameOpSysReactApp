@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {createTheme, CssBaseline, LinearProgress, ThemeOptions, ThemeProvider, useMediaQuery,} from "@material-ui/core";
+import {createTheme, CssBaseline, LinearProgress, ThemeOptions, ThemeProvider,} from "@material-ui/core";
 import ReactRouter from "./Routes";
 import BackendService from "./service/BackendService";
 import Config from "./Config";
@@ -8,12 +8,18 @@ import {useTracking} from "react-tracking";
 
 const backendService = new BackendService(Config.backend);
 
+function dispatch(data: any): void {
+    backendService.postTracking(data)
+        .catch(console.log);
+}
+
 function App() {
-    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    //Disabled, not supported for now
+    //const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
     const theme: ThemeOptions = useMemo(() => createTheme({
         palette: {
-            type: prefersDarkMode ? 'dark' : 'light',
+            type: 'light',
             primary: {
                 main: lightGreen[600],
                 contrastText: '#fff'
@@ -51,9 +57,9 @@ function App() {
                 }
             }
         },
-    }), [prefersDarkMode]);
+    }), []);
 
-    const { Track } = useTracking({}, { dispatch: data => console.log("Tracking: ", data) });
+    const {Track} = useTracking({}, {dispatch: dispatch});
 
     return (
         <ThemeProvider theme={theme}>
