@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import BackendService from "./service/BackendService";
-import {UserPredictionModel} from "./service/Model";
+import BackendService from "../service/BackendService";
+import {UserPredictionModel} from "../service/Model";
 import {Card, CardActionArea, CardContent, Typography} from "@material-ui/core";
 
 function ArchiveEntry(props: { date: string, backendService: BackendService }) {

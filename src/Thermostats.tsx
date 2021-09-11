@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Box, Button, Container, Grid, GridSize, Tab, Tabs, Toolbar} from "@material-ui/core";
 import DefaultAppBar from "./common/DefaultAppBar";
 import {ThermostatDaySetting, TimeItem} from "./thermostats/ThermostatDaySetting";
+import {useTracking} from "react-tracking";
 
 interface Props {
 
@@ -48,6 +49,7 @@ interface TabModel {
 }
 
 function Thermostats(props: Props) {
+    const {Track} = useTracking({page: 'Power'}, {dispatchOnMount: true});
     const [state, setState] = useState({viewType: 0} as State);
     const items: TimeItem[] = [
         {
@@ -81,7 +83,7 @@ function Thermostats(props: Props) {
     ]
 
     return (
-        <React.Fragment>
+        <Track>
             <DefaultAppBar title='Thermostats'>
                 <Button color="inherit">Ausprobieren</Button>
                 <Button color="inherit">Speichern</Button>
@@ -109,7 +111,7 @@ function Thermostats(props: Props) {
                     ))}
                 </Box>
             </Container>
-        </React.Fragment>
+        </Track>
     )
 }
 

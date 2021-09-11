@@ -11,12 +11,14 @@ import {EditConsumerDialog, useEditConsumerDialog} from "./consumers/EditConsume
 import {CreateConsumerDialog, useCreateConsumerDialog} from "./consumers/CreateConsumerDialog";
 import {useSnackBar} from "./common/UseSnackBar";
 import {Add} from "@material-ui/icons";
+import {useTracking} from "react-tracking";
 
 interface Props {
     backendService: BackendService
 }
 
 function Consumers(props: Props) {
+    const {Track} = useTracking({page: 'Consumers'}, {dispatchOnMount: true});
     const [consumers, setConsumers] = useState<ConsumerModel[]>([]);
     const [error, setError] = useSnackBar();
     const {backendService} = props;
@@ -61,7 +63,7 @@ function Consumers(props: Props) {
 
     const {t} = useTranslation();
     return (
-        <React.Fragment>
+        <Track>
             <DefaultAppBar title={t('edit_consumers')}/>
             <Container maxWidth="sm" disableGutters>
                 <Box my={1} pb={10}>
@@ -84,7 +86,7 @@ function Consumers(props: Props) {
             <CreateConsumerDialog {...createProps} />
             <EditConsumerDialog {...editProps} />
             <DeleteConsumerDialog {...deleteProps} />
-        </React.Fragment>
+        </Track>
     );
 }
 
