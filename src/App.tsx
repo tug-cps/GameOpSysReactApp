@@ -4,6 +4,7 @@ import ReactRouter from "./Routes";
 import BackendService from "./service/BackendService";
 import Config from "./Config";
 import {lightGreen} from "@material-ui/core/colors";
+import {useTracking} from "react-tracking";
 
 const backendService = new BackendService(Config.backend);
 
@@ -52,12 +53,15 @@ function App() {
         },
     }), [prefersDarkMode]);
 
+    const { Track } = useTracking({}, { dispatch: data => console.log("Tracking: ", data) });
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
             <React.Suspense fallback={<LinearProgress/>}>
-                <ReactRouter backendService={backendService}/>
+                <Track>
+                    <ReactRouter backendService={backendService}/>
+                </Track>
             </React.Suspense>
         </ThemeProvider>
     );

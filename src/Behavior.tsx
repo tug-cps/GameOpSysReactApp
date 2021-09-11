@@ -3,8 +3,8 @@ import BehaviorDragSelect, {Row} from "./behavior/BehaviorDragSelect"
 import {
     Avatar,
     Box,
+    Button,
     Container,
-    IconButton,
     Table,
     TableBody,
     TableCell,
@@ -16,14 +16,15 @@ import {
 } from "@material-ui/core";
 import DefaultAppBar from "./common/DefaultAppBar";
 import {useTranslation} from "react-i18next";
-import {Link as RouterLink, Prompt} from 'react-router-dom';
+import {Prompt} from 'react-router-dom';
 import BackendService from "./service/BackendService";
 import {withStyles} from "@material-ui/core/styles";
 import {styles} from "./behavior/BehaviorStyles";
-import {AcUnit, SaveAlt} from "@material-ui/icons";
+import {SaveAlt} from "@material-ui/icons";
 import {iconLookup, translate} from "./common/ConsumerTools";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
+import {useTracking} from "react-tracking";
 
 const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
@@ -46,6 +47,7 @@ interface State {
 }
 
 function Behavior(props: Props) {
+    const {Track} = useTracking({page: 'Behavior'}, {dispatchOnMount: true});
     const [state, setState] = useState<State>({rows: [], modified: false});
     const [error, setError] = useSnackBar();
     const [success, setSuccess] = useSnackBar();
@@ -95,12 +97,14 @@ function Behavior(props: Props) {
 
     const {rows, modified} = state;
     return (
-        <React.Fragment>
+        <Track>
             <Prompt when={modified} message={t('unsaved_changes')}/>
             <DefaultAppBar hideBackButton title={t('card_behavior_title')}>
-                <IconButton color="inherit" component={RouterLink}
-                            to={"/thermostats"}><AcUnit/></IconButton>
-                <IconButton color="inherit" onClick={handleSave}><SaveAlt/></IconButton>
+                <Button
+                    color="inherit"
+                    onClick={handleSave}
+                    startIcon={<SaveAlt/>}
+                >{t('save')}</Button>
             </DefaultAppBar>
             <Container maxWidth="xl" disableGutters>
                 <Box p={1}>
@@ -125,7 +129,7 @@ function Behavior(props: Props) {
             </Container>
             <AlertSnackbar {...success} severity="success"/>
             <AlertSnackbar {...error} />
-        </React.Fragment>)
+        </Track>)
 }
 
 export default withStyles(styles)(Behavior);

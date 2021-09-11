@@ -18,6 +18,7 @@ import {Link as RouterLink} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import DefaultAppBar from "./common/DefaultAppBar";
 import {useHomeDestinations} from "./common/Destinations";
+import {useTracking} from "react-tracking";
 
 const styles = ({palette}: Theme) => createStyles({
     media: {
@@ -68,10 +69,11 @@ const HomeCard = withStyles(styles)(
 )
 
 function Home() {
+    const {Track} = useTracking({page: 'Home'}, {dispatchOnMount: true});
     const homeDestinations = useHomeDestinations();
     const {t} = useTranslation();
     return (
-        <React.Fragment>
+        <Track>
             <DefaultAppBar hideBackButton title={t('home_title')}/>
             <Container maxWidth="lg" disableGutters>
                 <Box padding={1}>
@@ -80,7 +82,7 @@ function Home() {
                     </Grid>
                 </Box>
             </Container>
-        </React.Fragment>
+        </Track>
     );
 }
 

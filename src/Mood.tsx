@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import DefaultAppBar from "./common/DefaultAppBar";
-import {Box, Card, CardContent, Container, IconButton, Tooltip, Typography, useTheme} from "@material-ui/core";
+import {Box, Button, Card, CardContent, Container, Typography, useTheme} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 import {SaveAlt} from "@material-ui/icons";
-import {Bubble} from "react-chartjs-2";
+import {Bubble, defaults} from "react-chartjs-2";
 import 'chartjs-plugin-dragdata';
 import {useSnackBar} from "./common/UseSnackBar";
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {defaults} from 'react-chartjs-2';
+import {useTracking} from 'react-tracking';
 import BackendService from "./service/BackendService";
-
 
 function DraggableGraph(props: { mood: { x: number, y: number }, onChange: (mood: { x: number, y: number }) => void }) {
     const theme = useTheme();
@@ -101,6 +100,7 @@ function DraggableGraph(props: { mood: { x: number, y: number }, onChange: (mood
 const date = new Date().toISOString().slice(0, 10)
 
 function Mood(props: { backendService: BackendService }) {
+    const {Track} = useTracking({page: 'MoodPage'}, {dispatchOnMount: true});
     const {t} = useTranslation()
     const [success, setSuccess] = useSnackBar();
     const [error, setError] = useSnackBar();
@@ -123,12 +123,13 @@ function Mood(props: { backendService: BackendService }) {
             .catch(console.log);
     }
 
-    return <React.Fragment>
+    return <Track>
         <DefaultAppBar title={t('card_mood_title')}>
-            <Tooltip title={t('save') as string}>
-                <IconButton color="inherit"
-                            onClick={onSaveClick}><SaveAlt/></IconButton>
-            </Tooltip>
+            <Button
+                color="inherit"
+                onClick={onSaveClick}
+                startIcon={<SaveAlt/>}
+            >{t('save')}</Button>
         </DefaultAppBar>
         <Container maxWidth="sm">
             <Box py={3}>
@@ -145,7 +146,7 @@ function Mood(props: { backendService: BackendService }) {
         </Container>
         <AlertSnackbar {...success} severity="success"/>
         <AlertSnackbar {...error} />
-    </React.Fragment>
+    </Track>
 }
 
 export default Mood;

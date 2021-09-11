@@ -15,14 +15,15 @@ import {
     Typography
 } from "@material-ui/core";
 import {Link as RouterLink} from "react-router-dom";
-import {ArrowRight, Email, Group, Language, MyLocation, Power} from "@material-ui/icons";
-import i18n from "i18next";
+import {ArrowRight, Email, ExitToApp, Group, Language, MyLocation, Power} from "@material-ui/icons";
+import i18next from "i18next";
 import {useTranslation, withTranslation, WithTranslation} from "react-i18next";
 import DefaultAppBar from "./common/DefaultAppBar";
 import BackendService from "./service/BackendService";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
 import {UserModel} from "./service/Model";
+import {useTracking} from "react-tracking";
 
 interface Props extends WithTranslation {
     backendService: BackendService
@@ -70,11 +71,12 @@ function LanguageInfo(props: { language: string, changeLanguage: (language: stri
 }
 
 function User(props: Props) {
-    const [language, setLanguage] = useState<string>(i18n.languages[0]);
+    const {Track} = useTracking({page: 'User'}, {dispatchOnMount: true});
+    const [language, setLanguage] = useState<string>(i18next.languages[0]);
     const [user, setUser] = useState<UserModel>()
     const [consumers, setConsumers] = useState<number>();
-
     const [error, setError] = useSnackBar();
+
     const {backendService, t} = props;
 
     useEffect(() => {
@@ -91,14 +93,19 @@ function User(props: Props) {
     }, [backendService, setError])
 
     const changeLanguage = (language: string) =>
-        i18n.changeLanguage(language)
+        i18next.changeLanguage(language)
             .then(() => setLanguage(language), setError)
             .catch(console.log)
 
     return (
-        <>
+        <Track>
             <DefaultAppBar hideBackButton title={t('card_user_title')}>
-                <Button color="inherit" component={RouterLink} to="/logout">{t('logout')}</Button>
+                <Button
+                    startIcon={<ExitToApp/>}
+                    color="inherit"
+                    component={RouterLink}
+                    to="/logout"
+                >{t('logout')}</Button>
             </DefaultAppBar>
             {user &&
             <Box py={1}>
@@ -117,7 +124,7 @@ function User(props: Props) {
             }
             {!user && <LinearProgress/>}
             <AlertSnackbar {...error}/>
-        </>
+        </Track>
     )
 }
 
