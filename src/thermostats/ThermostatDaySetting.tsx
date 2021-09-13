@@ -39,17 +39,17 @@ const options = {
         }
     },
     scales: {
-        xAxes: {
+        x: {
             min: 0,
             max: 24,
             ticks: {
-                callback: (value: any) => value + ':00'
+                stepSize: 2,
+                callback: (value: any) => value + '⁰⁰'
             }
         },
-        yAxes: {
-            suggestedMax: 22,
-            suggestedMin: 22,
+        y: {
             ticks: {
+                stepSize: 2,
                 callback: (value: any) => value + ' °C'
             }
         }

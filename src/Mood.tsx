@@ -10,7 +10,13 @@ import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useTracking} from 'react-tracking';
 import BackendService from "./service/BackendService";
 
-function DraggableGraph(props: { mood: { x: number, y: number }, onChange: (mood: { x: number, y: number }) => void }) {
+interface GraphProps {
+    mood: { x: number, y: number }
+    onChange: (mood: { x: number, y: number }) => void
+    displayGrid?: boolean
+}
+
+function DraggableGraph(props: GraphProps) {
     const theme = useTheme();
     const {t} = useTranslation();
 
@@ -37,29 +43,29 @@ function DraggableGraph(props: { mood: { x: number, y: number }, onChange: (mood
                     max: 10,
                     min: 0,
                     ticks: {
-                        // callback: (value: any, index: number, ticks: any) => {
-                        //     return value == 10 || value == 0 ? value : null;
-                        // }
+                        display: false,
                     },
                     grid: {
-                        display: true,
+                        display: props.displayGrid ?? false,
                     },
                     title: {
                         display: true,
-                        text: [t('mood_very_uncomfortable') + '     ←--------------------------→     ' + t('mood_very_comfortable')],
+                        text: [t('mood_very_uncomfortable') + ' ⟵      ⟶ ' + t('mood_very_comfortable')],
                     },
                 },
                 x: {
                     alignToPixels: true,
                     max: 10,
                     min: 0,
-                    ticks: {},
+                    ticks: {
+                        display: false,
+                    },
                     grid: {
-                        display: true,
+                        display: props.displayGrid ?? false,
                     },
                     title: {
                         display: true,
-                        text: t('mood_very_cold') + '     ←--------------------------→     ' + t('mood_very_hot'),
+                        text: t('mood_very_cold') + ' ⟵      ⟶ ' + t('mood_very_hot'),
                     },
                 }
             },
@@ -78,13 +84,6 @@ function DraggableGraph(props: { mood: { x: number, y: number }, onChange: (mood
                     onDragEnd: (e: any, datasetIndex: any, index: number, value: { x: number, y: number, r: number }) => {
                         e.target.style.cursor = 'default'
                         props.onChange(value);
-                    },
-                    magnet: {
-                        to: (value: { x: number, y: number, r: number }) => ({
-                            x: Math.round(value.x),
-                            y: Math.round(value.y),
-                            r: value.r
-                        })
                     },
                 },
                 legend: {

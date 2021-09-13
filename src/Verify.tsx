@@ -7,7 +7,6 @@ import {withRouter} from "react-router";
 import {withTranslation, WithTranslation} from "react-i18next";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
-import {useTracking} from "react-tracking";
 
 const styles = ({palette, spacing}: Theme) => createStyles({
     paper: {
@@ -39,14 +38,13 @@ interface State {
 }
 
 function Verify(props: Props) {
-    const {Track} = useTracking({page: 'Verify'}, {dispatchOnMount: true});
     const [state, setState] = useState<State>({password: ''})
     const [error, setError] = useSnackBar()
     const {location, history, backendService, classes, t} = props;
 
     useEffect(() => {
         // @ts-ignore
-        if (location?.state?.email == null) {
+        if (!location?.state?.email) {
             history.push('/')
         }
     }, [location, history])
@@ -63,7 +61,7 @@ function Verify(props: Props) {
     }
 
     return (
-        <Track>
+        <>
             <Container component="main" maxWidth="sm">
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}/>
@@ -88,7 +86,7 @@ function Verify(props: Props) {
                 </div>
             </Container>
             <AlertSnackbar {...error}/>
-        </Track>
+        </>
     );
 }
 
