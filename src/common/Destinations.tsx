@@ -9,7 +9,7 @@ import {
     ShowChart
 } from "@material-ui/icons";
 import {useContext} from "react";
-import {UserContext} from "../Routes";
+import {UserContext} from "../App";
 
 const destinations = {
     home: {title: 'home_link', subtitle: '', icon: HomeOutlined, to: '/'},

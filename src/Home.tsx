@@ -18,7 +18,7 @@ import {Link as RouterLink} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import DefaultAppBar from "./common/DefaultAppBar";
 import {useHomeDestinations} from "./common/Destinations";
-import {useTracking} from "react-tracking";
+import useDefaultTracking from "./common/Tracking";
 
 const styles = ({palette}: Theme) => createStyles({
     media: {
@@ -69,7 +69,7 @@ const HomeCard = withStyles(styles)(
 )
 
 function Home() {
-    const {Track} = useTracking({page: 'Home'}, {dispatchOnMount: true});
+    const {Track} = useDefaultTracking({page: 'Home'});
     const homeDestinations = useHomeDestinations();
     const {t} = useTranslation();
     return (

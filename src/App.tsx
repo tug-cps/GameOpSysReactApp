@@ -1,17 +1,14 @@
-import React, {useMemo} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {createTheme, CssBaseline, LinearProgress, ThemeOptions, ThemeProvider,} from "@material-ui/core";
 import ReactRouter from "./Routes";
 import BackendService from "./service/BackendService";
 import Config from "./Config";
 import {lightGreen} from "@material-ui/core/colors";
 import {useTracking} from "react-tracking";
+import {UserModel} from "./service/Model";
 
 const backendService = new BackendService(Config.backend);
-
-function dispatch(data: any): void {
-    backendService.postTracking(data)
-        .catch(console.log);
-}
+export const UserContext = React.createContext<UserModel | undefined>(undefined);
 
 function App() {
     //Disabled, not supported for now
@@ -58,16 +55,41 @@ function App() {
             }
         },
     }), []);
+    const [user, setUser] = useState<UserModel>();
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>();
+    const {Track} = useTracking({}, {
+        dispatch(data: any) {
+            backendService.postTracking(data)
+                .catch(console.log);
+        }
+    });
 
-    const {Track} = useTracking({}, {dispatch: dispatch});
+    useEffect(() => {
+        backendService.isLoggedIn()
+            .subscribe((value) => setIsLoggedIn(value));
+    }, []);
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            setUser(undefined);
+        } else {
+            backendService.getUser()
+                .then(setUser)
+                .catch(console.error);
+        }
+    }, [isLoggedIn])
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
             <React.Suspense fallback={<LinearProgress/>}>
-                <Track>
-                    <ReactRouter backendService={backendService}/>
-                </Track>
+                {isLoggedIn !== undefined &&
+                <UserContext.Provider value={user}>
+                    <Track>
+                        <ReactRouter backendService={backendService} isLoggedIn={isLoggedIn}/>
+                    </Track>
+                </UserContext.Provider>
+                }
             </React.Suspense>
         </ThemeProvider>
     );

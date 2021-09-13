@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Box, Button, Container, Grid, GridSize, Tab, Tabs, Toolbar} from "@material-ui/core";
 import DefaultAppBar from "./common/DefaultAppBar";
 import {ThermostatDaySetting, TimeItem} from "./thermostats/ThermostatDaySetting";
-import {useTracking} from "react-tracking";
+import useDefaultTracking from "./common/Tracking";
 
 interface Props {
 
@@ -49,7 +49,7 @@ interface TabModel {
 }
 
 function Thermostats(props: Props) {
-    const {Track} = useTracking({page: 'Power'}, {dispatchOnMount: true});
+    const {Track} = useDefaultTracking({page: 'Power'});
     const [state, setState] = useState({viewType: 0} as State);
     const items: TimeItem[] = [
         {

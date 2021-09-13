@@ -23,7 +23,7 @@ import BackendService from "./service/BackendService";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
 import {UserModel} from "./service/Model";
-import {useTracking} from "react-tracking";
+import useDefaultTracking from "./common/Tracking";
 
 interface Props extends WithTranslation {
     backendService: BackendService
@@ -71,7 +71,7 @@ function LanguageInfo(props: { language: string, changeLanguage: (language: stri
 }
 
 function User(props: Props) {
-    const {Track} = useTracking({page: 'User'}, {dispatchOnMount: true});
+    const {Track} = useDefaultTracking({page: 'User'});
     const [language, setLanguage] = useState<string>(i18next.languages[0]);
     const [user, setUser] = useState<UserModel>()
     const [consumers, setConsumers] = useState<number>();

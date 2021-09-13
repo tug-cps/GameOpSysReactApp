@@ -7,8 +7,8 @@ import {Bubble, defaults} from "react-chartjs-2";
 import 'chartjs-plugin-dragdata';
 import {useSnackBar} from "./common/UseSnackBar";
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {useTracking} from 'react-tracking';
 import BackendService from "./service/BackendService";
+import useDefaultTracking from "./common/Tracking";
 
 interface GraphProps {
     mood: { x: number, y: number }
@@ -99,7 +99,7 @@ function DraggableGraph(props: GraphProps) {
 const date = new Date().toISOString().slice(0, 10)
 
 function Mood(props: { backendService: BackendService }) {
-    const {Track} = useTracking({page: 'MoodPage'}, {dispatchOnMount: true});
+    const {Track} = useDefaultTracking({page: 'MoodPage'});
     const {t} = useTranslation()
     const [success, setSuccess] = useSnackBar();
     const [error, setError] = useSnackBar();

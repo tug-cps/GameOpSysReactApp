@@ -6,7 +6,7 @@ import ArchiveEntry from "./archive/ArchiveEntry";
 import {useTranslation} from "react-i18next";
 import {useSnackBar} from "./common/UseSnackBar";
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {useTracking} from "react-tracking";
+import useDefaultTracking from "./common/Tracking";
 
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 }
 
 function Archive(props: Props) {
-    const {Track} = useTracking({page: 'Archive'}, {dispatchOnMount: true});
+    const {Track} = useDefaultTracking({page: 'Archive'});
     const [dates, setDates] = useState(new Array<string>());
     const {backendService} = props;
     const {t} = useTranslation();
