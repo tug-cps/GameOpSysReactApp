@@ -18,7 +18,6 @@ import {withRouter} from "react-router";
 import {withTranslation, WithTranslation} from "react-i18next";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
-import {useTracking} from "react-tracking";
 
 const styles = ({palette, spacing}: Theme) => createStyles({
     paper: {
@@ -47,7 +46,6 @@ interface State {
 }
 
 function Login(props: Props) {
-    const {Track} = useTracking({page: 'Login'}, {dispatchOnMount: true});
     const [state, setState] = useState<State>({shared_password: '', email: ''});
     const [error, setError] = useSnackBar();
     const {classes, t, backendService, history} = props;
@@ -60,7 +58,7 @@ function Login(props: Props) {
     }
 
     return (
-        <Track>
+        <>
             <Box display="flex" alignItems="center" height="100vh">
                 <Container maxWidth="lg">
                     <Grid container spacing={2}>
@@ -112,7 +110,7 @@ function Login(props: Props) {
                 </Container>
             </Box>
             <AlertSnackbar {...error} />
-        </Track>
+        </>
     );
 }
 
