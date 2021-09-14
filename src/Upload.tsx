@@ -17,8 +17,8 @@ import BackendService from "./service/BackendService";
 import {useTranslation, WithTranslation, withTranslation} from "react-i18next";
 import {useSnackBar} from "./common/UseSnackBar";
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {useTracking} from "react-tracking";
 import {CloudUploadOutlined} from "@material-ui/icons";
+import useDefaultTracking from "./common/Tracking";
 
 const styles = () => createStyles({
     input: {
@@ -36,7 +36,7 @@ interface Props extends WithStyles<typeof styles>, WithTranslation {
 }
 
 function Upload(props: Props) {
-    const {Track} = useTracking({page: 'Upload'}, {dispatchOnMount: true});
+    const {Track} = useDefaultTracking({page: 'Upload'});
     const [success, setSuccess] = useSnackBar();
     const [error, setError] = useSnackBar();
     const {t} = useTranslation();

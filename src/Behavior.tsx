@@ -24,7 +24,7 @@ import {SaveAlt} from "@material-ui/icons";
 import {iconLookup, translate} from "./common/ConsumerTools";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
-import {useTracking} from "react-tracking";
+import useDefaultTracking from "./common/Tracking";
 
 const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
@@ -47,7 +47,7 @@ interface State {
 }
 
 function Behavior(props: Props) {
-    const {Track} = useTracking({page: 'Behavior'}, {dispatchOnMount: true});
+    const {Track} = useDefaultTracking({page: 'Behavior'});
     const [state, setState] = useState<State>({rows: [], modified: false});
     const [error, setError] = useSnackBar();
     const [success, setSuccess] = useSnackBar();

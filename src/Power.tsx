@@ -4,7 +4,7 @@ import {withStyles} from "@material-ui/core/styles";
 import DefaultAppBar from "./common/DefaultAppBar";
 import BackendService from "./service/BackendService";
 import {PowerEntry} from "./power/PowerEntry";
-import {useTracking} from "react-tracking";
+import useDefaultTracking from "./common/Tracking";
 
 const styles = ({spacing}: Theme) => createStyles({
     card: {
@@ -17,7 +17,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 function Power(props: Props) {
-    const {Track} = useTracking({page: 'Power'}, {dispatchOnMount: true});
+    const {Track} = useDefaultTracking({page: 'Power'});
     const [dates, setDates] = useState<string[]>();
     const {classes, backendService} = props;
 

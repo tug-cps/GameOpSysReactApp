@@ -8,37 +8,19 @@ import Power from "./Power";
 import Archive from "./Archive";
 import Consumers from "./Consumers";
 import Behavior from "./Behavior";
-import React, {useEffect, useState} from "react";
+import React, {useContext} from "react";
 import Home from "./Home";
 import Thermostats from "./Thermostats";
 import BackendService from "./service/BackendService";
-import {Box, Button, LinearProgress, Typography} from "@material-ui/core";
+import {Box, Button, Typography} from "@material-ui/core";
 import DefaultBottomNavigation from "./common/DefaultBottomNavigation";
 import Mood from "./Mood";
+import {UserContext} from "./App";
 import {UserModel} from "./service/Model";
 
-export const UserContext = React.createContext<UserModel | undefined>(undefined);
-
-const ReactRouter = (props: { backendService: BackendService }) => {
-    const {backendService} = props;
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>();
-    const [user, setUser] = useState<UserModel>();
-
-    useEffect(() => {
-        backendService.isLoggedIn().subscribe((value) => setIsLoggedIn(value));
-    }, [backendService]);
-
-    useEffect(() => {
-        if (!isLoggedIn) {
-            setUser(undefined);
-        } else {
-            backendService.getUser()
-                .then(setUser)
-                .catch(console.error);
-        }
-    }, [isLoggedIn, backendService])
-
-    if (isLoggedIn == null) return (<LinearProgress/>)
+const ReactRouter = (props: { backendService: BackendService, isLoggedIn: boolean }) => {
+    const {backendService, isLoggedIn} = props;
+    const user = useContext(UserContext);
 
     const Page404 = (props: { path: string }) => (
         <Box m={16} textAlign='center'>
@@ -102,14 +84,12 @@ const ReactRouter = (props: { backendService: BackendService }) => {
     }
 
 
-    return (
-        <UserContext.Provider value={user}>
-            {!isLoggedIn && <Redirect to="/login"/>}
-            {!isLoggedIn && <PublicPaths/>}
-            {user && <PrivatePaths user={user}/>}
-            {isLoggedIn && (<DefaultBottomNavigation/>)}
-        </UserContext.Provider>
-    )
+    return <>
+        {!isLoggedIn && <Redirect to="/login"/>}
+        {!isLoggedIn && <PublicPaths/>}
+        {user && <PrivatePaths user={user}/>}
+        {isLoggedIn && <DefaultBottomNavigation/>}
+    </>
 }
 
 export default ReactRouter;

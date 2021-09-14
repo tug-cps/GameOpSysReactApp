@@ -11,14 +11,14 @@ import {EditConsumerDialog, useEditConsumerDialog} from "./consumers/EditConsume
 import {CreateConsumerDialog, useCreateConsumerDialog} from "./consumers/CreateConsumerDialog";
 import {useSnackBar} from "./common/UseSnackBar";
 import {Add} from "@material-ui/icons";
-import {useTracking} from "react-tracking";
+import useDefaultTracking from "./common/Tracking";
 
 interface Props {
     backendService: BackendService
 }
 
 function Consumers(props: Props) {
-    const {Track} = useTracking({page: 'Consumers'}, {dispatchOnMount: true});
+    const {Track} = useDefaultTracking({page: 'Consumers'});
     const [consumers, setConsumers] = useState<ConsumerModel[]>([]);
     const [error, setError] = useSnackBar();
     const {backendService} = props;
