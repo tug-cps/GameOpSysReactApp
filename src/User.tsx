@@ -15,7 +15,7 @@ import {
     Typography
 } from "@material-ui/core";
 import {Link as RouterLink} from "react-router-dom";
-import {ArrowRight, Email, ExitToApp, Group, Language, MyLocation, Power} from "@material-ui/icons";
+import {ArrowRight, Email, ExitToApp, Language, MyLocation, Power} from "@material-ui/icons";
 import i18next from "i18next";
 import {useTranslation, withTranslation, WithTranslation} from "react-i18next";
 import DefaultAppBar from "./common/DefaultAppBar";
@@ -34,7 +34,6 @@ function UserInfo(props: { user: UserModel }) {
     const items = [
         {icon: <Email/>, text: user.email},
         {icon: <MyLocation/>, text: user.location},
-        {icon: <Group/>, text: user.type},
     ]
     return <>{items.map((it, idx) =>
         <ListItem key={'element_' + idx}>
@@ -45,7 +44,7 @@ function UserInfo(props: { user: UserModel }) {
 }
 
 function ConsumersInfo(props: { consumers?: number }) {
-    const {t} = useTranslation()
+    const {t} = useTranslation();
     return <ListItem key={'element_consumers'} button component={RouterLink} to={"/consumers"}>
         <ListItemIcon><Power/></ListItemIcon>
         <ListItemText>{t('user_consumer', {count: props.consumers})}</ListItemText>
@@ -54,18 +53,19 @@ function ConsumersInfo(props: { consumers?: number }) {
 }
 
 function LanguageInfo(props: { language: string, changeLanguage: (language: string) => void }) {
+    const {t} = useTranslation();
     return <ListItem key="element_language">
         <ListItemIcon><Language/></ListItemIcon>
         <TextField
-            label="Language"
+            label={t("language")}
             select
             variant="outlined"
             fullWidth
             value={props.language}
             onChange={(e) => props.changeLanguage(e.target.value)}
         >
-            <MenuItem value={"de"}>German</MenuItem>
-            <MenuItem value={"en"}>English</MenuItem>
+            <MenuItem value={"de"}>{t('lang_german')}</MenuItem>
+            <MenuItem value={"en"}>{t('lang_english')}</MenuItem>
         </TextField>
     </ListItem>
 }

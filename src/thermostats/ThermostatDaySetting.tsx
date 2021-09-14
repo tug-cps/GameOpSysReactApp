@@ -6,7 +6,6 @@ import {
     CardActions,
     CardContent,
     IconButton,
-    Paper,
     Table,
     TableBody,
     TableCell,
@@ -78,34 +77,32 @@ export function ThermostatDaySetting(props: Props) {
     }
 
     return (
-        <Card variant="outlined">
+        <Card>
             <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">{title}</Typography>
-                <Paper square>
-                    <Box p={1}>
-                        <Scatter data={data} options={options} height={50}/>
-                    </Box>
-                    <Table size="small">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Zeitraum</TableCell>
-                                <TableCell colSpan={2}>Temperatur</TableCell>
+                <Box p={1}>
+                    <Scatter data={data} options={options} height={50}/>
+                </Box>
+                <Table size="small">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Zeitraum</TableCell>
+                            <TableCell colSpan={2}>Temperatur</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {items.map((item, index) => (
+                            <TableRow key={item.time} hover={true}>
+                                <TableCell>{item.time}</TableCell>
+                                <TableCell>{item.temperature} °C</TableCell>
+                                <TableCell align="right">
+                                    <IconButton size="small"><Edit/></IconButton>
+                                    <IconButton disabled={index < 1} size="small"><Delete/></IconButton>
+                                </TableCell>
                             </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {items.map((item, index) => (
-                                <TableRow key={item.time} hover={true}>
-                                    <TableCell>{item.time}</TableCell>
-                                    <TableCell>{item.temperature} °C</TableCell>
-                                    <TableCell align="right">
-                                        <IconButton size="small"><Edit/></IconButton>
-                                        <IconButton disabled={index < 1} size="small"><Delete/></IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </Paper>
+                        ))}
+                    </TableBody>
+                </Table>
 
                 <CardActions>
                     <Button style={{flexShrink: 0}} color="primary">Zeitraum hinzufügen</Button>
