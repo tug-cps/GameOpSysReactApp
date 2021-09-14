@@ -3,6 +3,7 @@ import {Box, Button, Container, Grid, GridSize, Tab, Tabs, Toolbar} from "@mater
 import DefaultAppBar from "./common/DefaultAppBar";
 import {ThermostatDaySetting, TimeItem} from "./thermostats/ThermostatDaySetting";
 import useDefaultTracking from "./common/Tracking";
+import {useTranslation} from "react-i18next";
 
 interface Props {
 
@@ -10,13 +11,6 @@ interface Props {
 
 interface State {
     viewType: number;
-}
-
-function a11yProps(index: any) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
 }
 
 interface TabPanelProps {
@@ -50,6 +44,7 @@ interface TabModel {
 
 function Thermostats(props: Props) {
     const {Track} = useDefaultTracking({page: 'Power'});
+    const {t} = useTranslation();
     const [state, setState] = useState({viewType: 0} as State);
     const items: TimeItem[] = [
         {
@@ -84,15 +79,15 @@ function Thermostats(props: Props) {
 
     return (
         <Track>
-            <DefaultAppBar title='Thermostats'>
+            <DefaultAppBar hideBackButton title={t('card_thermostats_title')}>
                 <Button color="inherit">Ausprobieren</Button>
                 <Button color="inherit">Speichern</Button>
             </DefaultAppBar>
             <Toolbar>
                 <Box mx="auto"/>
                 <Tabs value={viewType} variant="fullWidth" onChange={handleChange}>
-                    <Tab label="Einfach" {...a11yProps(0)}/>
-                    <Tab label="Erweitert" {...a11yProps(1)}/>
+                    <Tab label="Einfach" id="simple-tab-0" aria-controls="simple-tabpanel-0"/>
+                    <Tab label="Erweitert" id="simple-tab-1" aria-controls="simple-tabpanel-1"/>
                 </Tabs>
                 <Box mx="auto"/>
             </Toolbar>

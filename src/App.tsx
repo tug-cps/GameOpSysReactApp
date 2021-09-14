@@ -30,7 +30,8 @@ function App() {
                 spacing: 1
             },
             MuiCard: {
-                variant: "outlined"
+                variant: "outlined",
+                square: true,
             },
         },
         overrides: {
