@@ -20,7 +20,7 @@ import BackendService from "./service/BackendService";
 import {withStyles} from "@material-ui/core/styles";
 import {styles} from "./behavior/BehaviorStyles";
 import {InfoOutlined, SaveAlt} from "@material-ui/icons";
-import {iconLookup, translate} from "./common/ConsumerTools";
+import {backgroundColor, iconLookup, translate} from "./common/ConsumerTools";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
 import useDefaultTracking from "./common/Tracking";
@@ -65,7 +65,13 @@ function Behavior(props: Props) {
                     .map((c) => ({
                         header: (
                             <Tooltip title={translate(c.name, c.customName)} enterTouchDelay={0}>
-                                <Avatar variant="rounded" className={classes.avatar}>{iconLookup(c.type)}</Avatar>
+                                <Avatar
+                                    variant="rounded"
+                                    style={{backgroundColor: backgroundColor(c.consumerId)}}
+                                    className={classes.avatar}
+                                >
+                                    {iconLookup(c.type)}
+                                </Avatar>
                             </Tooltip>
                         ),
                         consumerId: c.consumerId,
