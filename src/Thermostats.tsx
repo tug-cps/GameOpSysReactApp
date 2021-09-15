@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
-import {Box, Button, Container, Grid, GridSize, Tab, Tabs, Toolbar} from "@material-ui/core";
+import {Box, Container, Grid, GridSize, Tab, Tabs, Toolbar} from "@material-ui/core";
 import DefaultAppBar from "./common/DefaultAppBar";
 import {ThermostatDaySetting, TimeItem} from "./thermostats/ThermostatDaySetting";
 import useDefaultTracking from "./common/Tracking";
 import {useTranslation} from "react-i18next";
+import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
+import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
+import {InfoOutlined, Replay, SaveAlt} from "@material-ui/icons";
 
 interface Props {
 
@@ -46,6 +49,7 @@ function Thermostats(props: Props) {
     const {Track} = useDefaultTracking({page: 'Power'});
     const {t} = useTranslation();
     const [state, setState] = useState({viewType: 0} as State);
+    const [infoProps, openInfo] = useInfoDialog();
     const items: TimeItem[] = [
         {
             time: '0:00',
@@ -80,8 +84,9 @@ function Thermostats(props: Props) {
     return (
         <Track>
             <DefaultAppBar hideBackButton title={t('card_thermostats_title')}>
-                <Button color="inherit">Ausprobieren</Button>
-                <Button color="inherit">Speichern</Button>
+                <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
+                <ResponsiveIconButton description={t('try')} icon={<Replay/>}/>
+                <ResponsiveIconButton description={t('save')} icon={<SaveAlt/>}/>
             </DefaultAppBar>
             <Toolbar>
                 <Box mx="auto"/>
@@ -106,6 +111,7 @@ function Thermostats(props: Props) {
                     ))}
                 </Box>
             </Container>
+            <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
         </Track>
     )
 }

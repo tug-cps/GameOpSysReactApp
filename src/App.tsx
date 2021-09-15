@@ -26,6 +26,9 @@ function App() {
             },
         },
         props: {
+            MuiUseMediaQuery: {
+              noSsr: true,
+            },
             MuiGrid: {
                 spacing: 1
             },

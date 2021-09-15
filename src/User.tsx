@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
     Box,
-    Button,
     Container,
     Divider,
     LinearProgress,
@@ -14,8 +13,8 @@ import {
     TextField,
     Typography
 } from "@material-ui/core";
-import {Link as RouterLink} from "react-router-dom";
-import {ArrowRight, Email, ExitToApp, Language, MyLocation, Power} from "@material-ui/icons";
+import {Link as RouterLink, useHistory} from "react-router-dom";
+import {ArrowRight, Email, ExitToApp, InfoOutlined, Language, MyLocation, Power} from "@material-ui/icons";
 import i18next from "i18next";
 import {useTranslation, withTranslation, WithTranslation} from "react-i18next";
 import DefaultAppBar from "./common/DefaultAppBar";
@@ -24,6 +23,8 @@ import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
 import {UserModel} from "./service/Model";
 import useDefaultTracking from "./common/Tracking";
+import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
+import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 
 interface Props extends WithTranslation {
     backendService: BackendService
@@ -72,10 +73,12 @@ function LanguageInfo(props: { language: string, changeLanguage: (language: stri
 
 function User(props: Props) {
     const {Track} = useDefaultTracking({page: 'User'});
+    const [infoProps, openInfo] = useInfoDialog();
     const [language, setLanguage] = useState<string>(i18next.languages[0]);
     const [user, setUser] = useState<UserModel>()
     const [consumers, setConsumers] = useState<number>();
     const [error, setError] = useSnackBar();
+    const history = useHistory();
 
     const {backendService, t} = props;
 
@@ -100,12 +103,12 @@ function User(props: Props) {
     return (
         <Track>
             <DefaultAppBar hideBackButton title={t('card_user_title')}>
-                <Button
-                    startIcon={<ExitToApp/>}
-                    color="inherit"
-                    component={RouterLink}
-                    to="/logout"
-                >{t('logout')}</Button>
+                <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
+                <ResponsiveIconButton
+                    icon={<ExitToApp/>}
+                    onClick={() => history.push('/logout')}
+                    description={t('logout')}
+                />
             </DefaultAppBar>
             {user &&
             <Box py={1}>
@@ -123,6 +126,7 @@ function User(props: Props) {
             </Box>
             }
             {!user && <LinearProgress/>}
+            <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps}/>
             <AlertSnackbar {...error}/>
         </Track>
     )

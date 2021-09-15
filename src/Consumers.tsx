@@ -10,8 +10,10 @@ import {DeleteConsumerDialog, useDeleteConsumerDialog} from "./consumers/DeleteC
 import {EditConsumerDialog, useEditConsumerDialog} from "./consumers/EditConsumerDialog";
 import {CreateConsumerDialog, useCreateConsumerDialog} from "./consumers/CreateConsumerDialog";
 import {useSnackBar} from "./common/UseSnackBar";
-import {Add} from "@material-ui/icons";
+import {Add, InfoOutlined} from "@material-ui/icons";
 import useDefaultTracking from "./common/Tracking";
+import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
+import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 
 interface Props {
     backendService: BackendService
@@ -21,6 +23,7 @@ function Consumers(props: Props) {
     const {Track} = useDefaultTracking({page: 'Consumers'});
     const [consumers, setConsumers] = useState<ConsumerModel[]>([]);
     const [error, setError] = useSnackBar();
+    const [infoProps, openInfo] = useInfoDialog();
     const {backendService} = props;
 
     useEffect(() => {
@@ -64,7 +67,9 @@ function Consumers(props: Props) {
     const {t} = useTranslation();
     return (
         <Track>
-            <DefaultAppBar title={t('edit_consumers')}/>
+            <DefaultAppBar title={t('edit_consumers')}>
+                <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
+            </DefaultAppBar>
             <Container maxWidth="sm" disableGutters>
                 <Box my={1} pb={10}>
                     <Paper variant="outlined">
@@ -86,6 +91,7 @@ function Consumers(props: Props) {
             <CreateConsumerDialog {...createProps} />
             <EditConsumerDialog {...editProps} />
             <DeleteConsumerDialog {...deleteProps} />
+            <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps}/>
         </Track>
     );
 }

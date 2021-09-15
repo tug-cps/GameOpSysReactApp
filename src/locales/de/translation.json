@@ -18,7 +18,7 @@
   "user_consumer_plural": "{{count}} Elektrogeräte nach Kategorien",
   "user_created": "Erstellt am {{text}}",
   "user_unlocked": "Freigeschalten am {{text}}",
-  "edit_consumers": "Elektrogerät bearbeiten",
+  "edit_consumers": "Elektrogeräte bearbeiten",
   "login_welcome": "Willkommen bei ANSERS, bitte melden Sie sich an...",
   "login_sign_in": "Anmelden",
   "login_shared_password": "Geteiltes Passwort",
@@ -51,5 +51,6 @@
   "mood_very_comfortable": "Sehr angenehm",
   "mood_very_cold": "Sehr kalt",
   "mood_very_hot": "Sehr heiß",
-  "language": "Sprache"
+  "language": "Sprache",
+  "info": "Info"
 }
