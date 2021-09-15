@@ -8,8 +8,8 @@
   "card_behavior_subtitle": "Vorhersage des Stromverbrauchs",
   "card_power_title": "Energieverbrauch",
   "card_power_subtitle": "Meine Genauigkeit",
-  "card_archive_title": "Archiv",
-  "card_archive_subtitle": "Vergangene Vorhersagen",
+  "card_archive_title": "Ältere Vorhersagen",
+  "card_archive_subtitle": "Vergangene Vorhersagen bearbeiten",
   "card_user_title": "Benutzer",
   "card_user_subtitle": "Bearbeite meine Daten",
   "card_thermostats_title": "Heizung",
@@ -52,5 +52,7 @@
   "mood_very_cold": "Sehr kalt",
   "mood_very_hot": "Sehr heiß",
   "language": "Sprache",
-  "info": "Info"
+  "info": "Info",
+  "hide_consumer": "Gerät verstecken",
+  "show_consumer": "Gerät anzeigen"
 }
