@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import DefaultAppBar from "./common/DefaultAppBar";
-import {Box, Button, Card, CardContent, Container, Typography, useTheme} from "@material-ui/core";
+import {Box, Card, CardContent, Container, Typography, useTheme} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
-import {SaveAlt} from "@material-ui/icons";
+import {InfoOutlined, SaveAlt} from "@material-ui/icons";
 import {Bubble, defaults} from "react-chartjs-2";
 import 'chartjs-plugin-dragdata';
 import {useSnackBar} from "./common/UseSnackBar";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import BackendService from "./service/BackendService";
 import useDefaultTracking from "./common/Tracking";
+import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
+import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 
 interface GraphProps {
     mood: { x: number, y: number }
@@ -101,6 +103,7 @@ const date = new Date().toISOString().slice(0, 10)
 function Mood(props: { backendService: BackendService }) {
     const {Track} = useDefaultTracking({page: 'MoodPage'});
     const {t} = useTranslation()
+    const [infoProps, openInfo] = useInfoDialog();
     const [success, setSuccess] = useSnackBar();
     const [error, setError] = useSnackBar();
     const [mood, setMood] = useState<{ x: number, y: number }>();
@@ -124,11 +127,8 @@ function Mood(props: { backendService: BackendService }) {
 
     return <Track>
         <DefaultAppBar title={t('card_mood_title')}>
-            <Button
-                color="inherit"
-                onClick={onSaveClick}
-                startIcon={<SaveAlt/>}
-            >{t('save')}</Button>
+            <ResponsiveIconButton icon={<InfoOutlined/>} onClick={openInfo} description={t('info')}/>
+            <ResponsiveIconButton icon={<SaveAlt/>} onClick={onSaveClick} description={t('save')}/>
         </DefaultAppBar>
         <Container maxWidth="sm">
             <Box py={3}>
@@ -141,8 +141,8 @@ function Mood(props: { backendService: BackendService }) {
                     }
                 </Card>
             </Box>
-
         </Container>
+        <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
         <AlertSnackbar {...success} severity="success"/>
         <AlertSnackbar {...error} />
     </Track>

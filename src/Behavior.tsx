@@ -3,7 +3,6 @@ import BehaviorDragSelect, {Row} from "./behavior/BehaviorDragSelect"
 import {
     Avatar,
     Box,
-    Button,
     Container,
     Table,
     TableBody,
@@ -20,11 +19,13 @@ import {Prompt} from 'react-router-dom';
 import BackendService from "./service/BackendService";
 import {withStyles} from "@material-ui/core/styles";
 import {styles} from "./behavior/BehaviorStyles";
-import {SaveAlt} from "@material-ui/icons";
+import {InfoOutlined, SaveAlt} from "@material-ui/icons";
 import {iconLookup, translate} from "./common/ConsumerTools";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
 import useDefaultTracking from "./common/Tracking";
+import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
+import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 
 const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
@@ -53,6 +54,7 @@ function Behavior(props: Props) {
     const [success, setSuccess] = useSnackBar();
     const {backendService} = props;
     const {t} = useTranslation();
+    const [infoProps, openInfo] = useInfoDialog();
     const {classes} = props;
 
     useEffect(() => {
@@ -100,11 +102,8 @@ function Behavior(props: Props) {
         <Track>
             <Prompt when={modified} message={t('unsaved_changes')}/>
             <DefaultAppBar hideBackButton title={t('card_behavior_title')}>
-                <Button
-                    color="inherit"
-                    onClick={handleSave}
-                    startIcon={<SaveAlt/>}
-                >{t('save')}</Button>
+                <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
+                <ResponsiveIconButton description={t('save')} icon={<SaveAlt/>} onClick={handleSave}/>
             </DefaultAppBar>
             <Container maxWidth="xl" disableGutters>
                 <Box p={1}>
@@ -127,6 +126,7 @@ function Behavior(props: Props) {
                     </TableContainer>
                 </Box>
             </Container>
+            <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps}/>
             <AlertSnackbar {...success} severity="success"/>
             <AlertSnackbar {...error} />
         </Track>)
