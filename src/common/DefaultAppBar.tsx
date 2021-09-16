@@ -1,33 +1,54 @@
 import {
     AppBar,
-    Box,
+    Box, Divider,
+    Drawer,
+    Hidden,
     IconButton,
     ListItemIcon,
     Slide,
     SvgIcon,
     Toolbar,
     Typography,
-    useMediaQuery,
-    useScrollTrigger,
-    useTheme
+    useScrollTrigger
 } from "@material-ui/core";
 import {Link as RouterLink, useHistory} from "react-router-dom";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {useTranslation} from "react-i18next";
 import {useNavDrawerDestinations} from "./Destinations";
-import {ArrowBack, Menu} from "@material-ui/icons";
+import {ArrowBack} from "@material-ui/icons";
+
+const drawerWidth = 250;
 
 const useStyles = makeStyles(theme => ({
         menuButton: {
             marginRight: theme.spacing(2),
         },
         menu: {
-            width: 250
+            width: drawerWidth,
+        },
+        toolbar: theme.mixins.toolbar,
+        root: {
+            display: "flex",
+        },
+        content: {
+            paddingTop: theme.spacing(1),
+            flexGrow: 1
+        },
+        drawer: {
+            [theme.breakpoints.up('sm')]: {
+                flexShrink: 0,
+                width: 250,
+            }
+        },
+        appBar: {
+            [theme.breakpoints.up('sm')]: {
+                marginLeft: drawerWidth,
+                width: `calc(100% - ${drawerWidth}px)`,
+            }
         }
     })
 );
@@ -38,82 +59,63 @@ export interface Props {
     multiLine?: React.ReactNode;
 }
 
-function MenuButton(props: { hideBackButton?: boolean }) {
-    const {goBack} = useHistory();
+function MenuButton() {
     const classes = useStyles();
-    const theme = useTheme();
-    const matches = useMediaQuery(theme.breakpoints.down('xs'));
-    const [state, setState] = React.useState({open: false});
     const {t} = useTranslation();
     const destinations = useNavDrawerDestinations();
 
-    const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-        if (event && event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
-            return;
-        }
-        setState({...state, open: open});
-    };
-
-    if (props.hideBackButton === true) {
-        if (matches) return null;
-        return <React.Fragment>
-            <SwipeableDrawer
-                anchor="left"
-                open={state.open}
-                onClose={toggleDrawer(false)}
-                onOpen={toggleDrawer(true)}
-            >
-                <Box
-                    onClick={toggleDrawer(false)}
-                    onKeyDown={toggleDrawer(false)}
-                    role="presentation"
-                    className={classes.menu}
-                >
-                    <List>
-                        {destinations.map((d) =>
-                            <ListItem button key={d.title} component={RouterLink} to={d.to}>
-                                <ListItemIcon><SvgIcon component={d.icon}/></ListItemIcon>
-                                <ListItemText primary={t(d.title)}/>
-                            </ListItem>)
-                        }
-                    </List>
-                </Box>
-
-            </SwipeableDrawer>
-            <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="open Menu"
-                onClick={toggleDrawer(true)}
-            >
-                <Menu/>
-            </IconButton>
-        </React.Fragment>
-    }
     return (
-        <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="back"
-            onClick={goBack}
-        >
-            <ArrowBack/>
-        </IconButton>
+        <Drawer open variant="persistent">
+            <Box role="presentation" className={classes.menu}>
+                <AppBarSpace/>
+                <Divider/>
+                <List>
+                    {destinations.map((d) =>
+                        <ListItem button key={d.title} component={RouterLink} to={d.to}>
+                            <ListItemIcon><SvgIcon component={d.icon}/></ListItemIcon>
+                            <ListItemText primary={t(d.title)}/>
+                        </ListItem>)
+                    }
+                </List>
+            </Box>
+        </Drawer>
     )
 }
 
+export function Content(props: React.PropsWithChildren<{}>) {
+    const classes = useStyles();
+    return <div className={classes.content}>
+        <AppBarSpace/>
+        {props.children}
+    </div>
+}
 
-function DefaultAppBar(props: React.PropsWithChildren<Props>) {
+export function Root(props: React.PropsWithChildren<{}>) {
+    const classes = useStyles();
+    return <div className={classes.root}>{props.children}</div>
+}
+
+export function AppBarSpace() {
+    const classes = useStyles();
+    return <div className={classes.toolbar}/>
+}
+
+
+function DefaultAppBar(props: React.PropsWithChildren<Props> & { hideBackButton?: boolean }) {
     const {title} = props;
     const trigger = useScrollTrigger();
+    const classes = useStyles();
+    const history = useHistory();
     return (
-        <React.Fragment>
+        <>
             <Slide appear={false} direction="down" in={!trigger}>
-                <AppBar>
-                    <Toolbar>
-                        <MenuButton hideBackButton={props.hideBackButton}/>
+                <AppBar className={classes.appBar}>
+                    <Toolbar className={classes.toolbar}>
+                        {!props.hideBackButton &&
+                        <IconButton color="inherit" className={classes.menuButton} onClick={history.goBack}>
+                            <ArrowBack/>
+                        </IconButton>
+                        }
                         <Typography color="inherit" variant="h6">{title}</Typography>
                         <Box mx="auto"/>
                         {props.children}
@@ -121,8 +123,12 @@ function DefaultAppBar(props: React.PropsWithChildren<Props>) {
                     {props.multiLine}
                 </AppBar>
             </Slide>
-            <Toolbar style={{visibility: "hidden"}}/>
-        </React.Fragment>
+            <nav className={classes.drawer}>
+                <Hidden xsDown>
+                    <MenuButton/>
+                </Hidden>
+            </nav>
+        </>
     )
 }
 

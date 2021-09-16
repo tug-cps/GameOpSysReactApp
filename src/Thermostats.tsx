@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Box, Container, Grid, GridSize, Tab, Tabs, Toolbar} from "@material-ui/core";
-import DefaultAppBar from "./common/DefaultAppBar";
+import DefaultAppBar, {Content, Root} from "./common/DefaultAppBar";
 import {ThermostatDaySetting, TimeItem} from "./thermostats/ThermostatDaySetting";
 import useDefaultTracking from "./common/Tracking";
 import {useTranslation} from "react-i18next";
@@ -83,34 +83,38 @@ function Thermostats(props: Props) {
 
     return (
         <Track>
-            <DefaultAppBar hideBackButton title={t('card_thermostats_title')}>
-                <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
-                <ResponsiveIconButton description={t('try')} icon={<Replay/>}/>
-                <ResponsiveIconButton description={t('save')} icon={<SaveAlt/>}/>
-            </DefaultAppBar>
-            <Toolbar>
-                <Box mx="auto"/>
-                <Tabs value={viewType} variant="fullWidth" onChange={handleChange}>
-                    <Tab label="Einfach" id="simple-tab-0" aria-controls="simple-tabpanel-0"/>
-                    <Tab label="Erweitert" id="simple-tab-1" aria-controls="simple-tabpanel-1"/>
-                </Tabs>
-                <Box mx="auto"/>
-            </Toolbar>
-            <Container disableGutters maxWidth="xl">
-                <Box p={1}>
-                    {tabs.map((tab, index) => (
-                        <TabPanel index={index} value={viewType} key={index}>
-                            <Grid container spacing={1}>
-                                {tab.days.map((day) => (
-                                    <Grid item xs={12} md={tab.md} lg={tab.lg} xl={tab.xl} key={day}>
-                                        <ThermostatDaySetting title={day} items={items}/>
+            <Root>
+                <DefaultAppBar hideBackButton title={t('card_thermostats_title')}>
+                    <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
+                    <ResponsiveIconButton description={t('try')} icon={<Replay/>}/>
+                    <ResponsiveIconButton description={t('save')} icon={<SaveAlt/>}/>
+                </DefaultAppBar>
+                <Content>
+                    <Toolbar>
+                        <Box mx="auto"/>
+                        <Tabs value={viewType} variant="fullWidth" onChange={handleChange}>
+                            <Tab label="Einfach" id="simple-tab-0" aria-controls="simple-tabpanel-0"/>
+                            <Tab label="Erweitert" id="simple-tab-1" aria-controls="simple-tabpanel-1"/>
+                        </Tabs>
+                        <Box mx="auto"/>
+                    </Toolbar>
+                    <Container disableGutters maxWidth="xl">
+                        <Box p={1}>
+                            {tabs.map((tab, index) => (
+                                <TabPanel index={index} value={viewType} key={index}>
+                                    <Grid container spacing={1}>
+                                        {tab.days.map((day) => (
+                                            <Grid item xs={12} md={tab.md} lg={tab.lg} xl={tab.xl} key={day}>
+                                                <ThermostatDaySetting title={day} items={items}/>
+                                            </Grid>
+                                        ))}
                                     </Grid>
-                                ))}
-                            </Grid>
-                        </TabPanel>
-                    ))}
-                </Box>
-            </Container>
+                                </TabPanel>
+                            ))}
+                        </Box>
+                    </Container>
+                </Content>
+            </Root>
             <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
         </Track>
     )

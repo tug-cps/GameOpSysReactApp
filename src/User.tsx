@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Box,
     Container,
     Divider,
     LinearProgress,
@@ -17,7 +16,7 @@ import {Link as RouterLink, useHistory} from "react-router-dom";
 import {ArrowRight, Email, ExitToApp, InfoOutlined, Language, MyLocation, Power} from "@material-ui/icons";
 import i18next from "i18next";
 import {useTranslation, withTranslation, WithTranslation} from "react-i18next";
-import DefaultAppBar from "./common/DefaultAppBar";
+import DefaultAppBar, {Content, Root} from "./common/DefaultAppBar";
 import BackendService from "./service/BackendService";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
@@ -102,29 +101,31 @@ function User(props: Props) {
 
     return (
         <Track>
-            <DefaultAppBar hideBackButton title={t('card_user_title')}>
-                <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
-                <ResponsiveIconButton
-                    icon={<ExitToApp/>}
-                    onClick={() => history.push('/logout')}
-                    description={t('logout')}
-                />
-            </DefaultAppBar>
-            {user &&
-            <Box py={1}>
-                <Container maxWidth="sm" disableGutters>
-                    <Paper variant="outlined">
-                        <List>
-                            <UserInfo user={user}/>
-                            <Divider variant="inset" component="li"/>
-                            {user.type !== "management" && <ConsumersInfo consumers={consumers}/>}
-                            <LanguageInfo language={language} changeLanguage={changeLanguage}/>
-                        </List>
-                    </Paper>
-                    {process.env.REACT_APP_BUILD_SHA && <Typography>{process.env.REACT_APP_BUILD_SHA}</Typography>}
-                </Container>
-            </Box>
-            }
+            <Root>
+                <DefaultAppBar hideBackButton title={t('card_user_title')}>
+                    <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
+                    <ResponsiveIconButton
+                        icon={<ExitToApp/>}
+                        onClick={() => history.push('/logout')}
+                        description={t('logout')}
+                    />
+                </DefaultAppBar>
+                {user &&
+                <Content>
+                    <Container maxWidth="sm" disableGutters>
+                        <Paper variant="outlined">
+                            <List>
+                                <UserInfo user={user}/>
+                                <Divider variant="inset" component="li"/>
+                                {user.type !== "management" && <ConsumersInfo consumers={consumers}/>}
+                                <LanguageInfo language={language} changeLanguage={changeLanguage}/>
+                            </List>
+                        </Paper>
+                        {process.env.REACT_APP_BUILD_SHA && <Typography>{process.env.REACT_APP_BUILD_SHA}</Typography>}
+                    </Container>
+                </Content>
+                }
+            </Root>
             {!user && <LinearProgress/>}
             <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps}/>
             <AlertSnackbar {...error}/>

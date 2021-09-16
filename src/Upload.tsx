@@ -12,7 +12,7 @@ import {
     WithStyles
 } from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import DefaultAppBar from "./common/DefaultAppBar";
+import DefaultAppBar, {Content, Root} from "./common/DefaultAppBar";
 import BackendService from "./service/BackendService";
 import {useTranslation, WithTranslation, withTranslation} from "react-i18next";
 import {useSnackBar} from "./common/UseSnackBar";
@@ -59,53 +59,57 @@ function Upload(props: Props) {
 
     return (
         <Track>
-            <DefaultAppBar hideBackButton title={t('card_upload_title')}/>
-            <Container maxWidth="md">
-                <Box my={1}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} sm={6}>
-                            <Typography variant="h5" gutterBottom>{t('upload_title_download')}</Typography>
-                            <Typography color="textSecondary" paragraph>
-                                {t('upload_instruction_download')}
-                            </Typography>
-                            <List>
-                                {operators.map((op) => {
-                                    return (
-                                        <ListItem key={op.name}>
-                                            <Typography><Link href={op.link}>{op.name}</Link></Typography>
-                                        </ListItem>
-                                    )
-                                })}
-                            </List>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography
-                                variant="h5"
-                                gutterBottom
-                            >{t('upload_title_upload')}</Typography>
-                            <Typography
-                                color="textSecondary"
-                                paragraph
-                            >{t('upload_instruction_upload')}</Typography>
-                            <input
-                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                className={classes.input}
-                                id="input-file"
-                                type="file"
-                                onChange={(e) => e.target?.files && onUpload(e.target.files[0])}/>
-                            <label htmlFor="input-file">
-                                <Button variant="contained"
-                                        size="large"
-                                        color="primary"
-                                        fullWidth
-                                        component="span"
-                                        startIcon={<CloudUploadOutlined/>}
-                                >{t('action_upload')}</Button>
-                            </label>
-                        </Grid>
-                    </Grid>
-                </Box>
-            </Container>
+            <Root>
+                <DefaultAppBar hideBackButton title={t('card_upload_title')}/>
+                <Content>
+                    <Container maxWidth="md">
+                        <Box my={1}>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography variant="h5" gutterBottom>{t('upload_title_download')}</Typography>
+                                    <Typography color="textSecondary" paragraph>
+                                        {t('upload_instruction_download')}
+                                    </Typography>
+                                    <List>
+                                        {operators.map((op) => {
+                                            return (
+                                                <ListItem key={op.name}>
+                                                    <Typography><Link href={op.link}>{op.name}</Link></Typography>
+                                                </ListItem>
+                                            )
+                                        })}
+                                    </List>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography
+                                        variant="h5"
+                                        gutterBottom
+                                    >{t('upload_title_upload')}</Typography>
+                                    <Typography
+                                        color="textSecondary"
+                                        paragraph
+                                    >{t('upload_instruction_upload')}</Typography>
+                                    <input
+                                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                        className={classes.input}
+                                        id="input-file"
+                                        type="file"
+                                        onChange={(e) => e.target?.files && onUpload(e.target.files[0])}/>
+                                    <label htmlFor="input-file">
+                                        <Button variant="contained"
+                                                size="large"
+                                                color="primary"
+                                                fullWidth
+                                                component="span"
+                                                startIcon={<CloudUploadOutlined/>}
+                                        >{t('action_upload')}</Button>
+                                    </label>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Container>
+                </Content>
+            </Root>
             <AlertSnackbar severity="success" {...success} />
             <AlertSnackbar {...error} />
         </Track>
