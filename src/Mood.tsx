@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import DefaultAppBar from "./common/DefaultAppBar";
+import DefaultAppBar, {Content, Root} from "./common/DefaultAppBar";
 import {Box, Card, CardContent, Container, Typography, useTheme} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 import {InfoOutlined, SaveAlt} from "@material-ui/icons";
@@ -126,22 +126,26 @@ function Mood(props: { backendService: BackendService }) {
     }
 
     return <Track>
-        <DefaultAppBar title={t('card_mood_title')}>
-            <ResponsiveIconButton icon={<InfoOutlined/>} onClick={openInfo} description={t('info')}/>
-            <ResponsiveIconButton icon={<SaveAlt/>} onClick={onSaveClick} description={t('save')}/>
-        </DefaultAppBar>
-        <Container maxWidth="sm">
-            <Box py={3}>
-                <Typography variant="h5" align="center">{t('mood_please_select_mood')}</Typography>
-                <Card>
-                    {mood &&
-                    <CardContent>
-                        <DraggableGraph mood={mood} onChange={setMood}/>
-                    </CardContent>
-                    }
-                </Card>
-            </Box>
-        </Container>
+        <Root>
+            <DefaultAppBar title={t('card_mood_title')}>
+                <ResponsiveIconButton icon={<InfoOutlined/>} onClick={openInfo} description={t('info')}/>
+                <ResponsiveIconButton icon={<SaveAlt/>} onClick={onSaveClick} description={t('save')}/>
+            </DefaultAppBar>
+            <Content>
+                <Container maxWidth="sm">
+                    <Box py={3}>
+                        <Typography variant="h5" align="center">{t('mood_please_select_mood')}</Typography>
+                        <Card>
+                            {mood &&
+                            <CardContent>
+                                <DraggableGraph mood={mood} onChange={setMood}/>
+                            </CardContent>
+                            }
+                        </Card>
+                    </Box>
+                </Container>
+            </Content>
+        </Root>
         <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
         <AlertSnackbar {...success} severity="success"/>
         <AlertSnackbar {...error} />

@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import BehaviorDragSelect, {Row} from "./behavior/BehaviorDragSelect"
 import {
     Avatar,
-    Box,
     Container,
     Table,
     TableBody,
@@ -13,7 +12,7 @@ import {
     Tooltip,
     WithStyles
 } from "@material-ui/core";
-import DefaultAppBar from "./common/DefaultAppBar";
+import DefaultAppBar, {Content, Root} from "./common/DefaultAppBar";
 import {useTranslation} from "react-i18next";
 import {Prompt} from 'react-router-dom';
 import BackendService from "./service/BackendService";
@@ -106,32 +105,34 @@ function Behavior(props: Props) {
     const {rows, modified} = state;
     return (
         <Track>
+            <Root>
+                <DefaultAppBar hideBackButton title={t('card_behavior_title')}>
+                    <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
+                    <ResponsiveIconButton description={t('save')} icon={<SaveAlt/>} onClick={handleSave}/>
+                </DefaultAppBar>
+                <Content>
+                    <Container maxWidth="xl" disableGutters>
+                        <TableContainer className={classes.container}>
+                            <Table stickyHeader size="small" className={classes.tableDragSelect}>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell variant="head"/>
+                                        {hours.map((value) => <TableCell align="center">{String(value)}⁰⁰</TableCell>)}
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell/>
+                                        {energyAvailable.map((v) => <TableCell style={{backgroundColor: v}}/>)}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    <BehaviorDragSelect rows={rows} onChange={handleChange}/>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Container>
+                </Content>
+            </Root>
             <Prompt when={modified} message={t('unsaved_changes')}/>
-            <DefaultAppBar hideBackButton title={t('card_behavior_title')}>
-                <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
-                <ResponsiveIconButton description={t('save')} icon={<SaveAlt/>} onClick={handleSave}/>
-            </DefaultAppBar>
-            <Container maxWidth="xl" disableGutters>
-                <Box p={1}>
-                    <TableContainer className={classes.container}>
-                        <Table stickyHeader size="small" className={classes.tableDragSelect}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell variant="head"/>
-                                    {hours.map((value) => <TableCell align="center">{String(value)}⁰⁰</TableCell>)}
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell/>
-                                    {energyAvailable.map((v) => <TableCell style={{backgroundColor: v}}/>)}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                <BehaviorDragSelect rows={rows} onChange={handleChange}/>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Box>
-            </Container>
             <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps}/>
             <AlertSnackbar {...success} severity="success"/>
             <AlertSnackbar {...error} />

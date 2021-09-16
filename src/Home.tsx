@@ -16,7 +16,7 @@ import {
 } from "@material-ui/core";
 import {Link as RouterLink} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import DefaultAppBar from "./common/DefaultAppBar";
+import DefaultAppBar, {Content, Root} from "./common/DefaultAppBar";
 import {useHomeDestinations} from "./common/Destinations";
 import useDefaultTracking from "./common/Tracking";
 
@@ -74,14 +74,18 @@ function Home() {
     const {t} = useTranslation();
     return (
         <Track>
-            <DefaultAppBar hideBackButton title={t('home_title')}/>
-            <Container maxWidth="lg" disableGutters>
-                <Box padding={1}>
-                    <Grid container>
-                        {homeDestinations.map((item: Item, index: number) => <HomeCard item={item} key={index}/>)}
-                    </Grid>
-                </Box>
-            </Container>
+            <Root>
+                <DefaultAppBar hideBackButton title={t('home_title')}/>
+                <Content>
+                    <Container maxWidth="lg" disableGutters>
+                        <Grid container>
+                            {homeDestinations.map((item: Item, index: number) =>
+                                <HomeCard item={item} key={index}/>)}
+                        </Grid>
+                    </Container>
+                </Content>
+            </Root>
+
         </Track>
     );
 }

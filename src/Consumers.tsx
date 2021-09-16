@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Box, Container, List, Paper} from "@material-ui/core";
 import BackendService from "./service/BackendService";
-import DefaultAppBar from "./common/DefaultAppBar";
+import DefaultAppBar, {Content, Root} from "./common/DefaultAppBar";
 import {ConsumerModel} from "./service/Model";
 import ConsumerCard from "./consumers/ConsumerCard";
 import {useTranslation} from "react-i18next";
@@ -43,23 +43,27 @@ function Consumers(props: Props) {
     const {t} = useTranslation();
     return (
         <Track>
-            <DefaultAppBar title={t('edit_consumers')}>
-                <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
-            </DefaultAppBar>
-            <Container maxWidth="sm" disableGutters>
-                <Box my={1} pb={10}>
-                    <Paper variant="outlined">
-                        <List>
-                            {consumers && consumers.map((it) =>
-                                <ConsumerCard
-                                    consumer={it}
-                                    clickActive={(c) => applyChangeActive(c)}
-                                />
-                            )}
-                        </List>
-                    </Paper>
-                </Box>
-            </Container>
+            <Root>
+                <DefaultAppBar title={t('edit_consumers')}>
+                    <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
+                </DefaultAppBar>
+                <Content>
+                    <Container maxWidth="sm" disableGutters>
+                        <Box pb={10}>
+                            <Paper variant="outlined">
+                                <List>
+                                    {consumers && consumers.map((it) =>
+                                        <ConsumerCard
+                                            consumer={it}
+                                            clickActive={(c) => applyChangeActive(c)}
+                                        />
+                                    )}
+                                </List>
+                            </Paper>
+                        </Box>
+                    </Container>
+                </Content>
+            </Root>
             <AlertSnackbar {...error}/>
             <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps}/>
         </Track>
