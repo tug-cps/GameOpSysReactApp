@@ -82,6 +82,7 @@ class BehaviorDragSelect extends React.Component<React.PropsWithChildren<Props> 
         if (!this.state.selectionStarted && (isLeftClick || isTouch)) {
             e.preventDefault();
             const {row, column} = eventToCellLocation(e);
+            if (row === undefined || column === undefined) return
             this.props.onSelectionStart({row, column});
             this.setState({
                 selectionStarted: true,
@@ -98,6 +99,7 @@ class BehaviorDragSelect extends React.Component<React.PropsWithChildren<Props> 
         if (this.state.selectionStarted) {
             e.preventDefault();
             const {row, column} = eventToCellLocation(e);
+            if (row === undefined || column === undefined) return
             const {startRow, startColumn, endRow, endColumn} = this.state;
 
             if (endRow !== row || endColumn !== column) {
@@ -213,13 +215,11 @@ function eventToCellLocation(e: any): { row: number, column: number } {
         target = document.elementFromPoint(touch.clientX, touch.clientY);
     } else {
         target = e.target;
-        while (target.tagName !== "TD") {
-            target = target.parentNode;
-        }
+        while (target.tagName !== "TD") target = target.parentNode;
     }
     return {
-        row: target.parentNode.rowIndex - 2,
-        column: target.cellIndex - 1
+        row: target?.parentNode?.rowIndex - 2,
+        column: target?.cellIndex - 1
     };
 }
 

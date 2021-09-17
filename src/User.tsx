@@ -16,7 +16,6 @@ import {Link as RouterLink, useHistory} from "react-router-dom";
 import {ArrowRight, Email, ExitToApp, InfoOutlined, Language, MyLocation, Power} from "@material-ui/icons";
 import i18next from "i18next";
 import {useTranslation, withTranslation, WithTranslation} from "react-i18next";
-import DefaultAppBar, {Content, Root} from "./common/DefaultAppBar";
 import BackendService from "./service/BackendService";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
@@ -24,10 +23,7 @@ import {UserModel} from "./service/Model";
 import useDefaultTracking from "./common/Tracking";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
-
-interface Props extends WithTranslation {
-    backendService: BackendService
-}
+import {AppBarProps} from "./App";
 
 function UserInfo(props: { user: UserModel }) {
     const {user} = props;
@@ -70,6 +66,11 @@ function LanguageInfo(props: { language: string, changeLanguage: (language: stri
     </ListItem>
 }
 
+interface Props extends WithTranslation {
+    backendService: BackendService
+    setAppBar: (props: AppBarProps) => void
+}
+
 function User(props: Props) {
     const {Track} = useDefaultTracking({page: 'User'});
     const [infoProps, openInfo] = useInfoDialog();
@@ -79,7 +80,7 @@ function User(props: Props) {
     const [error, setError] = useSnackBar();
     const history = useHistory();
 
-    const {backendService, t} = props;
+    const {backendService, t, setAppBar} = props;
 
     useEffect(() => {
         backendService.getUser()
@@ -99,33 +100,37 @@ function User(props: Props) {
             .then(() => setLanguage(language), setError)
             .catch(console.log)
 
-    return (
-        <Track>
-            <Root>
-                <DefaultAppBar hideBackButton title={t('card_user_title')}>
+    useEffect(() => {
+        setAppBar({
+            title: t('card_user_title'),
+            showBackButton: false,
+            children: () =>
+                <>
                     <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
                     <ResponsiveIconButton
                         icon={<ExitToApp/>}
                         onClick={() => history.push('/logout')}
                         description={t('logout')}
                     />
-                </DefaultAppBar>
-                {user &&
-                <Content>
-                    <Container maxWidth="sm" disableGutters>
-                        <Paper variant="outlined">
-                            <List>
-                                <UserInfo user={user}/>
-                                <Divider variant="inset" component="li"/>
-                                {user.type !== "management" && <ConsumersInfo consumers={consumers}/>}
-                                <LanguageInfo language={language} changeLanguage={changeLanguage}/>
-                            </List>
-                        </Paper>
-                        {process.env.REACT_APP_BUILD_SHA && <Typography>{process.env.REACT_APP_BUILD_SHA}</Typography>}
-                    </Container>
-                </Content>
-                }
-            </Root>
+                </>
+        })
+    }, [history, openInfo, t, setAppBar])
+
+    return (
+        <Track>
+            {user &&
+            <Container maxWidth="sm">
+                <Paper variant="outlined" square>
+                    <List>
+                        <UserInfo user={user}/>
+                        <Divider variant="inset" component="li"/>
+                        {user.type !== "management" && <ConsumersInfo consumers={consumers}/>}
+                        <LanguageInfo language={language} changeLanguage={changeLanguage}/>
+                    </List>
+                </Paper>
+                {process.env.REACT_APP_BUILD_SHA && <Typography>{process.env.REACT_APP_BUILD_SHA}</Typography>}
+            </Container>
+            }
             {!user && <LinearProgress/>}
             <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps}/>
             <AlertSnackbar {...error}/>

@@ -19,7 +19,7 @@ class FakeBackend implements Backend {
         return new Promise<R>((resolve, reject) => {
             let e: Executor = new DefaultExecutor(resolve, reject);
 
-            console.log(`DELETE Fake backend call to ${url}`, config)
+            console.log(`FAKEBACKEND DELETE Fake backend call to ${url}`, config)
             if (!config) return e.error();
             const db = getFakeDB();
 
@@ -45,7 +45,7 @@ class FakeBackend implements Backend {
         return new Promise<R>((resolve, reject) => {
             let e: Executor = new DefaultExecutor(resolve, reject);
 
-            console.log(`GET Fake backend call to ${url}`, config)
+            console.log(`FAKEBACKEND GET Fake backend call to ${url}`, config)
             if (!config) return e.error();
             const db = getFakeDB();
 
@@ -99,12 +99,12 @@ class FakeBackend implements Backend {
         return new Promise<R>((resolve, reject) => {
             let e: Executor = new DefaultExecutor(resolve, reject);
 
-            console.log(`POST Fake backend call to ${url}`, config)
+            console.log(`FAKEBACKEND POST Fake backend call to ${url}`, config)
             if (!config) return e.error();
             const db = getFakeDB();
 
             if (url.endsWith('/tracking')) {
-                console.log('Tracking data:', data);
+                console.log('FAKEBACKEND Tracking data:', data);
                 return e.ok({});
             }
 
@@ -134,7 +134,7 @@ class FakeBackend implements Backend {
     put<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: AxiosRequestConfig): Promise<R> {
         return new Promise<R>((resolve, reject) => {
             let e: Executor = new DefaultExecutor(resolve, reject);
-            console.log(`PUT Fake backend call to ${url}`, config)
+            console.log(`FAKEBACKEND PUT Fake backend call to ${url}`, config)
             if (!config) return e.error();
             const db = getFakeDB();
             const token = config.headers.Authorization;

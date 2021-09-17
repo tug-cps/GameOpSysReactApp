@@ -1,7 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Box, Container, List, Paper} from "@material-ui/core";
-import BackendService from "./service/BackendService";
-import DefaultAppBar, {Content, Root} from "./common/DefaultAppBar";
 import {ConsumerModel} from "./service/Model";
 import ConsumerCard from "./consumers/ConsumerCard";
 import {useTranslation} from "react-i18next";
@@ -11,9 +9,9 @@ import {InfoOutlined} from "@material-ui/icons";
 import useDefaultTracking from "./common/Tracking";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
+import {PrivateRouteProps} from "./App";
 
-interface Props {
-    backendService: BackendService
+interface Props extends PrivateRouteProps {
 }
 
 function Consumers(props: Props) {
@@ -21,7 +19,8 @@ function Consumers(props: Props) {
     const [consumers, setConsumers] = useState<ConsumerModel[]>([]);
     const [error, setError] = useSnackBar();
     const [infoProps, openInfo] = useInfoDialog();
-    const {backendService} = props;
+    const {t} = useTranslation();
+    const {backendService, setAppBar} = props;
 
     useEffect(() => {
         backendService.getConsumers()
@@ -29,41 +28,36 @@ function Consumers(props: Props) {
             .catch(console.log)
     }, [backendService, setError])
 
-    const refresh = () => {
-        backendService.getConsumers()
-            .then(setConsumers, setError)
-            .catch(console.log)
-    }
+    const applyChangeActive = useCallback((consumer: ConsumerModel) =>
+            backendService.putConsumer({...consumer, active: !consumer.active})
+                .then(() => backendService.getConsumers())
+                .then(setConsumers, setError)
+                .catch(console.log),
+        [backendService, setError])
 
-    const applyChangeActive = (consumer: ConsumerModel) =>
-        backendService.putConsumer({...consumer, active: !consumer.active})
-            .then(refresh)
-            .catch(setError)
+    useEffect(() => setAppBar({
+        title: t('edit_consumers'),
+        showBackButton: true,
+        children: () => <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
+    }), [t, setAppBar, openInfo])
 
-    const {t} = useTranslation();
     return (
         <Track>
-            <Root>
-                <DefaultAppBar title={t('edit_consumers')}>
-                    <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
-                </DefaultAppBar>
-                <Content>
-                    <Container maxWidth="sm" disableGutters>
-                        <Box pb={10}>
-                            <Paper variant="outlined">
-                                <List>
-                                    {consumers && consumers.map((it) =>
-                                        <ConsumerCard
-                                            consumer={it}
-                                            clickActive={(c) => applyChangeActive(c)}
-                                        />
-                                    )}
-                                </List>
-                            </Paper>
-                        </Box>
-                    </Container>
-                </Content>
-            </Root>
+            <Container maxWidth="sm">
+                <Box pb={10}>
+                    <Paper variant="outlined">
+                        <List>
+                            {consumers && consumers.map((it) =>
+                                <ConsumerCard
+                                    key={it.consumerId}
+                                    consumer={it}
+                                    clickActive={applyChangeActive}
+                                />
+                            )}
+                        </List>
+                    </Paper>
+                </Box>
+            </Container>
             <AlertSnackbar {...error}/>
             <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps}/>
         </Track>

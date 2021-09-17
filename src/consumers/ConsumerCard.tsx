@@ -13,13 +13,20 @@ import {backgroundColor, iconLookup, translate} from "../common/ConsumerTools";
 import {Delete, Visibility, VisibilityOff} from "@material-ui/icons";
 import {useTranslation} from "react-i18next";
 
-
-function ConsumerCard(props: {
+interface Props {
     consumer: ConsumerModel,
     clickEdit?: (consumer: ConsumerModel) => void,
     clickActive?: (consumer: ConsumerModel) => void,
     clickDelete?: (consumer: ConsumerModel) => void
-}) {
+}
+
+export const compareProps = (a: Props, b: Props) => compareConsumers(a.consumer, b.consumer)
+export const compareConsumers = (a: ConsumerModel, b: ConsumerModel) =>
+    a.type === b.type &&
+    a.consumerId === b.consumerId &&
+    a.active === b.active
+
+const ConsumerCard = React.memo((props: Props) => {
     const {t} = useTranslation()
     const {consumer, clickEdit, clickActive, clickDelete} = props;
     const button = !!clickEdit
@@ -58,6 +65,6 @@ function ConsumerCard(props: {
             </ListItemSecondaryAction>
         </ListItem>
     )
-}
+}, compareProps)
 
 export default ConsumerCard;
