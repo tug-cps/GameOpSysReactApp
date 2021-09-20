@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Box, Container, List, Paper} from "@material-ui/core";
+import {Box, Container, DialogContentText, List, Paper} from "@material-ui/core";
 import {ConsumerModel} from "./service/Model";
 import ConsumerCard from "./consumers/ConsumerCard";
 import {useTranslation} from "react-i18next";
@@ -7,7 +7,7 @@ import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
 import {InfoOutlined} from "@material-ui/icons";
 import useDefaultTracking from "./common/Tracking";
-import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
+import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import {PrivateRouteProps} from "./App";
 
@@ -41,6 +41,10 @@ function Consumers(props: Props) {
         children: () => <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
     }), [t, setAppBar, openInfo])
 
+    const content = () => <DialogContentText>
+        {t('consumer_help').split('\n').map((s) => <p>{s}</p>)}
+    </DialogContentText>
+
     return (
         <Track>
             <Container maxWidth="sm">
@@ -59,7 +63,7 @@ function Consumers(props: Props) {
                 </Box>
             </Container>
             <AlertSnackbar {...error}/>
-            <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps}/>
+            <InfoDialog title={t('info')} content={content()} {...infoProps}/>
         </Track>
     );
 }

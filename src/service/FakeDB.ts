@@ -55,9 +55,10 @@ export function getFakeDB() {
                         {name: {'de': "Wellness", 'en': "Wellness"}, type: 'wellness'},
                         {name: {'de': "Home-Office", 'en': "Home office"}, type: 'homeoffice'},
                         {name: {'de': "E-Mobilität", 'en': "E-Mobility"}, type: 'emobility'},
-                        {name: {'de': "Sonstiges", 'en': "Miscellaneous"}, type: 'misc'},
                         {name: {'de': "Stromheizung/-kühlung", 'en': "Air conditioning"}, type: 'temperature'},
-                        {name: {'de': "Gäste", 'en': "Guests"}, type: 'guests'},
+                        {name: {'de': "Sonstiges (hoher Verbrauch)", 'en': "Miscellaneous high"}, type: 'misc'},
+                        {name: {'de': "Sonstiges (mittlerer Verbrauch)", 'en': "Miscellaneous mid"}, type: 'misc'},
+                        {name: {'de': "Sonstiges (niedriger Verbrauch)", 'en': "Miscellaneous low"}, type: 'misc'},
                     ].map((v, i) => ({
                         consumerId: i.toString(),
                         owner: '0',
