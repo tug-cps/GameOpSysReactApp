@@ -44,7 +44,14 @@ export function Lorem() {
     </>
 }
 
-export function InfoDialog(props: { title: string, content: JSX.Element, open: boolean, onClose: () => void }) {
+interface Props {
+    title: string
+    content: JSX.Element
+    open: boolean
+    onClose: () => void
+}
+
+export function InfoDialog(props: Props) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
