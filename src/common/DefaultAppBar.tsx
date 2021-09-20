@@ -1,6 +1,7 @@
 import {
     AppBar,
-    Box, Divider,
+    Box,
+    Divider,
     Drawer,
     Hidden,
     IconButton,
@@ -59,26 +60,30 @@ export interface Props {
     multiLine?: React.ReactNode;
 }
 
-function MenuButton() {
+export function DefaultDrawer() {
     const classes = useStyles();
     const {t} = useTranslation();
     const destinations = useNavDrawerDestinations();
 
     return (
-        <Drawer open variant="persistent">
-            <Box role="presentation" className={classes.menu}>
-                <AppBarSpace/>
-                <Divider/>
-                <List>
-                    {destinations.map((d) =>
-                        <ListItem button key={d.title} component={RouterLink} to={d.to}>
-                            <ListItemIcon><SvgIcon component={d.icon}/></ListItemIcon>
-                            <ListItemText primary={t(d.title)}/>
-                        </ListItem>)
-                    }
-                </List>
-            </Box>
-        </Drawer>
+        <nav className={classes.drawer}>
+            <Hidden xsDown>
+                <Drawer open variant="persistent">
+                    <Box role="presentation" className={classes.menu}>
+                        <AppBarSpace/>
+                        <Divider/>
+                        <List>
+                            {destinations.map((d) =>
+                                <ListItem button key={d.title} component={RouterLink} to={d.to}>
+                                    <ListItemIcon><SvgIcon component={d.icon}/></ListItemIcon>
+                                    <ListItemText primary={t(d.title)}/>
+                                </ListItem>)
+                            }
+                        </List>
+                    </Box>
+                </Drawer>
+            </Hidden>
+        </nav>
     )
 }
 
@@ -92,7 +97,7 @@ export function Content(props: React.PropsWithChildren<{}>) {
 
 export function Root(props: React.PropsWithChildren<{}>) {
     const classes = useStyles();
-    return <div className={classes.root}>{props.children}</div>
+    return <div className={classes.root} children={props.children}/>
 }
 
 export function AppBarSpace() {
@@ -100,35 +105,27 @@ export function AppBarSpace() {
     return <div className={classes.toolbar}/>
 }
 
-
 function DefaultAppBar(props: React.PropsWithChildren<Props> & { hideBackButton?: boolean }) {
     const {title} = props;
     const trigger = useScrollTrigger();
     const classes = useStyles();
     const history = useHistory();
     return (
-        <>
-            <Slide appear={false} direction="down" in={!trigger}>
-                <AppBar className={classes.appBar}>
-                    <Toolbar className={classes.toolbar}>
-                        {!props.hideBackButton &&
-                        <IconButton color="inherit" className={classes.menuButton} onClick={history.goBack}>
-                            <ArrowBack/>
-                        </IconButton>
-                        }
-                        <Typography color="inherit" variant="h6">{title}</Typography>
-                        <Box mx="auto"/>
-                        {props.children}
-                    </Toolbar>
-                    {props.multiLine}
-                </AppBar>
-            </Slide>
-            <nav className={classes.drawer}>
-                <Hidden xsDown>
-                    <MenuButton/>
-                </Hidden>
-            </nav>
-        </>
+        <Slide appear={false} direction="down" in={!trigger}>
+            <AppBar className={classes.appBar}>
+                <Toolbar className={classes.toolbar}>
+                    {!props.hideBackButton &&
+                    <IconButton color="inherit" className={classes.menuButton} onClick={history.goBack}>
+                        <ArrowBack/>
+                    </IconButton>
+                    }
+                    <Typography color="inherit" variant="h6">{title}</Typography>
+                    <Box mx="auto"/>
+                    {props.children}
+                </Toolbar>
+                {props.multiLine}
+            </AppBar>
+        </Slide>
     )
 }
 

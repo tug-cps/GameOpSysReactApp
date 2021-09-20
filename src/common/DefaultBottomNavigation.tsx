@@ -31,9 +31,9 @@ function DefaultBottomNavigation() {
 
     if (!matches) return null;
     return (
-        <React.Fragment>
+        <>
             <div className={classes.spacer}/>
-            <Paper className={classes.root} elevation={1}>
+            <Paper className={classes.root} elevation={5}>
                 <BottomNavigation
                     value={value}
                     onChange={(event, newValue) => {
@@ -50,7 +50,7 @@ function DefaultBottomNavigation() {
                     }
                 </BottomNavigation>
             </Paper>
-        </React.Fragment>
+        </>
     );
 }
 

@@ -9,7 +9,7 @@ export class DefaultExecutor<R> implements Executor {
     }
 
     ok(data: {}) {
-        console.log("Resolving call with OK", data)
+        console.log("FAKEBACKEND Resolving call with OK", data)
         this.resolve({
             data: data,
             status: 200,
@@ -21,7 +21,7 @@ export class DefaultExecutor<R> implements Executor {
     }
 
     error() {
-        console.log("Resolving call with Error")
+        console.log("FAKEBACKEND Resolving call with Error")
         this.reject({
             response: {
                 data: {},

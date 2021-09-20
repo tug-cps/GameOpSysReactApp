@@ -1,41 +1,39 @@
 import React, {useEffect, useState} from 'react';
 import {Container} from "@material-ui/core";
-import BackendService from "./service/BackendService";
-import DefaultAppBar, {Content, Root} from "./common/DefaultAppBar";
 import ArchiveEntry from "./archive/ArchiveEntry";
 import {useTranslation} from "react-i18next";
 import {useSnackBar} from "./common/UseSnackBar";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import useDefaultTracking from "./common/Tracking";
+import {PrivateRouteProps} from "./App";
 
 
-interface Props {
-    backendService: BackendService
+interface Props extends PrivateRouteProps {
 }
 
 function Archive(props: Props) {
     const {Track} = useDefaultTracking({page: 'Archive'});
     const [dates, setDates] = useState(new Array<string>());
-    const {backendService} = props;
     const {t} = useTranslation();
     const [error, setError] = useSnackBar();
+    const {backendService, setAppBar} = props;
 
     useEffect(() => {
         backendService.getPredictions()
             .then(setDates, setError)
             .catch(console.log)
     }, [backendService, setError])
+
+    useEffect(() => {
+        setAppBar({title: t('card_archive_title'), showBackButton: true, children: () => <></>})
+    }, [t, setAppBar])
+
     return (
         <Track>
-            <Root>
-                <DefaultAppBar title={t('card_archive_title')}/>
-                <Content>
-                    <Container maxWidth="md">
-                        {dates.map((value) =>
-                            <ArchiveEntry date={value} key={value} backendService={props.backendService}/>)}
-                    </Container>
-                </Content>
-            </Root>
+            <Container maxWidth="md">
+                {dates.map((value) =>
+                    <ArchiveEntry date={value} key={value} backendService={props.backendService}/>)}
+            </Container>
             <AlertSnackbar {...error} />
         </Track>
     )

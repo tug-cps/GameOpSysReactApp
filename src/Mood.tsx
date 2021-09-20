@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import DefaultAppBar, {Content, Root} from "./common/DefaultAppBar";
+import React, {useCallback, useEffect, useState} from 'react';
+import {Content, Root} from "./common/DefaultAppBar";
 import {Box, Card, CardContent, Container, Typography, useTheme} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 import {InfoOutlined, SaveAlt} from "@material-ui/icons";
@@ -7,10 +7,10 @@ import {Bubble, defaults} from "react-chartjs-2";
 import 'chartjs-plugin-dragdata';
 import {useSnackBar} from "./common/UseSnackBar";
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import BackendService from "./service/BackendService";
 import useDefaultTracking from "./common/Tracking";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
+import {PrivateRouteProps} from "./App";
 
 interface GraphProps {
     mood: { x: number, y: number }
@@ -100,7 +100,7 @@ function DraggableGraph(props: GraphProps) {
 
 const date = new Date().toISOString().slice(0, 10)
 
-function Mood(props: { backendService: BackendService }) {
+function Mood(props: PrivateRouteProps) {
     const {Track} = useDefaultTracking({page: 'MoodPage'});
     const {t} = useTranslation()
     const [infoProps, openInfo] = useInfoDialog();
@@ -108,7 +108,7 @@ function Mood(props: { backendService: BackendService }) {
     const [error, setError] = useSnackBar();
     const [mood, setMood] = useState<{ x: number, y: number }>();
 
-    const {backendService} = props;
+    const {backendService, setAppBar} = props;
 
     useEffect(() => {
         backendService.getMood(date)
@@ -119,18 +119,25 @@ function Mood(props: { backendService: BackendService }) {
             .catch(console.log);
     }, [backendService, setError])
 
-    const onSaveClick = () => {
+    const onSaveClick = useCallback(() => {
         backendService.putMood(date, mood!)
             .then(() => setSuccess(t('behavior_changes_saved')), setError)
             .catch(console.log);
-    }
+    }, [backendService, mood, setError, setSuccess, t])
+
+    useEffect(() => {
+        setAppBar({
+            title: t('card_mood_title'),
+            showBackButton: true,
+            children: () => <>
+                <ResponsiveIconButton icon={<InfoOutlined/>} onClick={openInfo} description={t('info')}/>
+                <ResponsiveIconButton icon={<SaveAlt/>} onClick={onSaveClick} description={t('save')}/>
+            </>
+        })
+    }, [t, setAppBar, onSaveClick, openInfo])
 
     return <Track>
         <Root>
-            <DefaultAppBar title={t('card_mood_title')}>
-                <ResponsiveIconButton icon={<InfoOutlined/>} onClick={openInfo} description={t('info')}/>
-                <ResponsiveIconButton icon={<SaveAlt/>} onClick={onSaveClick} description={t('save')}/>
-            </DefaultAppBar>
             <Content>
                 <Container maxWidth="sm">
                     <Box py={3}>

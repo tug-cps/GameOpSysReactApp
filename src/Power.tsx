@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Card, CardContent, Container, createStyles, Theme, Typography, WithStyles} from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import DefaultAppBar, {Content, Root} from "./common/DefaultAppBar";
-import BackendService from "./service/BackendService";
 import {PowerEntry} from "./power/PowerEntry";
 import useDefaultTracking from "./common/Tracking";
 import {useTranslation} from "react-i18next";
+import {PrivateRouteProps} from "./App";
 
 const styles = ({spacing}: Theme) => createStyles({
     card: {
@@ -13,14 +12,13 @@ const styles = ({spacing}: Theme) => createStyles({
     },
 });
 
-interface Props extends WithStyles<typeof styles> {
-    backendService: BackendService
+interface Props extends PrivateRouteProps, WithStyles<typeof styles> {
 }
 
 function Power(props: Props) {
     const {Track} = useDefaultTracking({page: 'Power'});
     const [dates, setDates] = useState<string[]>();
-    const {classes, backendService} = props;
+    const {classes, backendService, setAppBar} = props;
     const {t} = useTranslation();
 
     useEffect(() => {
@@ -29,25 +27,26 @@ function Power(props: Props) {
             .catch(console.log);
     }, [backendService])
 
+    useEffect(() => setAppBar({
+        title: t('card_power_title'),
+        showBackButton: true,
+        children: () => <></>
+    }), [t, setAppBar])
+
     return (
         <Track>
-            <Root>
-                <DefaultAppBar title={t('card_power_title')}/>
-                <Content>
-                    {dates &&
-                    <Container maxWidth="md">
-                        {dates.map((date) =>
-                            <Card variant="outlined" key={date} className={classes.card}>
-                                <CardContent>
-                                    <Typography variant="h6">{date}</Typography>
-                                    <PowerEntry date={date} backendService={backendService}/>
-                                </CardContent>
-                            </Card>
-                        )}
-                    </Container>
-                    }
-                </Content>
-            </Root>
+            {dates &&
+            <Container maxWidth="md">
+                {dates.map((date) =>
+                    <Card variant="outlined" key={date} className={classes.card}>
+                        <CardContent>
+                            <Typography variant="h6">{date}</Typography>
+                            <PowerEntry date={date} backendService={backendService}/>
+                        </CardContent>
+                    </Card>
+                )}
+            </Container>
+            }
         </Track>
     )
 }

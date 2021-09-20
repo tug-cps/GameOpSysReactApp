@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
 import {
     AppBar,
     Button,
@@ -17,7 +17,7 @@ import {ArrowBack} from "@material-ui/icons";
 
 export function useInfoDialog(): readonly [{ open: boolean, onClose: () => void }, () => void] {
     const [state, setState] = useState(false);
-    return [{open: state, onClose: () => setState(false)}, () => setState(true)]
+    return [{open: state, onClose: () => setState(false)}, useCallback(() => setState(true), [])]
 }
 
 export function Lorem() {

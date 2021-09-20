@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
     Box,
     Card,
@@ -16,9 +16,9 @@ import {
 } from "@material-ui/core";
 import {Link as RouterLink} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import DefaultAppBar, {Content, Root} from "./common/DefaultAppBar";
 import {useHomeDestinations} from "./common/Destinations";
 import useDefaultTracking from "./common/Tracking";
+import {PrivateRouteProps} from "./App";
 
 const styles = ({palette}: Theme) => createStyles({
     media: {
@@ -49,7 +49,7 @@ const HomeCard = withStyles(styles)(
         const {t} = useTranslation()
 
         return (
-            <Grid item xs={12} sm={6} xl={4} key={item.title}>
+            <Grid item xs={12} lg={4} key={item.title}>
                 <Card>
                     <CardActionArea component={RouterLink} to={item.to}>
                         <Box display="flex">
@@ -68,24 +68,28 @@ const HomeCard = withStyles(styles)(
     }
 )
 
-function Home() {
+function Home(props: PrivateRouteProps) {
     const {Track} = useDefaultTracking({page: 'Home'});
     const homeDestinations = useHomeDestinations();
     const {t} = useTranslation();
+    const {setAppBar} = props;
+
+    useEffect(() => {
+        setAppBar({
+            title: t('home_title'),
+            showBackButton: false,
+            children: () => <></>
+        })
+    }, [t, setAppBar])
+
     return (
         <Track>
-            <Root>
-                <DefaultAppBar hideBackButton title={t('home_title')}/>
-                <Content>
-                    <Container maxWidth="lg" disableGutters>
-                        <Grid container>
-                            {homeDestinations.map((item: Item, index: number) =>
-                                <HomeCard item={item} key={index}/>)}
-                        </Grid>
-                    </Container>
-                </Content>
-            </Root>
-
+            <Container maxWidth="lg">
+                <Grid container justify="center">
+                    {homeDestinations.map((item: Item, index: number) =>
+                        <HomeCard item={item} key={index}/>)}
+                </Grid>
+            </Container>
         </Track>
     );
 }
