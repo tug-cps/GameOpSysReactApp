@@ -8,6 +8,8 @@ import {useTracking} from "react-tracking";
 import {UserModel} from "./service/Model";
 import DefaultBottomNavigation from "./common/DefaultBottomNavigation";
 import DefaultAppBar, {Content, DefaultDrawer, Root} from "./common/DefaultAppBar";
+import DateFnsUtils from "@date-io/date-fns";
+import {MuiPickersUtilsProvider} from "@material-ui/pickers";
 
 const backendService = new BackendService(Config.backend);
 export const UserContext = React.createContext<UserModel | undefined>(undefined);
@@ -120,10 +122,12 @@ function App() {
                                            children={appBar.children()}/>
                             <DefaultDrawer/>
                             <Content>
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <PrivateRouter
                                     backendService={backendService}
                                     setAppBar={setAppBarCb}
                                 />
+                                </MuiPickersUtilsProvider>
                             </Content>
                         </Root>
                         <DefaultBottomNavigation/>
