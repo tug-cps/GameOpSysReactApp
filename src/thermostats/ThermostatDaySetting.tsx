@@ -16,72 +16,58 @@ import {
 } from "@material-ui/core";
 import {Scatter} from "react-chartjs-2";
 import {Delete, Edit} from "@material-ui/icons";
+import {chartOptions, createData} from "./ChartOptions";
+import {createTime} from "../common/Time";
 
 export interface TimeItem {
-    time: string;
+    time: Date;
     temperature: number;
+}
+
+interface LabeledTimeItem extends TimeItem {
+    label: string
 }
 
 interface Props {
     title: string;
+    id: string;
     items: TimeItem[];
+    onAddTime: (id: string) => void
+    onCopyFrom: (id: string) => void
+    onDelete: (id: string, index: number) => void
+    onEdit: (id: string, index: number) => void
 }
 
-const options = {
-    locale: "de",
-    plugins: {
-        legend: {
-            display: false
-        },
-        tooltip: {
-            enabled: false
-        }
-    },
-    scales: {
-        x: {
-            min: 0,
-            max: 24,
-            ticks: {
-                stepSize: 2,
-                callback: (value: any) => value + '⁰⁰'
-            }
-        },
-        y: {
-            ticks: {
-                stepSize: 2,
-                callback: (value: any) => value + ' °C'
-            }
-        }
+const printTime = (time: Date) => time.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})
+
+const labelTimeItems = (dataItems: TimeItem[]): LabeledTimeItem[] => {
+    let array = new Array<LabeledTimeItem>();
+    for (let _i = 0; _i < dataItems.length - 1; _i++) {
+        array.push({...dataItems[_i], label: printTime(dataItems[_i].time) + ' - ' + printTime(dataItems[_i + 1].time)})
     }
+    return array;
 }
 
-export function ThermostatDaySetting(props: Props) {
+export const compareProps = (a: Props, b: Props) => {
+    if (a.id !== b.id || a.title !== b.title || a.items.length !== b.items.length) return false;
+    for (let i = 0; i < a.items.length; i++) {
+        if (a.items[i].time.getTime() !== b.items[i].time.getTime() || a.items[i].temperature !== b.items[i].temperature) return false;
+    }
+    return true;
+}
+
+export const ThermostatDaySetting = React.memo((props: Props) => {
     const {title, items} = props;
-    const dataItems = [...items, {time: '24:00', temperature: items[items.length - 1].temperature}]
+    const dataItems = [...items, {time: createTime(23, 59), temperature: items[items.length - 1].temperature}]
+    const labeledTimeItems = labelTimeItems(dataItems);
     const {palette} = useTheme();
-    const data = {
-        datasets: [
-            {
-                data: dataItems.map((i) => ({
-                    x: (+i.time.substring(0, i.time.indexOf(':'))),
-                    y: i.temperature
-                })),
-                showLine: true,
-                fill: true,
-                stepped: true,
-                borderColor: palette.primary.main,
-                backgroundColor: palette.secondary.main,
-            }
-        ],
-
-    }
-
+    const data = createData(dataItems, palette);
     return (
         <Card>
             <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">{title}</Typography>
                 <Box p={1}>
-                    <Scatter data={data} options={options} height={50}/>
+                    <Scatter data={data} options={chartOptions} height={50}/>
                 </Box>
                 <Table size="small">
                     <TableHead>
@@ -91,25 +77,38 @@ export function ThermostatDaySetting(props: Props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {items.map((item, index) => (
-                            <TableRow key={item.time} hover={true}>
-                                <TableCell>{item.time}</TableCell>
+                        {labeledTimeItems.map((item, index) => (
+                            <TableRow key={index} hover={true}>
+                                <TableCell>{item.label}</TableCell>
                                 <TableCell>{item.temperature} °C</TableCell>
                                 <TableCell align="right">
-                                    <IconButton size="small"><Edit/></IconButton>
-                                    <IconButton disabled={index < 1} size="small"><Delete/></IconButton>
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => props.onEdit(props.id, index)}
+                                    ><Edit/></IconButton>
+                                    <IconButton
+                                        disabled={index < 1}
+                                        size="small"
+                                        onClick={() => props.onDelete(props.id, index)}
+                                    ><Delete/></IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
-
                 <CardActions>
-                    <Button style={{flexShrink: 0}} color="primary">Zeitraum hinzufügen</Button>
+                    <Button
+                        style={{flexShrink: 0}}
+                        color="primary"
+                        onClick={() => props.onAddTime(props.id)}
+                    >Zeitraum hinzufügen</Button>
                     <Box mx="auto"/>
-                    <Button color="primary">Kopieren von ...</Button>
+                    <Button
+                        color="primary"
+                        onClick={() => props.onCopyFrom(props.id)}
+                    >Kopieren von ...</Button>
                 </CardActions>
             </CardContent>
         </Card>
     )
-}
+}, compareProps)

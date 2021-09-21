@@ -6,10 +6,18 @@ import {
     HomeOutlined,
     Mood,
     PersonOutline,
-    ShowChart
+    ShowChart,
+    SvgIconComponent
 } from "@material-ui/icons";
 import {useContext} from "react";
 import {UserContext} from "../App";
+
+interface Destination {
+    title: string,
+    subtitle: string,
+    icon: SvgIconComponent,
+    to: string
+}
 
 const destinations = {
     home: {title: 'home_link', subtitle: '', icon: HomeOutlined, to: '/'},
@@ -23,43 +31,46 @@ const destinations = {
     mood: {title: 'card_mood_title', subtitle: 'card_mood_subtitle', icon: Mood, to: '/mood'},
 }
 
-export function useBottomBarDestinations() {
+export function useBottomBarDestinations(): Destination[] {
     const user = useContext(UserContext)
-    if (!user) return []
-    switch (user.type) {
+    switch (user?.type) {
         case "management":
             return [destinations.home, destinations.upload, destinations.user];
         case "student":
             return [destinations.home, destinations.behavior, destinations.user];
-        default:
+        case "homeowner":
             return [destinations.home, destinations.upload, destinations.behavior, destinations.thermostats, destinations.user];
+        default:
+            return [];
     }
 }
 
 
-export function useNavDrawerDestinations() {
+export function useNavDrawerDestinations(): Destination[] {
     const user = useContext(UserContext)
-    if (!user) return []
-    switch (user.type) {
+    switch (user?.type) {
         case "management":
             return [destinations.home, destinations.upload, destinations.user];
         case "student":
             return [destinations.home, destinations.behavior, destinations.user];
-        default:
+        case "homeowner":
             return [destinations.home, destinations.upload, destinations.behavior, destinations.thermostats, destinations.user];
+        default:
+            return [];
     }
 }
 
-export function useHomeDestinations() {
+export function useHomeDestinations(): Destination[] {
     const user = useContext(UserContext)
-    if (!user) return []
-    switch (user.type) {
+    switch (user?.type) {
         case "management":
             return [destinations.upload, destinations.user]
         case "student":
             return [destinations.archive, destinations.mood]
-        default:
+        case "homeowner":
             return [destinations.power, destinations.upload, destinations.mood]
+        default:
+            return []
     }
 }
 

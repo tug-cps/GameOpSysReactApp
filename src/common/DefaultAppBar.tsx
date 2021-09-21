@@ -5,6 +5,7 @@ import {
     Drawer,
     Hidden,
     IconButton,
+    LinearProgress,
     ListItemIcon,
     Slide,
     SvgIcon,
@@ -22,7 +23,7 @@ import {useTranslation} from "react-i18next";
 import {useNavDrawerDestinations} from "./Destinations";
 import {ArrowBack} from "@material-ui/icons";
 
-const drawerWidth = 250;
+const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
         menuButton: {
@@ -36,13 +37,12 @@ const useStyles = makeStyles(theme => ({
             display: "flex",
         },
         content: {
-            paddingTop: theme.spacing(1),
             flexGrow: 1
         },
         drawer: {
             [theme.breakpoints.up('sm')]: {
                 flexShrink: 0,
-                width: 250,
+                width: drawerWidth,
             }
         },
         appBar: {
@@ -91,7 +91,11 @@ export function Content(props: React.PropsWithChildren<{}>) {
     const classes = useStyles();
     return <div className={classes.content}>
         <AppBarSpace/>
-        {props.children}
+        <React.Suspense fallback={<LinearProgress/>}>
+            <Box paddingTop={1}>
+                {props.children}
+            </Box>
+        </React.Suspense>
     </div>
 }
 
