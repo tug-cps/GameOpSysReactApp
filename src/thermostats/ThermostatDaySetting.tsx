@@ -96,11 +96,13 @@ export const ThermostatDaySetting = React.memo((props: Props) => {
                         ))}
                     </TableBody>
                 </Table>
+                <Box my="auto" />
                 <CardActions>
                     <Button
                         style={{flexShrink: 0}}
                         color="primary"
                         onClick={() => props.onAddTime(props.id)}
+                        disabled={items?.length > 4}
                     >Zeitraum hinzufügen</Button>
                     <Box mx="auto"/>
                     <Button

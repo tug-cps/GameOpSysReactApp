@@ -86,6 +86,7 @@ export function getFakeDB() {
                         return map
                     }, {})
                 }))),
+                thermostats: Object.assign({}, ...users.map((v) => ({[v]: null}))),
                 mood: Object.assign({}, ...users.map((v) => ({[v]: {}}))),
                 token: {
                     "fakeToken.thistokenisfake": "user@test.com",

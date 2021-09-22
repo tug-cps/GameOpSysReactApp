@@ -121,7 +121,7 @@ function Mood(props: PrivateRouteProps) {
 
     const onSaveClick = useCallback(() => {
         backendService.putMood(date, mood!)
-            .then(() => setSuccess(t('behavior_changes_saved')), setError)
+            .then(() => setSuccess(t('changes_saved')), setError)
             .catch(console.log);
     }, [backendService, mood, setError, setSuccess, t])
 

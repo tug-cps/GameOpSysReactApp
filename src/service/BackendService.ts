@@ -9,6 +9,7 @@ import {
     UserPredictionModel
 } from "./Model";
 import {BehaviorSubject, map, Observable} from "rxjs";
+import {TimeItem} from "../thermostats/ThermostatDaySetting";
 
 function unpack<T>(response: AxiosResponse<T>): T {
     return response.data;
@@ -118,6 +119,18 @@ class BackendService {
     putPrediction(date: string, predictions: UserPredictionModel[]): Promise<AxiosResponse> {
         return this.backend
             .put('/predictions/' + date, {predictions: predictions}, this.addAuth())
+    }
+
+    getThermostats(): Promise<Array<Array<TimeItem>>> {
+        return this.backend
+            .get<Array<Array<TimeItem>>>('/thermostat', this.addAuth())
+            .then(unpack)
+            .then((data) => data.map(day => day.map(it => ({time: new Date(it.time), temperature: it.temperature}))))
+    }
+
+    putThermostats(data: Array<Array<TimeItem>>) {
+        return this.backend
+            .put('/thermostat', {data: data}, this.addAuth())
     }
 
     putMood(date: string, mood: MoodModel): Promise<AxiosResponse> {
