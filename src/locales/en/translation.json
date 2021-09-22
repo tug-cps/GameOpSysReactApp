@@ -42,7 +42,7 @@
   "dialog_button_create": "Create",
   "confirm_dialog_title": "Confirm delete",
   "dialog_button_rename": "Rename",
-  "behavior_changes_saved": "Changes Saved",
+  "changes_saved": "Changes Saved",
   "card_mood_title": "Well-being",
   "card_mood_subtitle": "My well-being",
   "save": "Save",
@@ -56,5 +56,7 @@
   "lang_english": "English",
   "info": "Info",
   "hide_consumer": "Hide appliance",
-  "show_consumer": "Show appliance"
+  "show_consumer": "Show appliance",
+  "reset": "reset",
+  "compare": "compare"
 }

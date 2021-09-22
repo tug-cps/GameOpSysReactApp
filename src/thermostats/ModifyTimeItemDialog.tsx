@@ -1,6 +1,6 @@
+import React from "react";
 import {Button, DialogActions, DialogContent, InputAdornment, TextField, Typography} from "@material-ui/core";
 import {KeyboardTimePicker} from "@material-ui/pickers";
-import React from "react";
 import {ResponsiveDialog} from "../common/ResponsiveDialog";
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
     setTemperature: (temperature: string | null) => void
 }
 
-export function AddTimeDialog(props: Props) {
+export function ModifyTimeItemDialog(props: Props) {
     return <ResponsiveDialog title={props.title} open={props.open} onClose={props.onClose}>
         <DialogContent>
             {props.showTimePicker &&
@@ -45,7 +45,7 @@ export function AddTimeDialog(props: Props) {
         </DialogContent>
         <DialogActions>
             <Button color="primary" onClick={props.onClose}>Cancel</Button>
-            <Button color="primary">OK</Button>
+            <Button color="primary" onClick={props.onOK}>OK</Button>
         </DialogActions>
     </ResponsiveDialog>
 }

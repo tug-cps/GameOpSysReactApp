@@ -5,12 +5,14 @@ import useDefaultTracking from "./common/Tracking";
 import {useTranslation} from "react-i18next";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
-import {CheckOutlined, InfoOutlined, RotateLeft, SaveAlt} from "@material-ui/icons";
+import {CompareArrowsOutlined, InfoOutlined, RotateLeft, SaveAlt} from "@material-ui/icons";
 import BackendService from "./service/BackendService";
 import {AppBarProps} from "./App";
-import {AddTimeDialog} from "./thermostats/AddTimeDialog";
+import {ModifyTimeItemDialog} from "./thermostats/ModifyTimeItemDialog";
 import {createTime} from "./common/Time";
 import {data_} from "./thermostats/DummyData";
+import {AlertSnackbar} from "./common/AlertSnackbar";
+import {useSnackBar} from "./common/UseSnackBar";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -52,6 +54,9 @@ interface Props {
     setAppBar: (props: AppBarProps) => void
 }
 
+const copyData = (data: Array<Array<TimeItem>>) => data.map((day) => day.map((e) => ({...e})))
+const sortDay = (day: Array<TimeItem>) => day.sort((a, b) => a.time.getHours() > b.time.getHours() || (a.time.getHours() === b.time.getHours() && a.time.getMinutes() >= b.time.getMinutes()) ? 1 : -1)
+
 function Thermostats(props: Props) {
     const {Track} = useDefaultTracking({page: 'Power'});
     const {t} = useTranslation();
@@ -59,15 +64,32 @@ function Thermostats(props: Props) {
     const [infoProps, openInfo] = useInfoDialog();
     const [data, setData] = useState<Array<Array<TimeItem>>>([])
     const [initialData, setInitialData] = useState<Array<Array<TimeItem>>>([])
-    const {setAppBar} = props;
+    const [Success, setSuccess] = useSnackBar();
+    const [Error, setError] = useSnackBar();
+    const {setAppBar, backendService} = props;
 
     const simpleDayLabels = ["Werktage", "Wochenende"]
     const dayLabels = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
 
     useEffect(() => {
-        setData(data_);
-        setInitialData(data_);
-    }, [])
+        backendService.getThermostats()
+            .then((data) => {
+                if (data.length === 7) {
+                    data = data.map(day => sortDay(day));
+                    setData(data);
+                    setInitialData(data);
+                } else {
+                    console.log("set dummy data")
+                    setData(data_);
+                    setInitialData(data_);
+                }
+            }, (e) => {
+                setData(data_)
+                setInitialData(data_)
+                setError(e)
+            })
+            .catch(console.log)
+    }, [backendService, setError])
 
     const empty = [{time: createTime(0, 0), temperature: 21}]
     const days = dayLabels.map((value, index) => ({
@@ -85,10 +107,12 @@ function Thermostats(props: Props) {
         {days: days, md: 6, lg: 4, xl: 3}
     ]
 
-    const reset = useCallback(() => {
-        console.log(initialData);
-        setData(initialData);
-    }, [initialData]);
+    const reset = useCallback(() => setData(initialData), [initialData]);
+    const save = useCallback(() => {
+        backendService.putThermostats(data)
+            .then(() => setSuccess(t('changes_saved')), setError)
+            .catch(console.log)
+    }, [data, backendService, setSuccess, t, setError])
 
     useEffect(() => {
         setAppBar({
@@ -97,34 +121,64 @@ function Thermostats(props: Props) {
             children: () => <>
                 <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
                 <ResponsiveIconButton description={t('reset')} icon={<RotateLeft/>} onClick={reset}/>
-                <ResponsiveIconButton description={t('try')} icon={<CheckOutlined/>}/>
-                <ResponsiveIconButton description={t('save')} icon={<SaveAlt/>}/>
+                <ResponsiveIconButton description={t('compare')} icon={<CompareArrowsOutlined/>}/>
+                <ResponsiveIconButton description={t('save')} icon={<SaveAlt/>} onClick={save}/>
             </>
         })
-    }, [t, openInfo, reset, setAppBar]);
+    }, [t, openInfo, reset, setAppBar, save]);
 
     const [addTimeOpen, setAddTimeOpen] = useState(false);
+    const [editTimeOpen, setEditTimeOpen] = useState(false);
     const [copyFromOpen, setCopyFromOpen] = useState(false);
 
     const onAddTime = useCallback((id: string) => {
-        setAddTimeOpen(true);
         setShowTimePicker(true);
         setTemperature("21");
         setTime(createTime(12, 0));
+        setID(+id);
+        setAddTimeOpen(true);
     }, []);
+
     const onCopyFrom = useCallback((id: string) => setCopyFromOpen(true), []);
     const onDelete = useCallback((id: string, index: number) => {
-        console.log("id", id, "index", index)
-        setData(prevState =>
-            prevState.map((item, idx) =>
-                String(idx) === id ? item.filter((value, refIndex) => refIndex !== index) : item
-            )
-        );
+        setData(prevState => prevState.map((item, idx) =>
+            String(idx) === id ? item.filter((value, refIndex) => refIndex !== index) : item));
     }, [])
-
+    const [id, setID] = useState<number>();
+    const [index, setIndex] = useState<number>();
     const [time, setTime] = useState<Date | null>(new Date());
     const [temperature, setTemperature] = useState<string | null>("21");
     const [showTimePicker, setShowTimePicker] = useState(false);
+
+    const addEntry = useCallback(() => {
+        if (id === undefined || time === null || time === undefined || temperature === undefined || temperature === null) {
+            console.log("id, time or temperature undefined, aborting");
+            return;
+        }
+
+        setData(prevState => {
+            const state = copyData(prevState);
+            state[id].push({time: time, temperature: +temperature})
+            sortDay(state[id])
+            return state;
+        });
+        setAddTimeOpen(false);
+    }, [id, time, temperature]);
+
+    const editEntry = useCallback(() => {
+        if (index === undefined || id === undefined || time === null || time === undefined || temperature === undefined || temperature === null) {
+            console.log("id, time or temperature undefined, aborting");
+            return;
+        }
+
+        setData(prevState => {
+            const state = copyData(prevState);
+            state[id][index] = {time: time, temperature: +temperature};
+            sortDay(state[id])
+            return state;
+        });
+        setEditTimeOpen(false);
+    }, [index, id, time, temperature]);
 
     return (
         <Track>
@@ -150,10 +204,12 @@ function Thermostats(props: Props) {
                                             onAddTime={onAddTime}
                                             onCopyFrom={onCopyFrom}
                                             onEdit={(id, index) => {
+                                                setID(+id);
+                                                setIndex(index);
                                                 setTime(day.data[index].time);
                                                 setTemperature(String(day.data[index].temperature));
                                                 setShowTimePicker(index > 0);
-                                                setAddTimeOpen(true);
+                                                setEditTimeOpen(true);
                                             }}
                                             onDelete={onDelete}
                                         />
@@ -164,25 +220,34 @@ function Thermostats(props: Props) {
                     ))}
                 </Box>
             </Container>
-            <AddTimeDialog
+            <ModifyTimeItemDialog
                 title="Add Entry"
-                onOK={() => {
-                }}
+                onOK={addEntry}
                 onClose={() => setAddTimeOpen(false)}
                 open={addTimeOpen}
+                showTimePicker={true}
+                setTemperature={setTemperature}
+                temperature={temperature}
+                setTime={setTime}
+                time={time}
+            />
+            <ModifyTimeItemDialog
+                title="Edit Entry"
+                onOK={editEntry}
+                onClose={() => setEditTimeOpen(false)}
+                open={editTimeOpen}
                 showTimePicker={showTimePicker}
                 setTemperature={setTemperature}
                 temperature={temperature}
-                setTime={(time) => {
-                    setTime(time);
-                    console.log(time);
-                }}
+                setTime={setTime}
                 time={time}
             />
             <Dialog open={copyFromOpen} onClose={() => setCopyFromOpen(false)}>
                 <DialogTitle>Copy From</DialogTitle>
             </Dialog>
             <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
+            <AlertSnackbar {...Error}/>
+            <AlertSnackbar severity="success" {...Success}/>
         </Track>
     )
 }

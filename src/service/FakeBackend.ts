@@ -85,6 +85,8 @@ class FakeBackend implements Backend {
             } else if (url.includes('/predictions/')) {
                 const index = url.substring(url.lastIndexOf('/') + 1)
                 e.ok(db.predictions[user][index] ?? [])
+            } else if (url.includes('/thermostat')) {
+                e.ok(db.thermostats[user])
             } else if (url.includes('/mood/')) {
                 const index = url.substring(url.lastIndexOf('/') + 1)
                 e.ok(db.mood[user][index] ?? {x: 5, y: 5})
@@ -134,7 +136,7 @@ class FakeBackend implements Backend {
     put<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: AxiosRequestConfig): Promise<R> {
         return new Promise<R>((resolve, reject) => {
             let e: Executor = new DefaultExecutor(resolve, reject);
-            console.log(`FAKEBACKEND PUT Fake backend call to ${url}`, config)
+            console.log(`FAKEBACKEND PUT Fake backend call to ${url}`, 'config:', config, 'data:', data)
             if (!config) return e.error();
             const db = getFakeDB();
             const token = config.headers.Authorization;
@@ -163,6 +165,11 @@ class FakeBackend implements Backend {
             } else if (url.startsWith('/mood')) {
                 const date = url.substring(url.lastIndexOf('/') + 1)
                 db.mood[user][date] = data['mood'];
+                saveFakeDB(db);
+
+                return e.ok({})
+            } else if (url.startsWith('/thermostat')) {
+                db.thermostats[user] = data['data'];
                 saveFakeDB(db);
 
                 return e.ok({})

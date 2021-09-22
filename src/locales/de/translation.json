@@ -42,7 +42,7 @@
   "confirm_dialog_content": "Sind Sie sicher, dass Sie dieses Gerät löschen möchten?",
   "dialog_button_delete": "Löschen",
   "dialog_button_rename": "Umbenennen",
-  "behavior_changes_saved": "Änderungen gespeichert",
+  "changes_saved": "Änderungen gespeichert",
   "card_mood_title": "Wohlbefinden",
   "card_mood_subtitle": "Mein aktuelles Wohlbefinden",
   "save": "Speichern",
@@ -55,5 +55,7 @@
   "info": "Info",
   "hide_consumer": "Gerät verstecken",
   "show_consumer": "Gerät anzeigen",
-  "consumer_help": "* Wäsche (Waschmaschine, Wäschetrockner, Bügeleisen, …)\n* Kochen (Backrohr, Herd, Mikrowelle, Toaster, Elektrogrill, Wasserkocher, Kaffeemaschine, Abzugshaube, Warmwasser, …)\n* Spülen (Geschirrspüler, Warmwasser, …)\n* Hygiene/Reinigung (Warmwasser, Haarfön, Staubsauger, …)\n* Entertainment (TV, Audio, Computerspiele, …)\n* Wellness (Sauna, Whirlpool, Dampfbad, Infrarotkabine, Massagesessel, …)\n* Home-Office (PC, Drucker, Telefon, …)\n* Laden E-Mobilität (E-Auto, E-Bike, E-Scooter, …)\n* Sonstiges (Luftentfeuchter, Elektro-Rasenmäher, Modelleisenbahn, Außenbeleuchtung, Aquariums-/Terrariumsbeleuchtung, …)\n* Stromheizung und Kühlen (Stromheizung, Klimaanlage, Raumklimagerät, Ventilator, …)"
+  "consumer_help": "* Wäsche (Waschmaschine, Wäschetrockner, Bügeleisen, …)\n* Kochen (Backrohr, Herd, Mikrowelle, Toaster, Elektrogrill, Wasserkocher, Kaffeemaschine, Abzugshaube, Warmwasser, …)\n* Spülen (Geschirrspüler, Warmwasser, …)\n* Hygiene/Reinigung (Warmwasser, Haarfön, Staubsauger, …)\n* Entertainment (TV, Audio, Computerspiele, …)\n* Wellness (Sauna, Whirlpool, Dampfbad, Infrarotkabine, Massagesessel, …)\n* Home-Office (PC, Drucker, Telefon, …)\n* Laden E-Mobilität (E-Auto, E-Bike, E-Scooter, …)\n* Sonstiges (Luftentfeuchter, Elektro-Rasenmäher, Modelleisenbahn, Außenbeleuchtung, Aquariums-/Terrariumsbeleuchtung, …)\n* Stromheizung und Kühlen (Stromheizung, Klimaanlage, Raumklimagerät, Ventilator, …)",
+  "reset": "Zurücksetzen",
+  "compare": "Vergleichen"
 }

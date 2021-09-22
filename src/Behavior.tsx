@@ -90,7 +90,7 @@ function Behavior(props: Props) {
     const handleSave = useCallback(() =>
             backendService.putPrediction(date, rows.map((r) => (
                 {consumerId: r.consumerId, data: r.cellStates})))
-                .then(() => setSuccess(t('behavior_changes_saved')))
+                .then(() => setSuccess(t('changes_saved')))
                 .then(() => setState({...state, modified: false}), setError)
                 .catch(console.log)
         , [state, rows, backendService, setError, setSuccess, t]);
