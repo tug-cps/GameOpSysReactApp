@@ -1,3 +1,4 @@
+import {ArrowBack} from "@mui/icons-material";
 import {
     AppBar,
     Box,
@@ -13,46 +14,15 @@ import {
     Typography,
     useScrollTrigger
 } from "@mui/material";
-import {Link as RouterLink, useHistory} from "react-router-dom";
-import React from "react";
-import makeStyles from '@mui/styles/makeStyles';
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import React from "react";
 import {useTranslation} from "react-i18next";
+import {Link as RouterLink, useHistory} from "react-router-dom";
 import {useNavDrawerDestinations} from "./Destinations";
-import {ArrowBack} from "@mui/icons-material";
 
 const drawerWidth = 240;
-
-const useStyles = makeStyles(theme => ({
-        menuButton: {
-            marginRight: theme.spacing(2),
-        },
-        menu: {
-            width: drawerWidth,
-        },
-        toolbar: theme.mixins.toolbar,
-        root: {
-            display: "flex",
-        },
-        content: {
-            flexGrow: 1
-        },
-        drawer: {
-            [theme.breakpoints.up('sm')]: {
-                flexShrink: 0,
-                width: drawerWidth,
-            }
-        },
-        appBar: {
-            [theme.breakpoints.up('sm')]: {
-                marginLeft: drawerWidth,
-                width: `calc(100% - ${drawerWidth}px)`,
-            }
-        }
-    })
-);
 
 export interface Props {
     hideBackButton?: boolean;
@@ -61,15 +31,15 @@ export interface Props {
 }
 
 export function DefaultDrawer() {
-    const classes = useStyles();
+
     const {t} = useTranslation();
     const destinations = useNavDrawerDestinations();
 
     return (
-        <nav className={classes.drawer}>
+        <Box component='nav' sx={{flexShrink: {sm: 0}, width: {sm: drawerWidth}}}>
             <Hidden smDown>
                 <Drawer open variant="persistent">
-                    <Box role="presentation" className={classes.menu}>
+                    <Box role="presentation" sx={{width: drawerWidth}}>
                         <AppBarSpace/>
                         <Divider/>
                         <List>
@@ -83,45 +53,43 @@ export function DefaultDrawer() {
                     </Box>
                 </Drawer>
             </Hidden>
-        </nav>
+        </Box>
     );
 }
 
 export function Content(props: React.PropsWithChildren<{}>) {
-    const classes = useStyles();
-    return <div className={classes.content}>
+
+    return <Box sx={{flexGrow: 1}}>
         <AppBarSpace/>
         <React.Suspense fallback={<LinearProgress/>}>
             <Box paddingTop={1}>
                 {props.children}
             </Box>
         </React.Suspense>
-    </div>
+    </Box>
 }
 
 export function Root(props: React.PropsWithChildren<{}>) {
-    const classes = useStyles();
-    return <div className={classes.root} children={props.children}/>
+    return <Box sx={{display: 'flex'}} children={props.children}/>
 }
 
 export function AppBarSpace() {
-    const classes = useStyles();
-    return <div className={classes.toolbar}/>
+    return <Toolbar/>
 }
 
 function DefaultAppBar(props: React.PropsWithChildren<Props> & { hideBackButton?: boolean }) {
     const {title} = props;
     const trigger = useScrollTrigger();
-    const classes = useStyles();
+
     const history = useHistory();
     return (
         <Slide appear={false} direction="down" in={!trigger}>
-            <AppBar className={classes.appBar}>
-                <Toolbar className={classes.toolbar}>
+            <AppBar sx={{ml: {sm: `${drawerWidth}px`}, width: {sm: `calc(100% - ${drawerWidth}px)`}}}>
+                <Toolbar>
                     {!props.hideBackButton &&
                     <IconButton
                         color="inherit"
-                        className={classes.menuButton}
+                        sx={{marginRight: 2}}
                         onClick={history.goBack}
                         size="large">
                         <ArrowBack/>

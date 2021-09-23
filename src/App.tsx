@@ -7,7 +7,7 @@ import {
     StyledEngineProvider,
     Theme,
     ThemeOptions,
-    ThemeProvider, useMediaQuery,
+    ThemeProvider,
 } from "@mui/material";
 import {lightGreen} from "@mui/material/colors";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
@@ -25,7 +25,6 @@ declare module '@mui/styles/defaultTheme' {
     interface DefaultTheme extends Theme {
     }
 }
-
 
 const backendService = new BackendService(Config.backend);
 export const UserContext = React.createContext<UserModel | undefined>(undefined);

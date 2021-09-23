@@ -1,26 +1,17 @@
+import {Card, CardContent, Container, Typography} from "@mui/material";
 import React, {useEffect, useState} from 'react';
-import { Card, CardContent, Container, Theme, Typography } from "@mui/material";
-import { WithStyles } from '@mui/styles';
-import createStyles from '@mui/styles/createStyles';
-import withStyles from '@mui/styles/withStyles';
-import {PowerEntry} from "./power/PowerEntry";
-import useDefaultTracking from "./common/Tracking";
 import {useTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
+import useDefaultTracking from "./common/Tracking";
+import {PowerEntry} from "./power/PowerEntry";
 
-const styles = ({spacing}: Theme) => createStyles({
-    card: {
-        marginTop: spacing(2)
-    },
-});
-
-interface Props extends PrivateRouteProps, WithStyles<typeof styles> {
+interface Props extends PrivateRouteProps {
 }
 
 function Power(props: Props) {
     const {Track} = useDefaultTracking({page: 'Power'});
     const [dates, setDates] = useState<string[]>();
-    const {classes, backendService, setAppBar} = props;
+    const {backendService, setAppBar} = props;
     const {t} = useTranslation();
 
     useEffect(() => {
@@ -40,7 +31,7 @@ function Power(props: Props) {
             {dates &&
             <Container maxWidth="md">
                 {dates.map((date) =>
-                    <Card variant="outlined" key={date} className={classes.card}>
+                    <Card variant="outlined" key={date} sx={{marginTop: 2}}>
                         <CardContent>
                             <Typography variant="h6">{date}</Typography>
                             <PowerEntry date={date} backendService={backendService}/>
@@ -50,7 +41,7 @@ function Power(props: Props) {
             </Container>
             }
         </Track>
-    )
+    );
 }
 
-export default withStyles(styles)(Power);
+export default (Power);
