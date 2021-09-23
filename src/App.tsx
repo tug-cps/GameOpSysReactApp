@@ -1,29 +1,29 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import {LocalizationProvider} from "@mui/lab";
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {
     createTheme,
     CssBaseline,
     LinearProgress,
-    DeprecatedThemeOptions,
-    ThemeProvider,
-    Theme,
     StyledEngineProvider,
-    adaptV4Theme,
+    Theme,
+    ThemeOptions,
+    ThemeProvider, useMediaQuery,
 } from "@mui/material";
+import {lightGreen} from "@mui/material/colors";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
+import {useTracking} from "react-tracking";
+import DefaultAppBar, {Content, DefaultDrawer, Root} from "./common/DefaultAppBar";
+import DefaultBottomNavigation from "./common/DefaultBottomNavigation";
+import Config from "./Config";
 import {PrivateRouter, PublicRouter} from "./Routes";
 import BackendService from "./service/BackendService";
-import Config from "./Config";
-import {lightGreen} from "@mui/material/colors";
-import {useTracking} from "react-tracking";
 import {UserModel} from "./service/Model";
-import DefaultBottomNavigation from "./common/DefaultBottomNavigation";
-import DefaultAppBar, {Content, DefaultDrawer, Root} from "./common/DefaultAppBar";
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import {LocalizationProvider} from "@mui/lab";
 
 
 declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface DefaultTheme extends Theme {
+    }
 }
 
 
@@ -45,7 +45,7 @@ function App() {
     //Disabled, not supported for now
     //const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
-    const theme: DeprecatedThemeOptions = useMemo(() => createTheme(adaptV4Theme({
+    const theme: ThemeOptions = useMemo(() => createTheme({
         palette: {
             mode: 'light',
             primary: {
@@ -56,40 +56,48 @@ function App() {
                 main: lightGreen[400]
             },
         },
-        props: {
+        components: {
             MuiUseMediaQuery: {
-                noSsr: true,
+                defaultProps: {
+                    noSsr: true,
+                }
             },
             MuiGrid: {
-                spacing: 1
+                defaultProps: {
+                    spacing: 1
+                }
             },
             MuiCard: {
-                variant: "outlined",
-                square: true,
+                defaultProps: {
+                    variant: "outlined",
+                    square: true,
+                }
             },
-        },
-        overrides: {
             MuiFab: {
-                root: {
-                    position: 'fixed',
-                    bottom: '10px',
-                    right: '10px',
-                    // When bottom bar is shown, raise FAB position
-                    '@media (max-width:599.95px)': {
-                        bottom: '70px'
+                styleOverrides: {
+                    root: {
+                        position: 'fixed',
+                        bottom: '10px',
+                        right: '10px',
+                        // When bottom bar is shown, raise FAB position
+                        '@media (max-width:599.95px)': {
+                            bottom: '70px'
+                        }
                     }
                 }
             },
             MuiSnackbar: {
-                anchorOriginBottomCenter: {
-                    // When bottom bar is shown, raise Snackbar position
-                    '@media (max-width:599.95px)': {
-                        bottom: '70px'
+                styleOverrides: {
+                    anchorOriginBottomCenter: {
+                        // When bottom bar is shown, raise Snackbar position
+                        '@media (max-width:599.95px)': {
+                            bottom: '70px'
+                        }
                     }
                 }
             }
         },
-    })), []);
+    }), []);
     const [user, setUser] = useState<UserModel>();
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>();
     const {Track} = useTracking({}, {
@@ -140,10 +148,10 @@ function App() {
                                 <DefaultDrawer/>
                                 <Content>
                                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                    <PrivateRouter
-                                        backendService={backendService}
-                                        setAppBar={setAppBarCb}
-                                    />
+                                        <PrivateRouter
+                                            backendService={backendService}
+                                            setAppBar={setAppBarCb}
+                                        />
                                     </LocalizationProvider>
                                 </Content>
                             </Root>
