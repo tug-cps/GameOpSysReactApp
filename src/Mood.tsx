@@ -78,6 +78,7 @@ function DraggableGraph(props: GraphProps) {
             },
             animation: false,
             plugins: {
+                // @ts-ignore
                 dragData: {
                     dragX: true,
                     showTooltip: true,
