@@ -23,6 +23,7 @@
     "axios": "^0.21.4",
     "chart.js": "^3.5.1",
     "chartjs-plugin-dragdata": "^2.1.0",
+    "date-fns": "^2.24.0",
     "history": "^4.10.1",
     "i18next": "^21.0.2",
     "i18next-browser-languagedetector": "^6.1.2",

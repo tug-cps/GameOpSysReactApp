@@ -1,10 +1,12 @@
-import {CloudUploadOutlined} from "@mui/icons-material";
+import {CloudUploadOutlined, InfoOutlined} from "@mui/icons-material";
 import {Box, Button, Container, Grid, Link, List, ListItem, Typography} from "@mui/material";
-import {styled} from '@mui/material/styles';
+import {styled} from '@mui/system';
 import React, {useEffect} from 'react';
 import {useTranslation, WithTranslation, withTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
+import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
+import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 
@@ -33,6 +35,7 @@ function Upload(props: Props) {
     const [error, setError] = useSnackBar();
     const {t} = useTranslation();
     const {backendService, setAppBar} = props;
+    const [infoProps, openInfo] = useInfoDialog();
 
     const onUpload = (file: File) => {
         backendService.postConsumption(file)
@@ -46,8 +49,10 @@ function Upload(props: Props) {
     useEffect(() => setAppBar({
         title: t('card_upload_title'),
         showBackButton: false,
-        children: () => <></>
-    }), [t, setAppBar])
+        children: () => <>
+            <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
+        </>
+    }), [t, setAppBar, openInfo])
 
     return (
         <Track>
@@ -78,7 +83,7 @@ function Upload(props: Props) {
                                 color="textSecondary"
                                 paragraph
                             >{t('upload_instruction_upload')}</Typography>
-                            <label htmlFor="input-file">
+                            <label htmlFor="contained-button-file">
                                 <Input
                                     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                     id="contained-button-file"
@@ -97,6 +102,7 @@ function Upload(props: Props) {
                     </Grid>
                 </Box>
             </Container>
+            <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
             <AlertSnackbar severity="success" {...success} />
             <AlertSnackbar {...error} />
         </Track>

@@ -1,5 +1,5 @@
 import {Avatar, Button, Container, TextField, Typography} from "@mui/material";
-import {styled} from '@mui/material/styles';
+import {styled} from '@mui/system';
 import React, {useEffect, useState} from 'react';
 import {withTranslation, WithTranslation} from "react-i18next";
 import {withRouter} from "react-router";
