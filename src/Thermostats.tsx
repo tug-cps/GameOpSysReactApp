@@ -1,13 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Box, Container, Dialog, DialogTitle, Grid, GridSize, Tab, Tabs, Toolbar} from "@material-ui/core";
+import {Box, Container, Dialog, DialogTitle, Grid, GridSize, Tab, Tabs, Toolbar} from "@mui/material";
+import {CompareArrowsOutlined, InfoOutlined, RotateLeft, SaveAlt} from "@mui/icons-material";
+import {useTranslation} from "react-i18next";
 import {ThermostatDaySetting, TimeItem} from "./thermostats/ThermostatDaySetting";
 import useDefaultTracking from "./common/Tracking";
-import {useTranslation} from "react-i18next";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
-import {CompareArrowsOutlined, InfoOutlined, RotateLeft, SaveAlt} from "@material-ui/icons";
-import BackendService from "./service/BackendService";
-import {AppBarProps} from "./App";
+import {PrivateRouteProps} from "./App";
 import {ModifyTimeItemDialog} from "./thermostats/ModifyTimeItemDialog";
 import {createTime} from "./common/Time";
 import {data_} from "./thermostats/DummyData";
@@ -49,9 +48,7 @@ interface TabModel {
     xl: GridSize
 }
 
-interface Props {
-    backendService: BackendService
-    setAppBar: (props: AppBarProps) => void
+interface Props extends PrivateRouteProps {
 }
 
 const copyData = (data: Array<Array<TimeItem>>) => data.map((day) => day.map((e) => ({...e})))
@@ -74,16 +71,16 @@ function Thermostats(props: Props) {
     useEffect(() => {
         backendService.getThermostats()
             .then((data) => {
-                if (data.length === 7) {
+                if (data?.length === 7) {
                     data = data.map(day => sortDay(day));
                     setData(data);
                     setInitialData(data);
                 } else {
-                    console.log("set dummy data")
                     setData(data_);
                     setInitialData(data_);
                 }
             }, (e) => {
+                console.log(e);
                 setData(data_)
                 setInitialData(data_)
                 setError(e)

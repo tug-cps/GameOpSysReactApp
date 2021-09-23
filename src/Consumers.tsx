@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Box, Container, DialogContentText, List, Paper} from "@material-ui/core";
+import {Box, Container, DialogContentText, List, Paper} from "@mui/material";
 import {ConsumerModel} from "./service/Model";
 import ConsumerCard from "./consumers/ConsumerCard";
 import {useTranslation} from "react-i18next";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
-import {InfoOutlined} from "@material-ui/icons";
+import {InfoOutlined} from "@mui/icons-material";
 import useDefaultTracking from "./common/Tracking";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";

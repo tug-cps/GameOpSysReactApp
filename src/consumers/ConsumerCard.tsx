@@ -7,10 +7,10 @@ import {
     ListItemSecondaryAction,
     ListItemText,
     Tooltip
-} from "@material-ui/core";
+} from "@mui/material";
 import React from "react";
 import {backgroundColor, iconLookup, translate} from "../common/ConsumerTools";
-import {Delete, Visibility, VisibilityOff} from "@material-ui/icons";
+import {Delete, Visibility, VisibilityOff} from "@mui/icons-material";
 import {useTranslation} from "react-i18next";
 
 interface Props {
@@ -49,7 +49,8 @@ const ConsumerCard = React.memo((props: Props) => {
                     <IconButton
                         edge="end"
                         arial-label={showButtonTooltip}
-                        onClick={() => clickActive(consumer)}>
+                        onClick={() => clickActive(consumer)}
+                        size="large">
                         {consumer.active ? <Visibility/> : <VisibilityOff/>}
                     </IconButton>
                 </Tooltip>
@@ -58,13 +59,14 @@ const ConsumerCard = React.memo((props: Props) => {
                 <IconButton
                     edge="end"
                     arial-label="delete"
-                    onClick={() => clickDelete(consumer)}>
+                    onClick={() => clickDelete(consumer)}
+                    size="large">
                     <Delete/>
                 </IconButton>
                 }
             </ListItemSecondaryAction>
         </ListItem>
-    )
+    );
 }, compareProps)
 
 export default ConsumerCard;

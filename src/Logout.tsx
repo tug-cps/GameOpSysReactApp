@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 import BackendService from "./service/BackendService";
-import {LinearProgress} from "@material-ui/core";
+import {LinearProgress} from "@mui/material";
 import useDefaultTracking from "./common/Tracking";
 
 function Logout(props: { backendService: BackendService }) {

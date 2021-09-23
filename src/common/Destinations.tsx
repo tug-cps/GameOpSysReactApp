@@ -8,7 +8,7 @@ import {
     PersonOutline,
     ShowChart,
     SvgIconComponent
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import {useContext} from "react";
 import {UserContext} from "../App";
 

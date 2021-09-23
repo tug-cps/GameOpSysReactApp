@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Container} from "@material-ui/core";
+import {Container} from "@mui/material";
 import ArchiveEntry from "./archive/ArchiveEntry";
 import {useTranslation} from "react-i18next";
 import {useSnackBar} from "./common/UseSnackBar";

@@ -1,42 +1,14 @@
+import {Avatar, Box, Button, Container, Grid, TextField, Typography} from "@mui/material";
+import {styled} from "@mui/system";
 import React, {useState} from 'react';
-import {
-    Avatar,
-    Box,
-    Button,
-    Container,
-    createStyles,
-    Grid,
-    TextField,
-    Theme,
-    Typography,
-    WithStyles
-} from "@material-ui/core";
-import {withStyles} from "@material-ui/core/styles";
-import {RouteComponentProps} from 'react-router-dom';
-import BackendService from "./service/BackendService";
-import {withRouter} from "react-router";
 import {withTranslation, WithTranslation} from "react-i18next";
+import {withRouter} from "react-router";
+import {RouteComponentProps} from 'react-router-dom';
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
+import BackendService from "./service/BackendService";
 
-const styles = ({palette, spacing}: Theme) => createStyles({
-    paper: {
-        margin: spacing(2),
-        padding: spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    avatar: {
-        margin: spacing(1),
-        backgroundColor: palette.secondary.main,
-    },
-    submit: {
-        margin: spacing(3, 0, 2),
-    },
-});
-
-interface Props extends WithStyles<typeof styles>, RouteComponentProps, WithTranslation {
+interface Props extends RouteComponentProps, WithTranslation {
     backendService: BackendService
 }
 
@@ -45,10 +17,18 @@ interface State {
     email: string;
 }
 
+const StyledGrid = styled(Grid)({
+    margin: 2,
+    padding: 8,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+})
+
 function Login(props: Props) {
     const [state, setState] = useState<State>({shared_password: '', email: ''});
     const [error, setError] = useSnackBar();
-    const {classes, t, backendService, history} = props;
+    const {t, backendService, history} = props;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -58,19 +38,16 @@ function Login(props: Props) {
     }
 
     return (
-        <>
-            <Box display="flex" alignItems="center" height="100vh">
+        (<>
+            <Box sx={{display: 'flex', alignItems: 'center', height: '100vh'}}>
                 <Container maxWidth="lg">
                     <Grid container spacing={2}>
-                        <Grid item xs={12} md className={classes.paper}>
-                            <Box alignItems="center" display="flex" justifyContent="center" flexDirection="column"
-                                 height="100%">
-                                <Typography paragraph component="h1" variant="h2">Ansers</Typography>
-                                <Typography component="h2" variant="h5">{t('login_welcome')}</Typography>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12} md className={classes.paper}>
-                            <Avatar className={classes.avatar}/>
+                        <StyledGrid item xs={12} md>
+                            <Typography paragraph component="h1" variant="h2">ANSERS</Typography>
+                            <Typography component="h2" variant="h5">{t('login_welcome')}</Typography>
+                        </StyledGrid>
+                        <StyledGrid item xs={12} md>
+                            <Avatar sx={{margin: '1px', backgroundColor: 'secondary.main'}}/>
                             <Typography component="h1" variant="h5">{t('login_sign_in')}</Typography>
                             <form onSubmit={handleSubmit}>
                                 <TextField
@@ -100,18 +77,18 @@ function Login(props: Props) {
                                     fullWidth
                                     variant="contained"
                                     color="primary"
-                                    className={classes.submit}
+                                    sx={{marginTop: 1}}
                                 >
                                     {t('login_submit')}
                                 </Button>
                             </form>
-                        </Grid>
+                        </StyledGrid>
                     </Grid>
                 </Container>
             </Box>
             <AlertSnackbar {...error} />
-        </>
+        </>)
     );
 }
 
-export default withRouter(withStyles(styles)(withTranslation()(Login)));
+export default withRouter((withTranslation()(Login)));

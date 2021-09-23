@@ -1,39 +1,31 @@
+import {Box, Paper, SvgIcon, useMediaQuery, useTheme} from "@mui/material";
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {Paper, SvgIcon, useMediaQuery, useTheme} from "@material-ui/core";
+import {useHistory} from "react-router-dom";
 import {useBottomBarDestinations} from "./Destinations";
 
-const useStyles = makeStyles({
-    root: {
-        width: '100%',
-        position: 'fixed',
-        bottom: 0,
-        overflow: 'hidden',
-        zIndex: 100
-    },
-    spacer: {
-        marginTop: '60px'
-    },
-});
-
 function DefaultBottomNavigation() {
-    const classes = useStyles();
+
     const history = useHistory();
     const {t} = useTranslation()
     const [value, setValue] = React.useState(0);
     const theme = useTheme();
-    const matches = useMediaQuery(theme.breakpoints.down('xs'));
+    const matches = useMediaQuery(theme.breakpoints.down('sm'));
     const destinations = useBottomBarDestinations();
 
     if (!matches) return null;
     return (
-        <>
-            <div className={classes.spacer}/>
-            <Paper className={classes.root} elevation={5}>
+        (<>
+            <Box sx={{marginTop: '60px'}}/>
+            <Paper sx={{
+                width: '100%',
+                position: 'fixed',
+                bottom: 0,
+                overflow: 'hidden',
+                zIndex: 100
+            }} elevation={5}>
                 <BottomNavigation
                     value={value}
                     onChange={(event, newValue) => {
@@ -50,7 +42,7 @@ function DefaultBottomNavigation() {
                     }
                 </BottomNavigation>
             </Paper>
-        </>
+        </>)
     );
 }
 

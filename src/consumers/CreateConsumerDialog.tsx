@@ -8,7 +8,7 @@ import {
     DialogContentText,
     DialogTitle, List, ListItem, ListItemAvatar, ListItemText, Paper,
     TextField
-} from "@material-ui/core";
+} from "@mui/material";
 import React, {ChangeEvent, useState} from "react";
 import {iconLookup} from "../common/ConsumerTools";
 

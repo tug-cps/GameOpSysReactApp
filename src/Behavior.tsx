@@ -1,7 +1,7 @@
-import React, {useCallback, useEffect, useState} from "react";
-import BehaviorDragSelect, {Row} from "./behavior/BehaviorDragSelect"
+import {InfoOutlined, SaveAlt} from "@mui/icons-material";
 import {
-    Avatar, Box,
+    Avatar,
+    Box,
     Container,
     Table,
     TableBody,
@@ -10,20 +10,18 @@ import {
     TableHead,
     TableRow,
     Tooltip,
-    WithStyles
-} from "@material-ui/core";
+} from "@mui/material";
+import React, {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Prompt} from 'react-router-dom';
-import {withStyles} from "@material-ui/core/styles";
-import {styles} from "./behavior/BehaviorStyles";
-import {InfoOutlined, SaveAlt} from "@material-ui/icons";
-import {backgroundColor, iconLookup, translate} from "./common/ConsumerTools";
+import {PrivateRouteProps} from "./App";
+import BehaviorDragSelect, {Row} from "./behavior/BehaviorDragSelect"
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {useSnackBar} from "./common/UseSnackBar";
-import useDefaultTracking from "./common/Tracking";
+import {backgroundColor, iconLookup, translate} from "./common/ConsumerTools";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
-import {PrivateRouteProps} from "./App";
+import useDefaultTracking from "./common/Tracking";
+import {useSnackBar} from "./common/UseSnackBar";
 
 const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
@@ -32,7 +30,33 @@ const energyAvailable = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1
 
 const date = new Date().toISOString().slice(0, 10)
 
-interface Props extends PrivateRouteProps, WithStyles<typeof styles> {
+const style = {
+    userSelect: "none",
+    borderCollapse: "collapse",
+    "& thead th": {
+        position: "sticky",
+        top: "0px",
+        zIndex: 1,
+    },
+    "& thead>tr:nth-child(2) th": {
+        top: "37px"
+    },
+    "& td": {
+        border: 1,
+        borderColor: 'divider'
+    },
+    "& td.cell-selected": {
+        backgroundColor: 'secondary.main'
+    },
+    "& td.cell-being-selected": {
+        backgroundColor: 'primary.main'
+    },
+    "& td.cell-disabled": {
+        backgroundColor: "red"
+    }
+} as const
+
+interface Props extends PrivateRouteProps {
 }
 
 interface ExtendedRow extends Row {
@@ -51,7 +75,7 @@ function Behavior(props: Props) {
     const [success, setSuccess] = useSnackBar();
     const {t} = useTranslation();
     const [infoProps, openInfo] = useInfoDialog();
-    const {classes, setAppBar, backendService} = props;
+    const {setAppBar, backendService} = props;
     const {rows, modified} = state;
 
     useEffect(() => {
@@ -65,7 +89,7 @@ function Behavior(props: Props) {
                                 <Avatar
                                     variant="rounded"
                                     style={{backgroundColor: backgroundColor(c.consumerId)}}
-                                    className={classes.avatar}
+                                    sx={{width: 30, height: 30}}
                                 >
                                     {iconLookup(c.type)}
                                 </Avatar>
@@ -77,7 +101,7 @@ function Behavior(props: Props) {
                 setState({rows: cellStates, modified: false})
             }, setError)
             .catch(console.log)
-    }, [backendService, classes.avatar, setError]);
+    }, [backendService, setError]);
 
     const handleChange = (cells: boolean[][]) => {
         setState({
@@ -110,8 +134,8 @@ function Behavior(props: Props) {
         <Track>
             <Container maxWidth="xl" disableGutters>
                 <Box style={{display: "grid"}}>
-                    <TableContainer className={classes.container}>
-                        <Table stickyHeader size="small" className={classes.tableDragSelect}>
+                    <TableContainer sx={{overflow: 'auto', maxHeight: 'calc(100vh - 140px)'}}>
+                        <Table stickyHeader size="small" sx={style}>
                             <TableHead>
                                 <TableRow>
                                     <TableCell variant="head"/>
@@ -136,4 +160,4 @@ function Behavior(props: Props) {
         </Track>)
 }
 
-export default withStyles(styles)(Behavior);
+export default Behavior;

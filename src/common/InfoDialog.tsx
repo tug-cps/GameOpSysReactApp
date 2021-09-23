@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from "react";
-import {Button, DialogActions, DialogContent, DialogContentText} from "@material-ui/core";
+import {Button, DialogActions, DialogContent, DialogContentText} from "@mui/material";
 import {ResponsiveDialog} from "./ResponsiveDialog";
 
 export function useInfoDialog(): readonly [{ open: boolean, onClose: () => void }, () => void] {

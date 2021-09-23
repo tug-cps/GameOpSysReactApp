@@ -10,10 +10,10 @@ import {
     Power,
     Restaurant,
     Spa
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import {TranslatedString} from "../service/Model";
 import i18next from "i18next";
-import {blue, green, orange, pink, purple, red, teal} from "@material-ui/core/colors";
+import {blue, green, orange, pink, purple, red, teal} from "@mui/material/colors";
 
 export function translate(str: TranslatedString | undefined, override: string | undefined): string {
     if (override && override !== '') return override;

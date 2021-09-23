@@ -1,7 +1,7 @@
 /*  Adapted from https://github.com/mcjohnalds/react-table-drag-select */
 
 import React from "react";
-import {TableCell, TableRow} from "@material-ui/core";
+import {TableCell, TableRow} from "@mui/material";
 
 export interface Row {
     header: JSX.Element;

@@ -14,7 +14,7 @@ import {
     ListItemAvatar,
     ListItemText,
     Paper
-} from "@material-ui/core";
+} from "@mui/material";
 import {iconLookup, translate} from "../common/ConsumerTools";
 
 export function useDeleteConsumerDialog(onApplyDelete: (consumer: ConsumerModel, onClose: () => void) => void) {

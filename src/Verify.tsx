@@ -1,34 +1,19 @@
+import {Avatar, Button, Container, TextField, Typography} from "@mui/material";
+import {styled} from '@mui/system';
 import React, {useEffect, useState} from 'react';
-import {Avatar, Button, Container, createStyles, TextField, Theme, Typography, WithStyles} from "@material-ui/core";
-import {withStyles} from "@material-ui/core/styles";
-import {RouteComponentProps} from "react-router-dom";
-import BackendService from "./service/BackendService";
-import {withRouter} from "react-router";
 import {withTranslation, WithTranslation} from "react-i18next";
+import {withRouter} from "react-router";
+import {RouteComponentProps} from "react-router-dom";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
+import BackendService from "./service/BackendService";
 
-const styles = ({palette, spacing}: Theme) => createStyles({
-    paper: {
-        marginTop: spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    avatar: {
-        margin: spacing(1),
-        backgroundColor: palette.secondary.main,
-    },
-    form: {
-        width: '100%',
-        marginTop: spacing(1),
-    },
-    submit: {
-        margin: spacing(3, 0, 2),
-    },
+const Form = styled('form')({
+    width: '100%',
+    marginTop: 1
 });
 
-interface Props extends WithStyles<typeof styles>, RouteComponentProps, WithTranslation {
+interface Props extends RouteComponentProps, WithTranslation {
     backendService: BackendService
 }
 
@@ -37,10 +22,18 @@ interface State {
     password: string
 }
 
+const StyledContainer = styled('div')({
+    margin: 2,
+    padding: 8,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+})
+
 function Verify(props: Props) {
     const [state, setState] = useState<State>({password: ''})
     const [error, setError] = useSnackBar()
-    const {location, history, backendService, classes, t} = props;
+    const {location, history, backendService, t} = props;
 
     useEffect(() => {
         // @ts-ignore
@@ -61,12 +54,15 @@ function Verify(props: Props) {
     }
 
     return (
-        <>
+        (<>
             <Container component="main" maxWidth="sm">
-                <div className={classes.paper}>
-                    <Avatar className={classes.avatar}/>
+                <StyledContainer>
+                    <Avatar sx={{
+                        margin: '1px',
+                        backgroundColor: 'secondary.main',
+                    }}/>
                     <Typography component="h1" variant="h5">{t('verify_title')}</Typography>
-                    <form className={classes.form} onSubmit={handleSubmit}>
+                    <Form onSubmit={handleSubmit}>
                         <TextField
                             autoFocus
                             id="otp"
@@ -77,17 +73,19 @@ function Verify(props: Props) {
                             onChange={(e) => setState({...state, password: e.target.value})}
                             required
                             fullWidth/>
-                        <Button type="submit"
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                className={classes.submit}>{t('verify_login')}</Button>
-                    </form>
-                </div>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            sx={{marginTop: 1}}
+                        >{t('verify_login')}</Button>
+                    </Form>
+                </StyledContainer>
             </Container>
             <AlertSnackbar {...error}/>
-        </>
+        </>)
     );
 }
 
-export default withRouter(withStyles(styles)(withTranslation()(Verify)));
+export default withRouter((withTranslation()(Verify)));

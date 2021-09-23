@@ -13,9 +13,9 @@ import {
     TableRow,
     Typography,
     useTheme
-} from "@material-ui/core";
+} from "@mui/material";
 import {Scatter} from "react-chartjs-2";
-import {Delete, Edit} from "@material-ui/icons";
+import {Delete, Edit} from "@mui/icons-material";
 import {chartOptions, createData} from "./ChartOptions";
 import {createTime} from "../common/Time";
 

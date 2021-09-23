@@ -1,15 +1,22 @@
+import {LocalizationProvider} from "@mui/lab";
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import {
+    createTheme,
+    CssBaseline,
+    LinearProgress,
+    StyledEngineProvider,
+    ThemeOptions,
+    ThemeProvider,
+} from "@mui/material";
+import {lightGreen} from "@mui/material/colors";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {createTheme, CssBaseline, LinearProgress, ThemeOptions, ThemeProvider,} from "@material-ui/core";
+import {useTracking} from "react-tracking";
+import DefaultAppBar, {Content, DefaultDrawer, Root} from "./common/DefaultAppBar";
+import DefaultBottomNavigation from "./common/DefaultBottomNavigation";
+import Config from "./Config";
 import {PrivateRouter, PublicRouter} from "./Routes";
 import BackendService from "./service/BackendService";
-import Config from "./Config";
-import {lightGreen} from "@material-ui/core/colors";
-import {useTracking} from "react-tracking";
 import {UserModel} from "./service/Model";
-import DefaultBottomNavigation from "./common/DefaultBottomNavigation";
-import DefaultAppBar, {Content, DefaultDrawer, Root} from "./common/DefaultAppBar";
-import DateFnsUtils from "@date-io/date-fns";
-import {MuiPickersUtilsProvider} from "@material-ui/pickers";
 
 const backendService = new BackendService(Config.backend);
 export const UserContext = React.createContext<UserModel | undefined>(undefined);
@@ -31,7 +38,7 @@ function App() {
 
     const theme: ThemeOptions = useMemo(() => createTheme({
         palette: {
-            type: 'light',
+            mode: 'light',
             primary: {
                 main: lightGreen[600],
                 contrastText: '#fff'
@@ -40,35 +47,43 @@ function App() {
                 main: lightGreen[400]
             },
         },
-        props: {
+        components: {
             MuiUseMediaQuery: {
-                noSsr: true,
+                defaultProps: {
+                    noSsr: true,
+                }
             },
             MuiGrid: {
-                spacing: 1
+                defaultProps: {
+                    spacing: 1
+                }
             },
             MuiCard: {
-                variant: "outlined",
-                square: true,
+                defaultProps: {
+                    variant: "outlined",
+                    square: true,
+                }
             },
-        },
-        overrides: {
             MuiFab: {
-                root: {
-                    position: 'fixed',
-                    bottom: '10px',
-                    right: '10px',
-                    // When bottom bar is shown, raise FAB position
-                    '@media (max-width:599.95px)': {
-                        bottom: '70px'
+                styleOverrides: {
+                    root: {
+                        position: 'fixed',
+                        bottom: '10px',
+                        right: '10px',
+                        // When bottom bar is shown, raise FAB position
+                        '@media (max-width:599.95px)': {
+                            bottom: '70px'
+                        }
                     }
                 }
             },
             MuiSnackbar: {
-                anchorOriginBottomCenter: {
-                    // When bottom bar is shown, raise Snackbar position
-                    '@media (max-width:599.95px)': {
-                        bottom: '70px'
+                styleOverrides: {
+                    anchorOriginBottomCenter: {
+                        // When bottom bar is shown, raise Snackbar position
+                        '@media (max-width:599.95px)': {
+                            bottom: '70px'
+                        }
                     }
                 }
             }
@@ -106,37 +121,39 @@ function App() {
     const setAppBarCb = useCallback((props: AppBarProps) => setAppBar(props), [])
 
     return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline/>
-            {isLoggedIn !== undefined &&
-            <React.Suspense fallback={<LinearProgress/>}>
-                {!isLoggedIn &&
-                <PublicRouter backendService={backendService}/>
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
+                <CssBaseline/>
+                {isLoggedIn !== undefined &&
+                <React.Suspense fallback={<LinearProgress/>}>
+                    {!isLoggedIn &&
+                    <PublicRouter backendService={backendService}/>
+                    }
+                    {isLoggedIn &&
+                    <UserContext.Provider value={user}>
+                        <Track>
+                            <Root>
+                                <DefaultAppBar title={appBar.title}
+                                               hideBackButton={!appBar.showBackButton}
+                                               children={appBar.children()}/>
+                                <DefaultDrawer/>
+                                <Content>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <PrivateRouter
+                                            backendService={backendService}
+                                            setAppBar={setAppBarCb}
+                                        />
+                                    </LocalizationProvider>
+                                </Content>
+                            </Root>
+                            <DefaultBottomNavigation/>
+                        </Track>
+                    </UserContext.Provider>
+                    }
+                </React.Suspense>
                 }
-                {isLoggedIn &&
-                <UserContext.Provider value={user}>
-                    <Track>
-                        <Root>
-                            <DefaultAppBar title={appBar.title}
-                                           hideBackButton={!appBar.showBackButton}
-                                           children={appBar.children()}/>
-                            <DefaultDrawer/>
-                            <Content>
-                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <PrivateRouter
-                                    backendService={backendService}
-                                    setAppBar={setAppBarCb}
-                                />
-                                </MuiPickersUtilsProvider>
-                            </Content>
-                        </Root>
-                        <DefaultBottomNavigation/>
-                    </Track>
-                </UserContext.Provider>
-                }
-            </React.Suspense>
-            }
-        </ThemeProvider>
+            </ThemeProvider>
+        </StyledEngineProvider>
     );
 }
 
