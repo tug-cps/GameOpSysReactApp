@@ -6,7 +6,7 @@ import {
     LinearProgress,
     StyledEngineProvider,
     ThemeOptions,
-    ThemeProvider,
+    ThemeProvider, useMediaQuery,
 } from "@mui/material";
 import {lightGreen} from "@mui/material/colors";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
@@ -18,8 +18,19 @@ import {PrivateRouter, PublicRouter} from "./Routes";
 import BackendService from "./service/BackendService";
 import {UserModel} from "./service/Model";
 
+export type ColorMode = 'light' | 'dark' | undefined
+interface ColorModeCtx {
+    mode: ColorMode,
+    toggleColorMode: (mode: ColorMode) => void
+}
+
 const backendService = new BackendService(Config.backend);
 export const UserContext = React.createContext<UserModel | undefined>(undefined);
+export const ColorModeContext = React.createContext<ColorModeCtx>({
+    mode: undefined,
+    toggleColorMode: (state: ColorMode) => {
+    }
+});
 
 export interface AppBarProps {
     title: string,
@@ -33,12 +44,13 @@ export interface PrivateRouteProps {
 }
 
 function App() {
-    //Disabled, not supported for now
-    //const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const [mode, setMode] = useState<'light' | 'dark' | undefined>();
+    const colorMode = useMemo(() => ({mode: mode, toggleColorMode: (mode: ColorMode) => setMode(mode)}), [mode]);
 
     const theme: ThemeOptions = useMemo(() => createTheme({
         palette: {
-            mode: 'light',
+            mode: mode ? mode : (prefersDarkMode ? 'dark' : 'light'),
             primary: {
                 main: lightGreen[600],
                 contrastText: '#fff'
@@ -88,7 +100,7 @@ function App() {
                 }
             }
         },
-    }), []);
+    }), [prefersDarkMode, mode]);
     const [user, setUser] = useState<UserModel>();
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>();
     const {Track} = useTracking({}, {
@@ -126,30 +138,32 @@ function App() {
                 <CssBaseline/>
                 {isLoggedIn !== undefined &&
                 <React.Suspense fallback={<LinearProgress/>}>
-                    {!isLoggedIn &&
-                    <PublicRouter backendService={backendService}/>
-                    }
-                    {isLoggedIn &&
-                    <UserContext.Provider value={user}>
-                        <Track>
-                            <Root>
-                                <DefaultAppBar title={appBar.title}
-                                               hideBackButton={!appBar.showBackButton}
-                                               children={appBar.children()}/>
-                                <DefaultDrawer/>
-                                <Content>
-                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                        <PrivateRouter
-                                            backendService={backendService}
-                                            setAppBar={setAppBarCb}
-                                        />
-                                    </LocalizationProvider>
-                                </Content>
-                            </Root>
-                            <DefaultBottomNavigation/>
-                        </Track>
-                    </UserContext.Provider>
-                    }
+                    <ColorModeContext.Provider value={colorMode}>
+                        {!isLoggedIn &&
+                        <PublicRouter backendService={backendService}/>
+                        }
+                        {isLoggedIn &&
+                        <UserContext.Provider value={user}>
+                            <Track>
+                                <Root>
+                                    <DefaultAppBar title={appBar.title}
+                                                   hideBackButton={!appBar.showBackButton}
+                                                   children={appBar.children()}/>
+                                    <DefaultDrawer/>
+                                    <Content>
+                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                            <PrivateRouter
+                                                backendService={backendService}
+                                                setAppBar={setAppBarCb}
+                                            />
+                                        </LocalizationProvider>
+                                    </Content>
+                                </Root>
+                                <DefaultBottomNavigation/>
+                            </Track>
+                        </UserContext.Provider>
+                        }
+                    </ColorModeContext.Provider>
                 </React.Suspense>
                 }
             </ThemeProvider>
