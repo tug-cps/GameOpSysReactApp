@@ -11,7 +11,7 @@ import {
     DialogTitle, List, ListItem,
     ListItemAvatar, ListItemText, Paper,
     TextField
-} from "@material-ui/core";
+} from "@mui/material";
 
 export function useEditConsumerDialog(onApplyEdit: (consumer: ConsumerModel, closeDialog: () => void) => void) {
     const [state, setState] = useState<{ consumer?: ConsumerModel, consumerName?: string, open: boolean }>({open: false});

@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, DialogActions, DialogContent, InputAdornment, TextField, Typography} from "@material-ui/core";
+import {Button, DialogActions, DialogContent, InputAdornment, TextField, Typography} from "@mui/material";
 import {ResponsiveDialog} from "../common/ResponsiveDialog";
 import {StaticTimePicker} from "@mui/lab";
 

@@ -1,7 +1,8 @@
 import React, {useCallback, useEffect, useState} from "react";
 import BehaviorDragSelect, {Row} from "./behavior/BehaviorDragSelect"
 import {
-    Avatar, Box,
+    Avatar,
+    Box,
     Container,
     Table,
     TableBody,
@@ -10,13 +11,13 @@ import {
     TableHead,
     TableRow,
     Tooltip,
-    WithStyles
-} from "@material-ui/core";
+} from "@mui/material";
+import { WithStyles } from '@mui/styles';
 import {useTranslation} from "react-i18next";
 import {Prompt} from 'react-router-dom';
-import {withStyles} from "@material-ui/core/styles";
+import withStyles from '@mui/styles/withStyles';
 import {styles} from "./behavior/BehaviorStyles";
-import {InfoOutlined, SaveAlt} from "@material-ui/icons";
+import {InfoOutlined, SaveAlt} from "@mui/icons-material";
 import {backgroundColor, iconLookup, translate} from "./common/ConsumerTools";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";

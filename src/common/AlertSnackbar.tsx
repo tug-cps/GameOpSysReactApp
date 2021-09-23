@@ -1,12 +1,12 @@
-import {Snackbar} from "@material-ui/core";
-import {Alert, Color} from "@material-ui/lab";
+import {AlertColor, Snackbar} from "@mui/material";
+import { Alert } from '@mui/material';
 import React from "react";
 
 export interface Props {
     open: boolean
     onClose: () => void
     message?: string,
-    severity?: Color
+    severity?: AlertColor
     autoHideDuration?: number
 }
 

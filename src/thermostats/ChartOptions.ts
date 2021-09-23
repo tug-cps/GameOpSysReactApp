@@ -1,4 +1,4 @@
-import {Palette} from "@material-ui/core/styles/createPalette";
+import { Palette } from '@mui/material/styles';
 import {TimeItem} from "./ThermostatDaySetting";
 
 export const chartOptions = {

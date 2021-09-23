@@ -12,16 +12,16 @@ import {
     Toolbar,
     Typography,
     useScrollTrigger
-} from "@material-ui/core";
+} from "@mui/material";
 import {Link as RouterLink, useHistory} from "react-router-dom";
 import React from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
+import makeStyles from '@mui/styles/makeStyles';
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
 import {useTranslation} from "react-i18next";
 import {useNavDrawerDestinations} from "./Destinations";
-import {ArrowBack} from "@material-ui/icons";
+import {ArrowBack} from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -67,7 +67,7 @@ export function DefaultDrawer() {
 
     return (
         <nav className={classes.drawer}>
-            <Hidden xsDown>
+            <Hidden smDown>
                 <Drawer open variant="persistent">
                     <Box role="presentation" className={classes.menu}>
                         <AppBarSpace/>
@@ -84,7 +84,7 @@ export function DefaultDrawer() {
                 </Drawer>
             </Hidden>
         </nav>
-    )
+    );
 }
 
 export function Content(props: React.PropsWithChildren<{}>) {
@@ -119,7 +119,11 @@ function DefaultAppBar(props: React.PropsWithChildren<Props> & { hideBackButton?
             <AppBar className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
                     {!props.hideBackButton &&
-                    <IconButton color="inherit" className={classes.menuButton} onClick={history.goBack}>
+                    <IconButton
+                        color="inherit"
+                        className={classes.menuButton}
+                        onClick={history.goBack}
+                        size="large">
                         <ArrowBack/>
                     </IconButton>
                     }
@@ -130,7 +134,7 @@ function DefaultAppBar(props: React.PropsWithChildren<Props> & { hideBackButton?
                 {props.multiLine}
             </AppBar>
         </Slide>
-    )
+    );
 }
 
 export default DefaultAppBar;

@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Box, Container, Dialog, DialogTitle, Grid, GridSize, Tab, Tabs, Toolbar} from "@material-ui/core";
+import {Box, Container, Dialog, DialogTitle, Grid, GridSize, Tab, Tabs, Toolbar} from "@mui/material";
+import {CompareArrowsOutlined, InfoOutlined, RotateLeft, SaveAlt} from "@mui/icons-material";
+import {useTranslation} from "react-i18next";
 import {ThermostatDaySetting, TimeItem} from "./thermostats/ThermostatDaySetting";
 import useDefaultTracking from "./common/Tracking";
-import {useTranslation} from "react-i18next";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
-import {CompareArrowsOutlined, InfoOutlined, RotateLeft, SaveAlt} from "@material-ui/icons";
 import {PrivateRouteProps} from "./App";
 import {ModifyTimeItemDialog} from "./thermostats/ModifyTimeItemDialog";
 import {createTime} from "./common/Time";

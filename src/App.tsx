@@ -1,15 +1,31 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {createTheme, CssBaseline, LinearProgress, ThemeOptions, ThemeProvider,} from "@material-ui/core";
+import {
+    createTheme,
+    CssBaseline,
+    LinearProgress,
+    DeprecatedThemeOptions,
+    ThemeProvider,
+    Theme,
+    StyledEngineProvider,
+    adaptV4Theme,
+} from "@mui/material";
 import {PrivateRouter, PublicRouter} from "./Routes";
 import BackendService from "./service/BackendService";
 import Config from "./Config";
-import {lightGreen} from "@material-ui/core/colors";
+import {lightGreen} from "@mui/material/colors";
 import {useTracking} from "react-tracking";
 import {UserModel} from "./service/Model";
 import DefaultBottomNavigation from "./common/DefaultBottomNavigation";
 import DefaultAppBar, {Content, DefaultDrawer, Root} from "./common/DefaultAppBar";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {LocalizationProvider} from "@mui/lab";
+
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 const backendService = new BackendService(Config.backend);
 export const UserContext = React.createContext<UserModel | undefined>(undefined);
@@ -29,9 +45,9 @@ function App() {
     //Disabled, not supported for now
     //const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
-    const theme: ThemeOptions = useMemo(() => createTheme({
+    const theme: DeprecatedThemeOptions = useMemo(() => createTheme(adaptV4Theme({
         palette: {
-            type: 'light',
+            mode: 'light',
             primary: {
                 main: lightGreen[600],
                 contrastText: '#fff'
@@ -73,7 +89,7 @@ function App() {
                 }
             }
         },
-    }), []);
+    })), []);
     const [user, setUser] = useState<UserModel>();
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>();
     const {Track} = useTracking({}, {
@@ -106,37 +122,39 @@ function App() {
     const setAppBarCb = useCallback((props: AppBarProps) => setAppBar(props), [])
 
     return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline/>
-            {isLoggedIn !== undefined &&
-            <React.Suspense fallback={<LinearProgress/>}>
-                {!isLoggedIn &&
-                <PublicRouter backendService={backendService}/>
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
+                <CssBaseline/>
+                {isLoggedIn !== undefined &&
+                <React.Suspense fallback={<LinearProgress/>}>
+                    {!isLoggedIn &&
+                    <PublicRouter backendService={backendService}/>
+                    }
+                    {isLoggedIn &&
+                    <UserContext.Provider value={user}>
+                        <Track>
+                            <Root>
+                                <DefaultAppBar title={appBar.title}
+                                               hideBackButton={!appBar.showBackButton}
+                                               children={appBar.children()}/>
+                                <DefaultDrawer/>
+                                <Content>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <PrivateRouter
+                                        backendService={backendService}
+                                        setAppBar={setAppBarCb}
+                                    />
+                                    </LocalizationProvider>
+                                </Content>
+                            </Root>
+                            <DefaultBottomNavigation/>
+                        </Track>
+                    </UserContext.Provider>
+                    }
+                </React.Suspense>
                 }
-                {isLoggedIn &&
-                <UserContext.Provider value={user}>
-                    <Track>
-                        <Root>
-                            <DefaultAppBar title={appBar.title}
-                                           hideBackButton={!appBar.showBackButton}
-                                           children={appBar.children()}/>
-                            <DefaultDrawer/>
-                            <Content>
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                <PrivateRouter
-                                    backendService={backendService}
-                                    setAppBar={setAppBarCb}
-                                />
-                                </LocalizationProvider>
-                            </Content>
-                        </Root>
-                        <DefaultBottomNavigation/>
-                    </Track>
-                </UserContext.Provider>
-                }
-            </React.Suspense>
-            }
-        </ThemeProvider>
+            </ThemeProvider>
+        </StyledEngineProvider>
     );
 }
 

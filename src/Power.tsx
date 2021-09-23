@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Card, CardContent, Container, createStyles, Theme, Typography, WithStyles} from "@material-ui/core";
-import {withStyles} from "@material-ui/core/styles";
+import { Card, CardContent, Container, Theme, Typography } from "@mui/material";
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
 import {PowerEntry} from "./power/PowerEntry";
 import useDefaultTracking from "./common/Tracking";
 import {useTranslation} from "react-i18next";

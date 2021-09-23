@@ -11,9 +11,9 @@ import {
     Paper,
     TextField,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import {Link as RouterLink, useHistory} from "react-router-dom";
-import {ArrowRight, Email, ExitToApp, InfoOutlined, Language, MyLocation, Power} from "@material-ui/icons";
+import {ArrowRight, Email, ExitToApp, InfoOutlined, Language, MyLocation, Power} from "@mui/icons-material";
 import i18next from "i18next";
 import {useTranslation, withTranslation, WithTranslation} from "react-i18next";
 import BackendService from "./service/BackendService";

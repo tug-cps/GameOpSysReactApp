@@ -1,10 +1,10 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import makeStyles from '@mui/styles/makeStyles';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {Paper, SvgIcon, useMediaQuery, useTheme} from "@material-ui/core";
+import {Paper, SvgIcon, useMediaQuery, useTheme} from "@mui/material";
 import {useBottomBarDestinations} from "./Destinations";
 
 const useStyles = makeStyles({
@@ -26,7 +26,7 @@ function DefaultBottomNavigation() {
     const {t} = useTranslation()
     const [value, setValue] = React.useState(0);
     const theme = useTheme();
-    const matches = useMediaQuery(theme.breakpoints.down('xs'));
+    const matches = useMediaQuery(theme.breakpoints.down('sm'));
     const destinations = useBottomBarDestinations();
 
     if (!matches) return null;

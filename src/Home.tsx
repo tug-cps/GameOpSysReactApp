@@ -6,14 +6,14 @@ import {
     CardContent,
     CardMedia,
     Container,
-    createStyles,
     Grid,
     SvgIcon,
     Theme,
     Typography,
-    withStyles,
-    WithStyles
-} from "@material-ui/core";
+} from "@mui/material";
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
 import {Link as RouterLink} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {useHomeDestinations} from "./common/Destinations";
@@ -85,7 +85,7 @@ function Home(props: PrivateRouteProps) {
     return (
         <Track>
             <Container maxWidth="lg">
-                <Grid container justify="center">
+                <Grid container justifyContent="center">
                     {homeDestinations.map((item: Item, index: number) =>
                         <HomeCard item={item} key={index}/>)}
                 </Grid>

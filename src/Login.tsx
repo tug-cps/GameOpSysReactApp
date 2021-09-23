@@ -1,17 +1,8 @@
 import React, {useState} from 'react';
-import {
-    Avatar,
-    Box,
-    Button,
-    Container,
-    createStyles,
-    Grid,
-    TextField,
-    Theme,
-    Typography,
-    WithStyles
-} from "@material-ui/core";
-import {withStyles} from "@material-ui/core/styles";
+import { Avatar, Box, Button, Container, Grid, TextField, Theme, Typography } from "@mui/material";
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
 import {RouteComponentProps} from 'react-router-dom';
 import BackendService from "./service/BackendService";
 import {withRouter} from "react-router";
