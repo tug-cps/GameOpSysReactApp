@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, DialogActions, DialogContent, InputAdornment, TextField, Typography} from "@material-ui/core";
-import {KeyboardTimePicker} from "@material-ui/pickers";
 import {ResponsiveDialog} from "../common/ResponsiveDialog";
+import {StaticTimePicker} from "@mui/lab";
 
 interface Props {
     title: string
@@ -21,15 +21,12 @@ export function ModifyTimeItemDialog(props: Props) {
             {props.showTimePicker &&
             <>
                 <Typography variant="subtitle2">Time</Typography>
-                <KeyboardTimePicker
-                    autoOk
-                    openTo="hours"
-                    fullWidth
+                <StaticTimePicker
+                    label="Select Time"
                     ampm={false}
                     value={props.time}
-                    inputVariant="filled"
-                    label="Time"
-                    onChange={props.setTime}
+                    onChange={(date) => props.setTime(date)}
+                    renderInput={() => <></>}
                 />
             </>
             }
