@@ -1,4 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import {
+    ArrowRight,
+    Brightness4Outlined,
+    Email,
+    ExitToApp,
+    InfoOutlined,
+    Language,
+    MyLocation,
+    Power
+} from "@mui/icons-material";
 import {
     Container,
     Divider,
@@ -10,20 +19,22 @@ import {
     MenuItem,
     Paper,
     TextField,
+    ToggleButton,
+    ToggleButtonGroup,
     Typography
 } from "@mui/material";
-import {Link as RouterLink, useHistory} from "react-router-dom";
-import {ArrowRight, Email, ExitToApp, InfoOutlined, Language, MyLocation, Power} from "@mui/icons-material";
 import i18next from "i18next";
+import React, {useContext, useEffect, useState} from 'react';
 import {useTranslation, withTranslation, WithTranslation} from "react-i18next";
-import BackendService from "./service/BackendService";
+import {Link as RouterLink, useHistory} from "react-router-dom";
+import {AppBarProps, ColorMode, ColorModeContext} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {useSnackBar} from "./common/UseSnackBar";
-import {UserModel} from "./service/Model";
-import useDefaultTracking from "./common/Tracking";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
-import {AppBarProps} from "./App";
+import useDefaultTracking from "./common/Tracking";
+import {useSnackBar} from "./common/UseSnackBar";
+import BackendService from "./service/BackendService";
+import {UserModel} from "./service/Model";
 
 function UserInfo(props: { user: UserModel }) {
     const {user} = props;
@@ -39,11 +50,11 @@ function UserInfo(props: { user: UserModel }) {
     )}</>
 }
 
-function ConsumersInfo(props: { consumers?: number }) {
+function ConsumersInfo(props: {}) {
     const {t} = useTranslation();
     return <ListItem key={'element_consumers'} button component={RouterLink} to={"/consumers"}>
         <ListItemIcon><Power/></ListItemIcon>
-        <ListItemText>{t('user_consumer', {count: props.consumers})}</ListItemText>
+        <ListItemText>{t('user_consumer')}</ListItemText>
         <ListItemIcon><ArrowRight/></ListItemIcon>
     </ListItem>
 }
@@ -76,9 +87,10 @@ function User(props: Props) {
     const [infoProps, openInfo] = useInfoDialog();
     const [language, setLanguage] = useState<string>(i18next.languages[0]);
     const [user, setUser] = useState<UserModel>()
-    const [consumers, setConsumers] = useState<number>();
     const [error, setError] = useSnackBar();
     const history = useHistory();
+    const colorMode = useContext(ColorModeContext);
+    const colorModeValue = colorMode.mode ?? 'auto';
 
     const {backendService, t, setAppBar} = props;
 
@@ -86,13 +98,6 @@ function User(props: Props) {
         backendService.getUser()
             .then(setUser, setError)
             .catch(console.log)
-    }, [backendService, setError])
-
-    useEffect(() => {
-        backendService.getConsumers()
-            .then(consumers => consumers?.length | 0)
-            .then(setConsumers, setError)
-            .catch(console.log);
     }, [backendService, setError])
 
     const changeLanguage = (language: string) =>
@@ -116,6 +121,12 @@ function User(props: Props) {
         })
     }, [history, openInfo, t, setAppBar])
 
+    const setColorMode = (event: React.MouseEvent<HTMLElement>, value: string | null) => {
+        if (value !== null) {
+            colorMode.toggleColorMode((value !== 'auto' ? value : undefined) as ColorMode)
+        }
+    }
+
     return (
         <Track>
             {user &&
@@ -124,8 +135,23 @@ function User(props: Props) {
                     <List>
                         <UserInfo user={user}/>
                         <Divider variant="inset" component="li"/>
-                        {user.type !== "management" && <ConsumersInfo consumers={consumers}/>}
+                        {user.type !== "management" && <ConsumersInfo/>}
                         <LanguageInfo language={language} changeLanguage={changeLanguage}/>
+                        <ListItem>
+                            <ListItemIcon><Brightness4Outlined/></ListItemIcon>
+                            <ToggleButtonGroup
+                                fullWidth
+                                color="primary"
+                                value={colorModeValue}
+                                exclusive
+                                onChange={setColorMode}
+                            >
+                                <ToggleButton value="auto">Auto</ToggleButton>
+                                <ToggleButton value="light">Light</ToggleButton>
+                                <ToggleButton value="dark">Dark</ToggleButton>
+                            </ToggleButtonGroup>
+                        </ListItem>
+
                     </List>
                 </Paper>
                 {process.env.REACT_APP_BUILD_SHA && <Typography>{process.env.REACT_APP_BUILD_SHA}</Typography>}
