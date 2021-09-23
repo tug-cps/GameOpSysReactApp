@@ -121,11 +121,11 @@ class BackendService {
             .put('/predictions/' + date, {predictions: predictions}, this.addAuth())
     }
 
-    getThermostats(): Promise<Array<Array<TimeItem>>> {
+    getThermostats(): Promise<Array<Array<TimeItem>> | null> {
         return this.backend
             .get<Array<Array<TimeItem>>>('/thermostat', this.addAuth())
             .then(unpack)
-            .then((data) => data.map(day => day.map(it => ({time: new Date(it.time), temperature: it.temperature}))))
+            .then((data) => data?.map(day => day.map(it => ({time: new Date(it.time), temperature: it.temperature}))))
     }
 
     putThermostats(data: Array<Array<TimeItem>>) {
