@@ -5,7 +5,6 @@ import {
     CssBaseline,
     LinearProgress,
     StyledEngineProvider,
-    Theme,
     ThemeOptions,
     ThemeProvider,
 } from "@mui/material";
@@ -18,13 +17,6 @@ import Config from "./Config";
 import {PrivateRouter, PublicRouter} from "./Routes";
 import BackendService from "./service/BackendService";
 import {UserModel} from "./service/Model";
-
-
-declare module '@mui/styles/defaultTheme' {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface DefaultTheme extends Theme {
-    }
-}
 
 const backendService = new BackendService(Config.backend);
 export const UserContext = React.createContext<UserModel | undefined>(undefined);
