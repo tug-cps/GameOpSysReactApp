@@ -1,17 +1,21 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Box, Container, Dialog, DialogTitle, Grid, GridSize, Tab, Tabs, Toolbar} from "@mui/material";
 import {CompareArrowsOutlined, InfoOutlined, RotateLeft, SaveAlt} from "@mui/icons-material";
+import {Box, Container, DialogContent, Grid, GridSize, List, ListItem} from "@mui/material";
+import Divider from "@mui/material/Divider";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
-import {ThermostatDaySetting, TimeItem} from "./thermostats/ThermostatDaySetting";
-import useDefaultTracking from "./common/Tracking";
-import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
-import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import {PrivateRouteProps} from "./App";
-import {ModifyTimeItemDialog} from "./thermostats/ModifyTimeItemDialog";
-import {createTime} from "./common/Time";
-import {data_} from "./thermostats/DummyData";
 import {AlertSnackbar} from "./common/AlertSnackbar";
+import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
+import {ResponsiveDialog} from "./common/ResponsiveDialog";
+import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
+import {createTime} from "./common/Time";
+import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
+import {data_} from "./thermostats/DummyData";
+import {ModifyTimeItemDialog} from "./thermostats/ModifyTimeItemDialog";
+import {ThermostatDaySetting, TimeItem} from "./thermostats/ThermostatDaySetting";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -65,8 +69,8 @@ function Thermostats(props: Props) {
     const [Error, setError] = useSnackBar();
     const {setAppBar, backendService} = props;
 
-    const simpleDayLabels = ["Werktage", "Wochenende"]
-    const dayLabels = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
+    const simpleDayLabels = [t('day_weekdays'), t('day_weekend')]
+    const dayLabels = [t('day_monday'), t('day_tuesday'), t('day_wednesday'), t('day_thursday'), t('day_friday'), t('day_saturday'), t('day_sunday')]
 
     useEffect(() => {
         backendService.getThermostats()
@@ -79,12 +83,7 @@ function Thermostats(props: Props) {
                     setData(data_);
                     setInitialData(data_);
                 }
-            }, (e) => {
-                console.log(e);
-                setData(data_)
-                setInitialData(data_)
-                setError(e)
-            })
+            }, setError)
             .catch(console.log)
     }, [backendService, setError])
 
@@ -101,7 +100,7 @@ function Thermostats(props: Props) {
     }))
     const tabs: TabModel[] = [
         {days: simpleDays, md: 6, lg: 6, xl: 6},
-        {days: days, md: 6, lg: 4, xl: 3}
+        {days: days, md: 6, lg: 4, xl: 4}
     ]
 
     const reset = useCallback(() => setData(initialData), [initialData]);
@@ -135,8 +134,10 @@ function Thermostats(props: Props) {
         setID(+id);
         setAddTimeOpen(true);
     }, []);
-
-    const onCopyFrom = useCallback((id: string) => setCopyFromOpen(true), []);
+    const onCopyFrom = useCallback((id: string) => {
+        setID(+id);
+        setCopyFromOpen(true);
+    }, []);
     const onDelete = useCallback((id: string, index: number) => {
         setData(prevState => prevState.map((item, idx) =>
             String(idx) === id ? item.filter((value, refIndex) => refIndex !== index) : item));
@@ -177,17 +178,28 @@ function Thermostats(props: Props) {
         setEditTimeOpen(false);
     }, [index, id, time, temperature]);
 
+    const copyFrom = useCallback((fromID: number) => {
+        if (id === undefined) return;
+        setData(prevState => {
+            const state = copyData(prevState);
+            state[id] = prevState[fromID].map(it => ({...it}));
+            return state;
+        });
+    }, [id])
+
     return (
         <Track>
-            <Toolbar>
-                <Box mx="auto"/>
-                <Tabs value={activeTab} variant="fullWidth" onChange={(e, tab) => setActiveTab(tab)}>
-                    <Tab label="Einfach" id="simple-tab-0" aria-controls="simple-tabpanel-0"/>
-                    <Tab label="Erweitert" id="simple-tab-1" aria-controls="simple-tabpanel-1"/>
-                </Tabs>
-                <Box mx="auto"/>
-            </Toolbar>
             <Container disableGutters maxWidth="xl">
+                <ToggleButtonGroup
+                    color="primary"
+                    value={activeTab}
+                    exclusive
+                    sx={{my: 1, display: "flex", justifyContent: "center"}}
+                    onChange={((event, value) => value !== null && setActiveTab(value))}
+                >
+                    <ToggleButton value={0}>{t('thermostat_simple')}</ToggleButton>
+                    <ToggleButton value={1}>{t('thermostat_advanced')}</ToggleButton>
+                </ToggleButtonGroup>
                 <Box p={1}>
                     {tabs.map((tab, index) => (
                         <TabPanel index={index} value={activeTab} key={index}>
@@ -239,9 +251,34 @@ function Thermostats(props: Props) {
                 setTime={setTime}
                 time={time}
             />
-            <Dialog open={copyFromOpen} onClose={() => setCopyFromOpen(false)}>
-                <DialogTitle>Copy From</DialogTitle>
-            </Dialog>
+            <ResponsiveDialog title={t('dialog_copy_from_title')} open={copyFromOpen}
+                              onClose={() => setCopyFromOpen(false)}>
+                <DialogContent>
+                    <List>
+                        {dayLabels.map((day, index) =>
+                            <ListItem
+                                key={index}
+                                button
+                                disabled={index === id}
+                                onClick={() => {
+                                    copyFrom(index);
+                                    setCopyFromOpen(false);
+                                }}
+                            >{day}</ListItem>)}
+                        <Divider/>
+                        {simpleDayLabels.map((day, index) =>
+                            <ListItem
+                                key={index + 10}
+                                button
+                                disabled={index + 10 === id}
+                                onClick={() => {
+                                    copyFrom(index + 10);
+                                    setCopyFromOpen(false);
+                                }}
+                            >{day}</ListItem>)}
+                    </List>
+                </DialogContent>
+            </ResponsiveDialog>
             <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
             <AlertSnackbar {...Error}/>
             <AlertSnackbar severity="success" {...Success}/>

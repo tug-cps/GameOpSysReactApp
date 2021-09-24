@@ -56,5 +56,19 @@
   "show_consumer": "Gerät anzeigen",
   "consumer_help": "* Wäsche (Waschmaschine, Wäschetrockner, Bügeleisen, …)\n* Kochen (Backrohr, Herd, Mikrowelle, Toaster, Elektrogrill, Wasserkocher, Kaffeemaschine, Abzugshaube, Warmwasser, …)\n* Spülen (Geschirrspüler, Warmwasser, …)\n* Hygiene/Reinigung (Warmwasser, Haarfön, Staubsauger, …)\n* Entertainment (TV, Audio, Computerspiele, …)\n* Wellness (Sauna, Whirlpool, Dampfbad, Infrarotkabine, Massagesessel, …)\n* Home-Office (PC, Drucker, Telefon, …)\n* Laden E-Mobilität (E-Auto, E-Bike, E-Scooter, …)\n* Sonstiges (Luftentfeuchter, Elektro-Rasenmäher, Modelleisenbahn, Außenbeleuchtung, Aquariums-/Terrariumsbeleuchtung, …)\n* Stromheizung und Kühlen (Stromheizung, Klimaanlage, Raumklimagerät, Ventilator, …)",
   "reset": "Zurücksetzen",
-  "compare": "Vergleichen"
+  "compare": "Vergleichen",
+  "color_mode_light": "Hell",
+  "color_mode_dark": "Dunkel",
+  "day_monday": "Montag",
+  "day_tuesday": "Dienstag",
+  "day_wednesday": "Mittwoch",
+  "day_thursday": "Donnerstag",
+  "day_friday": "Freitag",
+  "day_saturday": "Samstag",
+  "day_sunday": "Sonntag",
+  "day_weekdays": "Werktage",
+  "day_weekend": "Wochenende",
+  "thermostat_simple": "Einfach",
+  "thermostat_advanced": "Erweitert",
+  "dialog_copy_from_title": "Kopiere von"
 }

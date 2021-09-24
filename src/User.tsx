@@ -1,28 +1,22 @@
-import {
-    ArrowRight,
-    Brightness4Outlined,
-    Email,
-    ExitToApp,
-    InfoOutlined,
-    Language,
-    MyLocation,
-    Power
-} from "@mui/icons-material";
-import {
-    Container,
-    Divider,
-    LinearProgress,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    MenuItem,
-    Paper,
-    TextField,
-    ToggleButton,
-    ToggleButtonGroup,
-    Typography
-} from "@mui/material";
+import ArrowRight from "@mui/icons-material/ArrowRight"
+import Brightness4Outlined from "@mui/icons-material/Brightness4Outlined"
+import Email from "@mui/icons-material/Email"
+import ExitToApp from "@mui/icons-material/ExitToApp"
+import InfoOutlined from "@mui/icons-material/InfoOutlined"
+import Language from "@mui/icons-material/Language"
+import MyLocation from "@mui/icons-material/MyLocation"
+import Power from "@mui/icons-material/Power"
+import Container from "@mui/material/Container"
+import Divider from "@mui/material/Divider"
+import LinearProgress from "@mui/material/LinearProgress"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
+import ListItemIcon from "@mui/material/ListItemIcon"
+import ListItemText from "@mui/material/ListItemText"
+import Paper from "@mui/material/Paper"
+import ToggleButton from "@mui/material/ToggleButton"
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
+import Typography from "@mui/material/Typography"
 import i18next from "i18next";
 import React, {useContext, useEffect, useState} from 'react';
 import {useTranslation, withTranslation, WithTranslation} from "react-i18next";
@@ -59,22 +53,57 @@ function ConsumersInfo(props: {}) {
     </ListItem>
 }
 
-function LanguageInfo(props: { language: string, changeLanguage: (language: string) => void }) {
+function LanguageInfo(props: { setError: (description: string) => void }) {
     const {t} = useTranslation();
-    return <ListItem key="element_language">
-        <ListItemIcon><Language/></ListItemIcon>
-        <TextField
-            label={t("language")}
-            select
-            variant="outlined"
-            fullWidth
-            value={props.language}
-            onChange={(e) => props.changeLanguage(e.target.value)}
-        >
-            <MenuItem value={"de"}>{t('lang_german')}</MenuItem>
-            <MenuItem value={"en"}>{t('lang_english')}</MenuItem>
-        </TextField>
-    </ListItem>
+    const [language, setLanguage] = useState<string>(i18next.resolvedLanguage);
+    const {setError} = props;
+
+    const changeLanguage = React.useCallback((language: string) =>
+            language && i18next.changeLanguage(language)
+                .then(() => setLanguage(language), setError)
+                .catch(console.log),
+        [setError])
+    return <>
+        <ListItem key="element_language2">
+            <ListItemIcon><Language/></ListItemIcon>
+            <ToggleButtonGroup
+                fullWidth
+                color="primary"
+                value={language}
+                exclusive
+                onChange={((event, value) => changeLanguage(value))}
+            >
+                <ToggleButton value="en">{t('lang_english')}</ToggleButton>
+                <ToggleButton value="de">{t('lang_german')}</ToggleButton>
+            </ToggleButtonGroup>
+        </ListItem>
+    </>
+}
+
+function ColorModeInfo(props: {}) {
+    const colorMode = useContext(ColorModeContext);
+    const colorModeValue = colorMode.mode ?? 'auto';
+    const {t} = useTranslation();
+    const setColorMode = (event: any, value: string | null): void => {
+        value && colorMode.toggleColorMode((value !== 'auto' ? value : undefined) as ColorMode)
+    }
+
+    return (
+        <ListItem key="element_color_mode">
+            <ListItemIcon><Brightness4Outlined/></ListItemIcon>
+            <ToggleButtonGroup
+                fullWidth
+                color="primary"
+                value={colorModeValue}
+                exclusive
+                onChange={setColorMode}
+            >
+                <ToggleButton value="auto">Auto</ToggleButton>
+                <ToggleButton value="light">{t('color_mode_light')}</ToggleButton>
+                <ToggleButton value="dark">{t('color_mode_dark')}</ToggleButton>
+            </ToggleButtonGroup>
+        </ListItem>
+    )
 }
 
 interface Props extends WithTranslation {
@@ -85,13 +114,9 @@ interface Props extends WithTranslation {
 function User(props: Props) {
     const {Track} = useDefaultTracking({page: 'User'});
     const [infoProps, openInfo] = useInfoDialog();
-    const [language, setLanguage] = useState<string>(i18next.languages[0]);
     const [user, setUser] = useState<UserModel>()
     const [error, setError] = useSnackBar();
     const history = useHistory();
-    const colorMode = useContext(ColorModeContext);
-    const colorModeValue = colorMode.mode ?? 'auto';
-
     const {backendService, t, setAppBar} = props;
 
     useEffect(() => {
@@ -99,11 +124,6 @@ function User(props: Props) {
             .then(setUser, setError)
             .catch(console.log)
     }, [backendService, setError])
-
-    const changeLanguage = (language: string) =>
-        i18next.changeLanguage(language)
-            .then(() => setLanguage(language), setError)
-            .catch(console.log)
 
     useEffect(() => {
         setAppBar({
@@ -121,12 +141,6 @@ function User(props: Props) {
         })
     }, [history, openInfo, t, setAppBar])
 
-    const setColorMode = (event: React.MouseEvent<HTMLElement>, value: string | null) => {
-        if (value !== null) {
-            colorMode.toggleColorMode((value !== 'auto' ? value : undefined) as ColorMode)
-        }
-    }
-
     return (
         <Track>
             {user &&
@@ -136,22 +150,8 @@ function User(props: Props) {
                         <UserInfo user={user}/>
                         <Divider variant="inset" component="li"/>
                         {user.type !== "management" && <ConsumersInfo/>}
-                        <LanguageInfo language={language} changeLanguage={changeLanguage}/>
-                        <ListItem>
-                            <ListItemIcon><Brightness4Outlined/></ListItemIcon>
-                            <ToggleButtonGroup
-                                fullWidth
-                                color="primary"
-                                value={colorModeValue}
-                                exclusive
-                                onChange={setColorMode}
-                            >
-                                <ToggleButton value="auto">Auto</ToggleButton>
-                                <ToggleButton value="light">Light</ToggleButton>
-                                <ToggleButton value="dark">Dark</ToggleButton>
-                            </ToggleButtonGroup>
-                        </ListItem>
-
+                        <LanguageInfo setError={setError}/>
+                        <ColorModeInfo/>
                     </List>
                 </Paper>
                 {process.env.REACT_APP_BUILD_SHA && <Typography>{process.env.REACT_APP_BUILD_SHA}</Typography>}
