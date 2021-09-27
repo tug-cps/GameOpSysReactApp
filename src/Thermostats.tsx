@@ -1,8 +1,17 @@
 import {CompareArrowsOutlined, InfoOutlined, RotateLeft, SaveAlt} from "@mui/icons-material";
-import {Box, Container, DialogContent, Grid, GridSize, List, ListItem} from "@mui/material";
+import {
+    Container,
+    DialogContent,
+    Grid,
+    GridSize,
+    List,
+    ListItem,
+    ListItemText,
+    Stack,
+    Switch,
+    Typography
+} from "@mui/material";
 import Divider from "@mui/material/Divider";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
@@ -13,9 +22,10 @@ import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import {createTime} from "./common/Time";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
+import {ThermostatModel, TimeItem} from "./service/Model";
 import {data_} from "./thermostats/DummyData";
 import {ModifyTimeItemDialog} from "./thermostats/ModifyTimeItemDialog";
-import {ThermostatDaySetting, TimeItem} from "./thermostats/ThermostatDaySetting";
+import {ThermostatDaySetting} from "./thermostats/ThermostatDaySetting";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -55,16 +65,20 @@ interface TabModel {
 interface Props extends PrivateRouteProps {
 }
 
-const copyData = (data: Array<Array<TimeItem>>) => data.map((day) => day.map((e) => ({...e})))
+const copySetting = (data: Array<Array<TimeItem>>) => data.map((day) => day.map((e) => ({...e})))
+const copyData = (data: ThermostatModel): ThermostatModel => {
+    data.simple = copySetting(data.simple);
+    data.advanced = copySetting(data.advanced);
+    return data;
+}
 const sortDay = (day: Array<TimeItem>) => day.sort((a, b) => a.time.getHours() > b.time.getHours() || (a.time.getHours() === b.time.getHours() && a.time.getMinutes() >= b.time.getMinutes()) ? 1 : -1)
 
 function Thermostats(props: Props) {
     const {Track} = useDefaultTracking({page: 'Power'});
     const {t} = useTranslation();
-    const [activeTab, setActiveTab] = useState(0);
     const [infoProps, openInfo] = useInfoDialog();
-    const [data, setData] = useState<Array<Array<TimeItem>>>([])
-    const [initialData, setInitialData] = useState<Array<Array<TimeItem>>>([])
+    const [data, setData] = useState<ThermostatModel>(data_)
+    const [initialData, setInitialData] = useState<ThermostatModel>(data_)
     const [Success, setSuccess] = useSnackBar();
     const [Error, setError] = useSnackBar();
     const {setAppBar, backendService} = props;
@@ -75,33 +89,14 @@ function Thermostats(props: Props) {
     useEffect(() => {
         backendService.getThermostats()
             .then((data) => {
-                if (data?.length === 7) {
-                    data = data.map(day => sortDay(day));
-                    setData(data);
-                    setInitialData(data);
-                } else {
-                    setData(data_);
-                    setInitialData(data_);
-                }
+                if (!data) return;
+                data.simple = data.simple.map(day => sortDay(day));
+                data.advanced = data.advanced.map(day => sortDay(day));
+                setData(data);
+                setInitialData(data);
             }, setError)
             .catch(console.log)
     }, [backendService, setError])
-
-    const empty = [{time: createTime(0, 0), temperature: 21}]
-    const days = dayLabels.map((value, index) => ({
-        id: String(index),
-        label: value,
-        data: data.length < index ? empty : data[index]
-    }))
-    const simpleDays = simpleDayLabels.map((value, index) => ({
-        id: String(index + 10),
-        label: value,
-        data: empty
-    }))
-    const tabs: TabModel[] = [
-        {days: simpleDays, md: 6, lg: 6, xl: 6},
-        {days: days, md: 6, lg: 4, xl: 4}
-    ]
 
     const reset = useCallback(() => setData(initialData), [initialData]);
     const save = useCallback(() => {
@@ -139,8 +134,14 @@ function Thermostats(props: Props) {
         setCopyFromOpen(true);
     }, []);
     const onDelete = useCallback((id: string, index: number) => {
-        setData(prevState => prevState.map((item, idx) =>
-            String(idx) === id ? item.filter((value, refIndex) => refIndex !== index) : item));
+        setData(prevState => {
+            if (+id > 9) {
+                prevState.simple[+id - 10] = prevState.simple[+id - 10].filter((value, refIndex) => refIndex !== index)
+            } else {
+                prevState.advanced[+id] = prevState.advanced[+id].filter((value, refIndex) => refIndex !== index)
+            }
+            return prevState;
+        });
     }, [])
     const [id, setID] = useState<number>();
     const [index, setIndex] = useState<number>();
@@ -156,8 +157,13 @@ function Thermostats(props: Props) {
 
         setData(prevState => {
             const state = copyData(prevState);
-            state[id].push({time: time, temperature: +temperature})
-            sortDay(state[id])
+            if (id > 9) {
+                state.simple[id - 10].push({time: time, temperature: +temperature})
+                sortDay(state.simple[id - 10])
+            } else {
+                state.advanced[id].push({time: time, temperature: +temperature})
+                sortDay(state.advanced[id])
+            }
             return state;
         });
         setAddTimeOpen(false);
@@ -171,8 +177,13 @@ function Thermostats(props: Props) {
 
         setData(prevState => {
             const state = copyData(prevState);
-            state[id][index] = {time: time, temperature: +temperature};
-            sortDay(state[id])
+            if (id > 9) {
+                state.simple[id - 10][index] = {time: time, temperature: +temperature};
+                sortDay(state.simple[id - 10])
+            } else {
+                state.advanced[id][index] = {time: time, temperature: +temperature};
+                sortDay(state.advanced[id])
+            }
             return state;
         });
         setEditTimeOpen(false);
@@ -182,52 +193,70 @@ function Thermostats(props: Props) {
         if (id === undefined) return;
         setData(prevState => {
             const state = copyData(prevState);
-            state[id] = prevState[fromID].map(it => ({...it}));
+            const from = (fromID > 9 ? prevState.simple[fromID - 10] : prevState.advanced[fromID]).map(it => ({...it}));
+            if (id > 9) {
+                state.simple[id - 10] = from;
+            } else {
+                state.advanced[id] = from;
+            }
             return state;
         });
     }, [id])
 
+    if (!data) return <></>
+
+    const empty = [{time: createTime(0, 0), temperature: 21}]
+    const days = dayLabels.map((value, index) => ({
+        id: String(index),
+        label: value,
+        data: data.advanced.length < index ? empty : data.advanced[index]
+    }))
+    const simpleDays = simpleDayLabels.map((value, index) => ({
+        id: String(index + 10),
+        label: value,
+        data: data.simple[index]
+    }))
+    const tabs: TabModel[] = [
+        {days: simpleDays, md: 6, lg: 6, xl: 6},
+        {days: days, md: 6, lg: 4, xl: 4}
+    ]
+
     return (
         <Track>
-            <Container disableGutters maxWidth="xl">
-                <ToggleButtonGroup
-                    color="primary"
-                    value={activeTab}
-                    exclusive
-                    sx={{my: 1, display: "flex", justifyContent: "center"}}
-                    onChange={((event, value) => value !== null && setActiveTab(value))}
-                >
-                    <ToggleButton value={0}>{t('thermostat_simple')}</ToggleButton>
-                    <ToggleButton value={1}>{t('thermostat_advanced')}</ToggleButton>
-                </ToggleButtonGroup>
-                <Box p={1}>
-                    {tabs.map((tab, index) => (
-                        <TabPanel index={index} value={activeTab} key={index}>
-                            <Grid container spacing={1}>
-                                {tab.days.map((day) => (
-                                    <Grid item xs={12} md={tab.md} lg={tab.lg} xl={tab.xl} key={day.id}>
-                                        <ThermostatDaySetting
-                                            id={day.id}
-                                            title={day.label}
-                                            items={day.data}
-                                            onAddTime={onAddTime}
-                                            onCopyFrom={onCopyFrom}
-                                            onEdit={(id, index) => {
-                                                setID(+id);
-                                                setIndex(index);
-                                                setTime(day.data[index].time);
-                                                setTemperature(String(day.data[index].temperature));
-                                                setShowTimePicker(index > 0);
-                                                setEditTimeOpen(true);
-                                            }}
-                                            onDelete={onDelete}
-                                        />
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        </TabPanel>
-                    ))}
-                </Box>
+            <Container maxWidth="xl">
+                <Stack direction="row" spacing={1} sx={{alignItems: "center", justifyContent: "end", pb: 1}}>
+                    <Typography variant="subtitle1">Benutze erweiterte Einstellungen</Typography>
+                    <Switch
+                        checked={data.useAdvanced}
+                        onChange={(event, value) => setData(prevState => ({...prevState, useAdvanced: value}))}/>
+                </Stack>
+
+                {tabs.map((tab, index) => (
+                    <TabPanel index={index} value={data.useAdvanced ? 1 : 0} key={index}>
+                        <Grid container spacing={1}>
+                            {tab.days.map((day) => (
+                                <Grid item xs={12} md={tab.md} lg={tab.lg} xl={tab.xl} key={day.id}>
+                                    <ThermostatDaySetting
+                                        id={day.id}
+                                        title={day.label}
+                                        items={day.data}
+                                        onAddTime={onAddTime}
+                                        onCopyFrom={onCopyFrom}
+                                        onEdit={(id, index) => {
+                                            setID(+id);
+                                            setIndex(index);
+                                            setTime(day.data[index].time);
+                                            setTemperature(String(day.data[index].temperature));
+                                            setShowTimePicker(index > 0);
+                                            setEditTimeOpen(true);
+                                        }}
+                                        onDelete={onDelete}
+                                    />
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </TabPanel>
+                ))}
             </Container>
             <ModifyTimeItemDialog
                 title="Add Entry"
@@ -264,8 +293,8 @@ function Thermostats(props: Props) {
                                     copyFrom(index);
                                     setCopyFromOpen(false);
                                 }}
-                            >{day}</ListItem>)}
-                        <Divider/>
+                            ><ListItemText>{day}</ListItemText></ListItem>)}
+                        <Divider variant="middle"/>
                         {simpleDayLabels.map((day, index) =>
                             <ListItem
                                 key={index + 10}
@@ -275,7 +304,7 @@ function Thermostats(props: Props) {
                                     copyFrom(index + 10);
                                     setCopyFromOpen(false);
                                 }}
-                            >{day}</ListItem>)}
+                            ><ListItemText>{day}</ListItemText></ListItem>)}
                     </List>
                 </DialogContent>
             </ResponsiveDialog>

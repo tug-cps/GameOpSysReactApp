@@ -1,15 +1,15 @@
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
+import {BehaviorSubject, map, Observable} from "rxjs";
 import {Backend} from "./Backend";
 import {
     ConsumerModel,
     LoginResponse,
     MoodModel,
     ProcessedConsumptionModel,
+    ThermostatModel,
     UserModel,
     UserPredictionModel
 } from "./Model";
-import {BehaviorSubject, map, Observable} from "rxjs";
-import {TimeItem} from "../thermostats/ThermostatDaySetting";
 
 function unpack<T>(response: AxiosResponse<T>): T {
     return response.data;
@@ -121,14 +121,25 @@ class BackendService {
             .put('/predictions/' + date, {predictions: predictions}, this.addAuth())
     }
 
-    getThermostats(): Promise<Array<Array<TimeItem>> | null> {
+    getThermostats(): Promise<ThermostatModel | null> {
         return this.backend
-            .get<Array<Array<TimeItem>>>('/thermostat', this.addAuth())
+            .get<ThermostatModel>('/thermostat', this.addAuth())
             .then(unpack)
-            .then((data) => data?.map(day => day.map(it => ({time: new Date(it.time), temperature: it.temperature}))))
+            .then((data) => {
+                if (!data) return data;
+                data.simple = data.simple.map(day => day.map(it => ({
+                    time: new Date(it.time),
+                    temperature: it.temperature
+                })));
+                data.advanced = data.advanced.map(day => day.map(it => ({
+                    time: new Date(it.time),
+                    temperature: it.temperature
+                })));
+                return data;
+            })
     }
 
-    putThermostats(data: Array<Array<TimeItem>>) {
+    putThermostats(data: ThermostatModel) {
         return this.backend
             .put('/thermostat', {data: data}, this.addAuth())
     }
