@@ -1,28 +1,25 @@
-import React from "react";
+import {Add, Delete, Edit} from "@mui/icons-material";
 import {
     Box,
     Button,
     Card,
     CardActions,
     CardContent,
+    CardHeader,
     IconButton,
     Table,
     TableBody,
     TableCell,
     TableHead,
     TableRow,
-    Typography,
+    Tooltip,
     useTheme
 } from "@mui/material";
+import React from "react";
 import {Scatter} from "react-chartjs-2";
-import {Delete, Edit} from "@mui/icons-material";
-import {chartOptions, createData} from "./ChartOptions";
 import {createTime} from "../common/Time";
-
-export interface TimeItem {
-    time: Date;
-    temperature: number;
-}
+import {TimeItem} from "../service/Model";
+import {chartOptions, createData} from "./ChartOptions";
 
 interface LabeledTimeItem extends TimeItem {
     label: string
@@ -64,11 +61,9 @@ export const ThermostatDaySetting = React.memo((props: Props) => {
     const data = createData(dataItems, palette);
     return (
         <Card>
+            <CardHeader title={title}/>
             <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">{title}</Typography>
-                <Box p={1}>
-                    <Scatter data={data} options={chartOptions} height={50}/>
-                </Box>
+                <Scatter data={data} options={chartOptions} height={50}/>
                 <Table size="small">
                     <TableHead>
                         <TableRow>
@@ -96,21 +91,21 @@ export const ThermostatDaySetting = React.memo((props: Props) => {
                         ))}
                     </TableBody>
                 </Table>
-                <Box my="auto" />
-                <CardActions>
-                    <Button
-                        style={{flexShrink: 0}}
-                        color="primary"
+            </CardContent>
+            <CardActions>
+                <Button
+                    color="primary"
+                    onClick={() => props.onCopyFrom(props.id)}
+                >Kopiere von ...</Button>
+                <Box mx="auto"/>
+                <Tooltip title="Zeitraum hinzufügen">
+                    <IconButton
+                        sx={{marginLeft: "auto"}}
                         onClick={() => props.onAddTime(props.id)}
                         disabled={items?.length > 4}
-                    >Zeitraum hinzufügen</Button>
-                    <Box mx="auto"/>
-                    <Button
-                        color="primary"
-                        onClick={() => props.onCopyFrom(props.id)}
-                    >Kopieren von ...</Button>
-                </CardActions>
-            </CardContent>
+                    ><Add/></IconButton>
+                </Tooltip>
+            </CardActions>
         </Card>
     )
 }, compareProps)

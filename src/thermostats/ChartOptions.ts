@@ -1,5 +1,5 @@
-import { Palette } from '@mui/material/styles';
-import {TimeItem} from "./ThermostatDaySetting";
+import {Palette} from '@mui/material/styles';
+import {TimeItem} from "../service/Model";
 
 export const chartOptions = {
     plugins: {
@@ -28,10 +28,7 @@ export const createData = (dataItems: TimeItem[], palette: Palette) => {
     return {
         datasets: [
             {
-                data: dataItems.map((i) => ({
-                    x: (i.time.getHours() + i.time.getMinutes() / 60),
-                    y: i.temperature
-                })),
+                data: dataItems.map((i) => ({x: (i.time.getHours() + i.time.getMinutes() / 60), y: i.temperature})),
                 showLine: true,
                 fill: true,
                 stepped: true,
@@ -42,4 +39,3 @@ export const createData = (dataItems: TimeItem[], palette: Palette) => {
 
     }
 }
-
