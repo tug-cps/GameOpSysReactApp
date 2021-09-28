@@ -1,4 +1,6 @@
-import {Add, Delete, Edit} from "@mui/icons-material";
+import Add from "@mui/icons-material/Add";
+import Delete from "@mui/icons-material/Delete";
+import Edit from "@mui/icons-material/Edit";
 import {
     Box,
     Button,
@@ -36,28 +38,21 @@ interface Props {
 }
 
 const printTime = (time: Date) => time.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})
+const labelTimeItems = (array: TimeItem[]): LabeledTimeItem[] => array.map((value, index) => ({
+    ...value, label: `${printTime(value.time)} - ${printTime(array[index + 1]?.time ?? createTime(23, 59))}`
+}))
 
-const labelTimeItems = (dataItems: TimeItem[]): LabeledTimeItem[] => {
-    let array = new Array<LabeledTimeItem>();
-    for (let _i = 0; _i < dataItems.length - 1; _i++) {
-        array.push({...dataItems[_i], label: printTime(dataItems[_i].time) + ' - ' + printTime(dataItems[_i + 1].time)})
-    }
-    return array;
-}
-
-export const compareProps = (a: Props, b: Props) => {
-    if (a.id !== b.id || a.title !== b.title || a.items.length !== b.items.length) return false;
-    for (let i = 0; i < a.items.length; i++) {
-        if (a.items[i].time.getTime() !== b.items[i].time.getTime() || a.items[i].temperature !== b.items[i].temperature) return false;
-    }
-    return true;
-}
+const compareItem = (a: TimeItem, b: TimeItem) => a.time.getTime() === b.time.getTime() && a.temperature === b.temperature
+export const compareProps = (a: Props, b: Props) =>
+    a.id === b.id && a.title === b.title && a.items.length === b.items.length &&
+    a.items.every((value, index) => compareItem(value, b.items[index]))
 
 export const ThermostatDaySetting = React.memo((props: Props) => {
-    const {title, items} = props;
-    const dataItems = [...items, {time: createTime(23, 59), temperature: items[items.length - 1].temperature}]
-    const labeledTimeItems = labelTimeItems(dataItems);
     const {palette} = useTheme();
+    const {title, items} = props;
+
+    const labeledTimeItems = labelTimeItems(items);
+    const dataItems = [...items, {time: createTime(23, 59), temperature: items[items.length - 1].temperature}]
     const data = createData(dataItems, palette);
     return (
         <Card>

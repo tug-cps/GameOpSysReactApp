@@ -1,4 +1,5 @@
-import {CloudUploadOutlined, InfoOutlined} from "@mui/icons-material";
+import CloudUploadOutlined from "@mui/icons-material/CloudUploadOutlined";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {Box, Button, Container, Grid, Link, List, ListItem, Typography} from "@mui/material";
 import {styled} from '@mui/system';
 import React, {useEffect} from 'react';

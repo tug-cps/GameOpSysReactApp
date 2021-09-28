@@ -1,16 +1,17 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Content, Root} from "./common/DefaultAppBar";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import SaveAlt from "@mui/icons-material/SaveAlt";
 import {Box, Card, CardContent, Container, Typography, useTheme} from "@mui/material";
-import {useTranslation} from "react-i18next";
-import {InfoOutlined, SaveAlt} from "@mui/icons-material";
-import {Bubble, defaults} from "react-chartjs-2";
 import 'chartjs-plugin-dragdata';
-import {useSnackBar} from "./common/UseSnackBar";
+import React, {useCallback, useEffect, useState} from 'react';
+import {Bubble, defaults} from "react-chartjs-2";
+import {useTranslation} from "react-i18next";
+import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import useDefaultTracking from "./common/Tracking";
+import {Content, Root} from "./common/DefaultAppBar";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
-import {PrivateRouteProps} from "./App";
+import useDefaultTracking from "./common/Tracking";
+import {useSnackBar} from "./common/UseSnackBar";
 
 interface GraphProps {
     mood: { x: number, y: number }
