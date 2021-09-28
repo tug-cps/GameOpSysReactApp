@@ -73,6 +73,13 @@ const copyData = (data: ThermostatModel): ThermostatModel => ({
 })
 const sortDay = (day: Array<TimeItem>) => day.sort((a, b) => a.time.getHours() > b.time.getHours() || (a.time.getHours() === b.time.getHours() && a.time.getMinutes() >= b.time.getMinutes()) ? 1 : -1)
 
+const compareDays = (a: TimeItem[][], b: TimeItem[][]) => a.length === b.length &&
+    a.every((day, dayIndex) =>
+        day.length === b[dayIndex].length && day.every((item, itemIndex) =>
+            item.time === b[dayIndex][itemIndex].time && item.temperature === b[dayIndex][itemIndex].temperature))
+const compareData = (a: ThermostatModel, b: ThermostatModel) => a.useAdvanced === b.useAdvanced &&
+    compareDays(a.simple, b.simple) && compareDays(a.advanced, b.advanced)
+
 function Thermostats(props: Props) {
     const {Track} = useDefaultTracking({page: 'Power'});
     const {t} = useTranslation();
@@ -106,6 +113,8 @@ function Thermostats(props: Props) {
             .catch(console.log)
     }, [data, backendService, setSuccess, t, setError])
 
+    const modified = !compareData(data, initialData);
+
     useEffect(() => {
         setAppBar({
             title: t('card_thermostats_title'),
@@ -114,10 +123,14 @@ function Thermostats(props: Props) {
                 <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
                 <ResponsiveIconButton description={t('reset')} icon={<RotateLeft/>} onClick={reset}/>
                 <ResponsiveIconButton description={t('compare')} icon={<CompareArrowsOutlined/>}/>
-                <ResponsiveIconButton description={t('save')} icon={<SaveAlt/>} onClick={save}/>
+                <ResponsiveIconButton
+                    requiresAttention={modified}
+                    description={t('save')}
+                    icon={<SaveAlt/>}
+                    onClick={save}/>
             </>
         })
-    }, [t, openInfo, reset, setAppBar, save]);
+    }, [t, openInfo, reset, setAppBar, save, modified]);
 
     const [addTimeOpen, setAddTimeOpen] = useState(false);
     const [editTimeOpen, setEditTimeOpen] = useState(false);
@@ -228,7 +241,9 @@ function Thermostats(props: Props) {
         <Track>
             <Container maxWidth="xl">
                 <Stack direction="row" spacing={1} sx={{alignItems: "center", justifyContent: "end", pb: 1}}>
-                    <Typography variant="subtitle1">Benutze erweiterte Einstellungen</Typography>
+                    <Typography variant="subtitle1"
+                                sx={{textTransform: 'uppercase'}}
+                    >{t('thermostat_use_advanced_settings')}</Typography>
                     <Switch
                         checked={data.useAdvanced}
                         onChange={(event, value) => setData(prevState => ({...prevState, useAdvanced: value}))}/>
@@ -262,7 +277,7 @@ function Thermostats(props: Props) {
                 ))}
             </Container>
             <ModifyTimeItemDialog
-                title="Add Entry"
+                title={t('thermostat_add_entry')}
                 onOK={addEntry}
                 onClose={() => setAddTimeOpen(false)}
                 open={addTimeOpen}
@@ -273,7 +288,7 @@ function Thermostats(props: Props) {
                 time={time}
             />
             <ModifyTimeItemDialog
-                title="Edit Entry"
+                title={t('thermostat_edit_entry')}
                 onOK={editEntry}
                 onClose={() => setEditTimeOpen(false)}
                 open={editTimeOpen}
@@ -285,7 +300,7 @@ function Thermostats(props: Props) {
             />
             <ResponsiveDialog title={t('dialog_copy_from_title')} open={copyFromOpen}
                               onClose={() => setCopyFromOpen(false)}>
-                <DialogContent>
+                <DialogContent sx={{minWidth: 300}}>
                     <List>
                         {dayLabels.map((day, index) =>
                             <ListItem

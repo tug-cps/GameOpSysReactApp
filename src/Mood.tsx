@@ -12,19 +12,28 @@ import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
+import {MoodModel} from "./service/Model";
 
 interface GraphProps {
     mood: { x: number, y: number }
     onChange: (mood: { x: number, y: number }) => void
-    displayGrid?: boolean
 }
 
-function DraggableGraph(props: GraphProps) {
+export const compareProps = (a: GraphProps, b: GraphProps) => a.mood.x === b.mood.x && a.mood.y === b.mood.y
+
+const DraggableGraph = React.memo(function (props: GraphProps) {
     const theme = useTheme();
     const {t} = useTranslation();
 
     defaults.borderColor = theme.palette.divider;
     defaults.color = theme.palette.text.primary;
+    const commonScaleProps = {
+        alignToPixels: true,
+        max: 10,
+        min: 0,
+        ticks: {display: false},
+        grid: {display: false},
+    }
 
     return <Bubble
         data={{
@@ -32,7 +41,6 @@ function DraggableGraph(props: GraphProps) {
             datasets: [{
                 data: [{...props.mood, r: 20}],
                 borderWidth: 1,
-                hoverRadius: 0,
                 backgroundColor: theme.palette.primary.main,
                 pointHitRadius: 25
             }]
@@ -42,30 +50,14 @@ function DraggableGraph(props: GraphProps) {
             aspectRation: 1,
             scales: {
                 y: {
-                    alignToPixels: true,
-                    max: 10,
-                    min: 0,
-                    ticks: {
-                        display: false,
-                    },
-                    grid: {
-                        display: props.displayGrid ?? false,
-                    },
+                    ...commonScaleProps,
                     title: {
                         display: true,
                         text: [t('mood_very_uncomfortable') + ' ⟵      ⟶ ' + t('mood_very_comfortable')],
                     },
                 },
                 x: {
-                    alignToPixels: true,
-                    max: 10,
-                    min: 0,
-                    ticks: {
-                        display: false,
-                    },
-                    grid: {
-                        display: props.displayGrid ?? false,
-                    },
+                    ...commonScaleProps,
                     title: {
                         display: true,
                         text: t('mood_very_cold') + ' ⟵      ⟶ ' + t('mood_very_hot'),
@@ -77,7 +69,6 @@ function DraggableGraph(props: GraphProps) {
                 if (point.length) e.native.target.style.cursor = 'grab'
                 else e.native.target.style.cursor = 'default'
             },
-            animation: false,
             plugins: {
                 // @ts-ignore
                 dragData: {
@@ -98,7 +89,7 @@ function DraggableGraph(props: GraphProps) {
                 }
             }
         }} height={100} width={100}/>
-}
+}, compareProps)
 
 const date = new Date().toISOString().slice(0, 10)
 
@@ -108,24 +99,29 @@ function Mood(props: PrivateRouteProps) {
     const [infoProps, openInfo] = useInfoDialog();
     const [success, setSuccess] = useSnackBar();
     const [error, setError] = useSnackBar();
-    const [mood, setMood] = useState<{ x: number, y: number }>();
+    const [mood, setMood] = useState<MoodModel>({x: 5, y: 5});
+    const [modified, setModified] = useState(false);
 
     const {backendService, setAppBar} = props;
 
     useEffect(() => {
         backendService.getMood(date)
-            .then(setMood, (e) => {
-                setError(e);
-                setMood({x: 5, y: 5});
-            })
+            .then(setMood, setError)
+            .then(() => setModified(false))
             .catch(console.log);
     }, [backendService, setError])
 
     const onSaveClick = useCallback(() => {
         backendService.putMood(date, mood!)
             .then(() => setSuccess(t('changes_saved')), setError)
+            .then(() => setModified(false))
             .catch(console.log);
     }, [backendService, mood, setError, setSuccess, t])
+
+    const onMoodChange = useCallback((mood: MoodModel) => {
+        setMood(mood);
+        setModified(true);
+    }, [])
 
     useEffect(() => {
         setAppBar({
@@ -133,10 +129,13 @@ function Mood(props: PrivateRouteProps) {
             showBackButton: true,
             children: () => <>
                 <ResponsiveIconButton icon={<InfoOutlined/>} onClick={openInfo} description={t('info')}/>
-                <ResponsiveIconButton icon={<SaveAlt/>} onClick={onSaveClick} description={t('save')}/>
+                <ResponsiveIconButton requiresAttention={modified}
+                                      icon={<SaveAlt/>}
+                                      onClick={onSaveClick}
+                                      description={t('save')}/>
             </>
         })
-    }, [t, setAppBar, onSaveClick, openInfo])
+    }, [t, setAppBar, onSaveClick, openInfo, modified])
 
     return <Track>
         <Root>
@@ -147,7 +146,7 @@ function Mood(props: PrivateRouteProps) {
                         <Card>
                             {mood &&
                             <CardContent>
-                                <DraggableGraph mood={mood} onChange={setMood}/>
+                                <DraggableGraph mood={mood} onChange={onMoodChange}/>
                             </CardContent>
                             }
                         </Card>

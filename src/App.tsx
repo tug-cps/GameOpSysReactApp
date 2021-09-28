@@ -6,7 +6,8 @@ import {
     LinearProgress,
     StyledEngineProvider,
     ThemeOptions,
-    ThemeProvider, useMediaQuery,
+    ThemeProvider,
+    useMediaQuery,
 } from "@mui/material";
 import {lightGreen} from "@mui/material/colors";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
@@ -19,6 +20,7 @@ import BackendService from "./service/BackendService";
 import {UserModel} from "./service/Model";
 
 export type ColorMode = 'light' | 'dark' | undefined
+
 interface ColorModeCtx {
     mode: ColorMode,
     toggleColorMode: (mode: ColorMode) => void
@@ -103,12 +105,8 @@ function App() {
     }), [prefersDarkMode, mode]);
     const [user, setUser] = useState<UserModel>();
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>();
-    const {Track} = useTracking({}, {
-        dispatch(data: any) {
-            backendService.postTracking(data)
-                .catch(console.log);
-        }
-    });
+    const dispatchTracking = useCallback((data: any) => backendService.postTracking(data).catch(console.log), [])
+    const {Track} = useTracking({}, {dispatch: dispatchTracking});
 
     useEffect(() => {
         backendService.isLoggedIn()

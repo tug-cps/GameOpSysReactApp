@@ -70,5 +70,16 @@
   "day_weekend": "Wochenende",
   "thermostat_simple": "Einfach",
   "thermostat_advanced": "Erweitert",
-  "dialog_copy_from_title": "Kopiere von"
+  "dialog_copy_from_title": "Kopiere von",
+  "thermostat_timespan": "Zeitraum",
+  "thermostat_temperature": "Temperatur",
+  "thermostat_insert_timespan": "Zeitraum hinzufügen",
+  "thermostat_copy_from": "Kopiere von ...",
+  "thermostat_select_time": "Zeit auswählen",
+  "dialog_button_modify": "Ändern",
+  "dialog_button_ok": "Ok",
+  "thermostat_time": "Zeit",
+  "thermostat_edit_entry": "Zeitraum bearbeiten",
+  "thermostat_add_entry": "Zeitraum hinzufügen",
+  "thermostat_use_advanced_settings": "Benutze erweiterte Einstellungen"
 }

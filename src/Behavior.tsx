@@ -126,16 +126,20 @@ function Behavior(props: Props) {
             showBackButton: false,
             children: () => <>
                 <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
-                <ResponsiveIconButton description={t('save')} icon={<SaveAlt/>} onClick={handleSave}/>
+                <ResponsiveIconButton requiresAttention={state.modified}
+                                      description={t('save')}
+                                      icon={<SaveAlt/>}
+                                      onClick={handleSave}/>
             </>
         })
-    }, [t, setAppBar, handleSave, openInfo])
+    }, [t, setAppBar, handleSave, openInfo, state])
 
     return (
         <Track>
             <Container maxWidth="xl" disableGutters>
                 <Box style={{display: "grid"}}>
-                    <TableContainer sx={{overflow: 'auto', maxHeight: 'calc(100vh - 140px)'}}>
+                    <TableContainer
+                        sx={{overflow: 'auto', maxHeight: {xs: 'calc(100vh - 120px)', sm: 'calc(100vh - 70px)'}}}>
                         <Table stickyHeader size="small" sx={style}>
                             <TableHead>
                                 <TableRow>

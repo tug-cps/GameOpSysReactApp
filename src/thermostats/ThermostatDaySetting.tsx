@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import {Scatter} from "react-chartjs-2";
+import {useTranslation} from "react-i18next";
 import {createTime} from "../common/Time";
 import {TimeItem} from "../service/Model";
 import {chartOptions, createData} from "./ChartOptions";
@@ -49,6 +50,7 @@ export const compareProps = (a: Props, b: Props) =>
 
 export const ThermostatDaySetting = React.memo((props: Props) => {
     const {palette} = useTheme();
+    const {t} = useTranslation();
     const {title, items} = props;
 
     const labeledTimeItems = labelTimeItems(items);
@@ -62,8 +64,8 @@ export const ThermostatDaySetting = React.memo((props: Props) => {
                 <Table size="small">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Zeitraum</TableCell>
-                            <TableCell colSpan={2}>Temperatur</TableCell>
+                            <TableCell>{t('thermostat_timespan')}</TableCell>
+                            <TableCell colSpan={2}>{t('thermostat_temperature')}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -91,9 +93,9 @@ export const ThermostatDaySetting = React.memo((props: Props) => {
                 <Button
                     color="primary"
                     onClick={() => props.onCopyFrom(props.id)}
-                >Kopiere von ...</Button>
+                >{t('thermostat_copy_from')}</Button>
                 <Box mx="auto"/>
-                <Tooltip title="Zeitraum hinzufügen">
+                <Tooltip title={t('thermostat_insert_timespan') as string}>
                     <IconButton
                         sx={{marginLeft: "auto"}}
                         onClick={() => props.onAddTime(props.id)}
