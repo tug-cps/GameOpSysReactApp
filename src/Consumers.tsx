@@ -1,15 +1,15 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {Box, Container, DialogContentText, List, Paper} from "@mui/material";
-import {ConsumerModel} from "./service/Model";
-import ConsumerCard from "./consumers/ConsumerCard";
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
+import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {useSnackBar} from "./common/UseSnackBar";
-import {InfoOutlined} from "@mui/icons-material";
-import useDefaultTracking from "./common/Tracking";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
-import {PrivateRouteProps} from "./App";
+import useDefaultTracking from "./common/Tracking";
+import {useSnackBar} from "./common/UseSnackBar";
+import ConsumerCard from "./consumers/ConsumerCard";
+import {ConsumerModel} from "./service/Model";
 
 interface Props extends PrivateRouteProps {
 }

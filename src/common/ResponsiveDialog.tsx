@@ -1,6 +1,6 @@
-import React from "react";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 import {AppBar, Dialog, DialogTitle, IconButton, Toolbar, Typography, useMediaQuery, useTheme} from "@mui/material";
-import {ArrowBack} from "@mui/icons-material";
+import React from "react";
 
 interface Props {
     title: string

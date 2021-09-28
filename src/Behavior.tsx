@@ -1,4 +1,5 @@
-import {InfoOutlined, SaveAlt} from "@mui/icons-material";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import SaveAlt from "@mui/icons-material/SaveAlt";
 import {
     Avatar,
     Box,

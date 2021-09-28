@@ -1,21 +1,19 @@
-import {
-    AcUnit,
-    CloudUploadOutlined,
-    EditOutlined,
-    History,
-    HomeOutlined,
-    Mood,
-    PersonOutline,
-    ShowChart,
-    SvgIconComponent
-} from "@mui/icons-material";
+import AcUnit from "@mui/icons-material/AcUnit";
+import CloudUploadOutlined from "@mui/icons-material/CloudUploadOutlined";
+import EditOutlined from "@mui/icons-material/EditOutlined";
+import History from "@mui/icons-material/History";
+import HomeOutlined from "@mui/icons-material/HomeOutlined";
+import Mood from "@mui/icons-material/Mood";
+import PersonOutline from "@mui/icons-material/PersonOutline";
+import ShowChart from "@mui/icons-material/ShowChart";
+import {SvgIcon} from "@mui/material";
 import {useContext} from "react";
 import {UserContext} from "../App";
 
 interface Destination {
     title: string,
     subtitle: string,
-    icon: SvgIconComponent,
+    icon: typeof SvgIcon,
     to: string
 }
 

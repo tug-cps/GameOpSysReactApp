@@ -24,18 +24,15 @@ export const chartOptions = {
     }
 }
 
-export const createData = (dataItems: TimeItem[], palette: Palette) => {
-    return {
-        datasets: [
-            {
-                data: dataItems.map((i) => ({x: (i.time.getHours() + i.time.getMinutes() / 60), y: i.temperature})),
-                showLine: true,
-                fill: true,
-                stepped: true,
-                borderColor: palette.primary.main,
-                backgroundColor: palette.secondary.main,
-            }
-        ],
-
-    }
-}
+export const createData = (dataItems: TimeItem[], palette: Palette) => ({
+    datasets: [
+        {
+            data: dataItems.map((i) => ({x: (i.time.getHours() + i.time.getMinutes() / 60), y: i.temperature})),
+            showLine: true,
+            fill: true,
+            stepped: true,
+            borderColor: palette.primary.main,
+            backgroundColor: palette.secondary.main,
+        }
+    ],
+})

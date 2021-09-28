@@ -1,17 +1,17 @@
-import {CompareArrowsOutlined, InfoOutlined, RotateLeft, SaveAlt} from "@mui/icons-material";
-import {
-    Container,
-    DialogContent,
-    Grid,
-    GridSize,
-    List,
-    ListItem,
-    ListItemText,
-    Stack,
-    Switch,
-    Typography
-} from "@mui/material";
+import CompareArrowsOutlined from "@mui/icons-material/CompareArrowsOutlined"
+import InfoOutlined from "@mui/icons-material/InfoOutlined"
+import RotateLeft from "@mui/icons-material/RotateLeft"
+import SaveAlt from "@mui/icons-material/SaveAlt"
+import Container from "@mui/material/Container"
+import DialogContent from "@mui/material/DialogContent"
 import Divider from "@mui/material/Divider";
+import Grid, {GridSize} from "@mui/material/Grid"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
+import ListItemText from "@mui/material/ListItemText"
+import Stack from "@mui/material/Stack"
+import Switch from "@mui/material/Switch"
+import Typography from "@mui/material/Typography"
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
@@ -66,11 +66,11 @@ interface Props extends PrivateRouteProps {
 }
 
 const copySetting = (data: Array<Array<TimeItem>>) => data.map((day) => day.map((e) => ({...e})))
-const copyData = (data: ThermostatModel): ThermostatModel => {
-    data.simple = copySetting(data.simple);
-    data.advanced = copySetting(data.advanced);
-    return data;
-}
+const copyData = (data: ThermostatModel): ThermostatModel => ({
+    ...data,
+    simple: copySetting(data.simple),
+    advanced: copySetting(data.advanced)
+})
 const sortDay = (day: Array<TimeItem>) => day.sort((a, b) => a.time.getHours() > b.time.getHours() || (a.time.getHours() === b.time.getHours() && a.time.getMinutes() >= b.time.getMinutes()) ? 1 : -1)
 
 function Thermostats(props: Props) {
@@ -102,6 +102,7 @@ function Thermostats(props: Props) {
     const save = useCallback(() => {
         backendService.putThermostats(data)
             .then(() => setSuccess(t('changes_saved')), setError)
+            .then(() => setInitialData(data))
             .catch(console.log)
     }, [data, backendService, setSuccess, t, setError])
 
@@ -135,12 +136,14 @@ function Thermostats(props: Props) {
     }, []);
     const onDelete = useCallback((id: string, index: number) => {
         setData(prevState => {
-            if (+id > 9) {
-                prevState.simple[+id - 10] = prevState.simple[+id - 10].filter((value, refIndex) => refIndex !== index)
+            const intId = +id;
+            const state = copyData(prevState)
+            if (intId > 9) {
+                state.simple[intId - 10].splice(index, 1)
             } else {
-                prevState.advanced[+id] = prevState.advanced[+id].filter((value, refIndex) => refIndex !== index)
+                state.advanced[intId].splice(index, 1)
             }
-            return prevState;
+            return state;
         });
     }, [])
     const [id, setID] = useState<number>();

@@ -1,19 +1,17 @@
-import {
-    AcUnit,
-    Bathtub,
-    Computer,
-    FreeBreakfast,
-    Group,
-    Help,
-    LocalLaundryService,
-    Movie,
-    Power,
-    Restaurant,
-    Spa
-} from "@mui/icons-material";
-import {TranslatedString} from "../service/Model";
-import i18next from "i18next";
+import AcUnit from "@mui/icons-material/AcUnit";
+import Bathtub from "@mui/icons-material/Bathtub";
+import Computer from "@mui/icons-material/Computer";
+import FreeBreakfast from "@mui/icons-material/FreeBreakfast";
+import Group from "@mui/icons-material/Group";
+import Help from "@mui/icons-material/Help";
+import LocalLaundryService from "@mui/icons-material/LocalLaundryService";
+import Movie from "@mui/icons-material/Movie";
+import Power from "@mui/icons-material/Power";
+import Restaurant from "@mui/icons-material/Restaurant";
+import Spa from "@mui/icons-material/Spa";
 import {blue, green, orange, pink, purple, red, teal} from "@mui/material/colors";
+import i18next from "i18next";
+import {TranslatedString} from "../service/Model";
 
 export function translate(str: TranslatedString | undefined, override: string | undefined): string {
     if (override && override !== '') return override;

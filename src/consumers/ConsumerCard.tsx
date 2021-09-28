@@ -1,4 +1,6 @@
-import {ConsumerModel} from "../service/Model";
+import Delete from "@mui/icons-material/Delete";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
     Avatar,
     IconButton,
@@ -9,9 +11,9 @@ import {
     Tooltip
 } from "@mui/material";
 import React from "react";
-import {backgroundColor, iconLookup, translate} from "../common/ConsumerTools";
-import {Delete, Visibility, VisibilityOff} from "@mui/icons-material";
 import {useTranslation} from "react-i18next";
+import {backgroundColor, iconLookup, translate} from "../common/ConsumerTools";
+import {ConsumerModel} from "../service/Model";
 
 interface Props {
     consumer: ConsumerModel,
