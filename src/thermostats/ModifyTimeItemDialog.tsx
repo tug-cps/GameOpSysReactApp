@@ -1,7 +1,8 @@
-import React from "react";
-import {Button, DialogActions, DialogContent, InputAdornment, TextField, Typography} from "@mui/material";
-import {ResponsiveDialog} from "../common/ResponsiveDialog";
 import {StaticTimePicker} from "@mui/lab";
+import {Button, DialogActions, DialogContent, InputAdornment, TextField} from "@mui/material";
+import React from "react";
+import {useTranslation} from "react-i18next";
+import {ResponsiveDialog} from "../common/ResponsiveDialog";
 
 interface Props {
     title: string
@@ -16,33 +17,31 @@ interface Props {
 }
 
 export function ModifyTimeItemDialog(props: Props) {
+    const {t} = useTranslation();
     return <ResponsiveDialog title={props.title} open={props.open} onClose={props.onClose}>
         <DialogContent>
             {props.showTimePicker &&
-            <>
-                <Typography variant="subtitle2">Time</Typography>
-                <StaticTimePicker
-                    label="Select Time"
-                    ampm={false}
-                    value={props.time}
-                    onChange={(date) => props.setTime(date)}
-                    renderInput={() => <></>}
-                />
-            </>
+            <StaticTimePicker
+                label={t('thermostat_select_time')}
+                ampm={false}
+                value={props.time}
+                onChange={(date) => props.setTime(date)}
+                renderInput={() => <></>}
+            />
             }
-            <Typography variant="subtitle2">Temperature</Typography>
             <TextField
                 variant="filled"
+                sx={{my: 2}}
                 fullWidth
-                label="Temperature"
+                label={t('thermostat_temperature')}
                 type="number"
                 value={props.temperature}
                 onChange={(e) => props.setTemperature(e.target.value)}
                 InputProps={{endAdornment: <InputAdornment position="start">°C</InputAdornment>}}/>
         </DialogContent>
         <DialogActions>
-            <Button color="primary" onClick={props.onClose}>Cancel</Button>
-            <Button color="primary" onClick={props.onOK}>OK</Button>
+            <Button color="primary" onClick={props.onClose}>{t('dialog_button_cancel')}</Button>
+            <Button color="primary" onClick={props.onOK}>{t('dialog_button_ok')}</Button>
         </DialogActions>
     </ResponsiveDialog>
 }
