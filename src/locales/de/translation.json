@@ -81,5 +81,6 @@
   "thermostat_time": "Zeit",
   "thermostat_edit_entry": "Zeitraum bearbeiten",
   "thermostat_add_entry": "Zeitraum hinzufügen",
-  "thermostat_use_advanced_settings": "Benutze erweiterte Einstellungen"
+  "thermostat_use_advanced_settings": "Benutze erweiterte Einstellungen",
+  "confirm_title": "Bestätigen"
 }

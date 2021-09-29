@@ -7,12 +7,12 @@ import {Bubble, defaults} from "react-chartjs-2";
 import {useTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {Content, Root} from "./common/DefaultAppBar";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 import {MoodModel} from "./service/Model";
+import {Prompt} from "react-router-dom";
 
 interface GraphProps {
     mood: { x: number, y: number }
@@ -138,22 +138,19 @@ function Mood(props: PrivateRouteProps) {
     }, [t, setAppBar, onSaveClick, openInfo, modified])
 
     return <Track>
-        <Root>
-            <Content>
-                <Container maxWidth="sm">
-                    <Box py={3}>
-                        <Typography variant="h5" align="center">{t('mood_please_select_mood')}</Typography>
-                        <Card>
-                            {mood &&
-                            <CardContent>
-                                <DraggableGraph mood={mood} onChange={onMoodChange}/>
-                            </CardContent>
-                            }
-                        </Card>
-                    </Box>
-                </Container>
-            </Content>
-        </Root>
+        <Container maxWidth="sm">
+            <Box py={3}>
+                <Typography variant="h5" align="center">{t('mood_please_select_mood')}</Typography>
+                <Card>
+                    {mood &&
+                    <CardContent>
+                        <DraggableGraph mood={mood} onChange={onMoodChange}/>
+                    </CardContent>
+                    }
+                </Card>
+            </Box>
+        </Container>
+        <Prompt when={modified} message={t('unsaved_changes')}/>
         <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
         <AlertSnackbar {...success} severity="success"/>
         <AlertSnackbar {...error} />

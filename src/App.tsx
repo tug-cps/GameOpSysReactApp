@@ -1,16 +1,7 @@
 import {LocalizationProvider} from "@mui/lab";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import {
-    createTheme,
-    CssBaseline,
-    LinearProgress,
-    StyledEngineProvider,
-    ThemeOptions,
-    ThemeProvider,
-    useMediaQuery,
-} from "@mui/material";
-import {lightGreen} from "@mui/material/colors";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import {CssBaseline, LinearProgress, StyledEngineProvider, ThemeProvider,} from "@mui/material";
+import React, {useCallback, useEffect, useState} from "react";
 import {useTracking} from "react-tracking";
 import DefaultAppBar, {Content, DefaultDrawer, Root} from "./common/DefaultAppBar";
 import DefaultBottomNavigation from "./common/DefaultBottomNavigation";
@@ -18,6 +9,9 @@ import Config from "./Config";
 import {PrivateRouter, PublicRouter} from "./Routes";
 import BackendService from "./service/BackendService";
 import {UserModel} from "./service/Model";
+import {BrowserRouter as Router} from 'react-router-dom';
+import {UserConfirmationDialog, useUserConfirmationDialog} from "./common/UserConfirmationDialog";
+import {useThemeBuilder} from "./common/UseThemeBuilder";
 
 export type ColorMode = 'light' | 'dark' | undefined
 
@@ -46,63 +40,7 @@ export interface PrivateRouteProps {
 }
 
 function App() {
-    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    const [mode, setMode] = useState<'light' | 'dark' | undefined>();
-    const colorMode = useMemo(() => ({mode: mode, toggleColorMode: (mode: ColorMode) => setMode(mode)}), [mode]);
-
-    const theme: ThemeOptions = useMemo(() => createTheme({
-        palette: {
-            mode: mode ? mode : (prefersDarkMode ? 'dark' : 'light'),
-            primary: {
-                main: lightGreen[600],
-                contrastText: '#fff'
-            },
-            secondary: {
-                main: lightGreen[400]
-            },
-        },
-        components: {
-            MuiUseMediaQuery: {
-                defaultProps: {
-                    noSsr: true,
-                }
-            },
-            MuiGrid: {
-                defaultProps: {
-                    spacing: 1
-                }
-            },
-            MuiCard: {
-                defaultProps: {
-                    variant: "outlined",
-                    square: true,
-                }
-            },
-            MuiFab: {
-                styleOverrides: {
-                    root: {
-                        position: 'fixed',
-                        bottom: '10px',
-                        right: '10px',
-                        // When bottom bar is shown, raise FAB position
-                        '@media (max-width:599.95px)': {
-                            bottom: '70px'
-                        }
-                    }
-                }
-            },
-            MuiSnackbar: {
-                styleOverrides: {
-                    anchorOriginBottomCenter: {
-                        // When bottom bar is shown, raise Snackbar position
-                        '@media (max-width:599.95px)': {
-                            bottom: '70px'
-                        }
-                    }
-                }
-            }
-        },
-    }), [prefersDarkMode, mode]);
+    const [theme, colorMode] = useThemeBuilder();
     const [user, setUser] = useState<UserModel>();
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>();
     const dispatchTracking = useCallback((data: any) => backendService.postTracking(data).catch(console.log), [])
@@ -129,6 +67,7 @@ function App() {
         children: () => <></>
     });
     const setAppBarCb = useCallback((props: AppBarProps) => setAppBar(props), [])
+    const [userConfirmationProps, userConfirm] = useUserConfirmationDialog();
 
     return (
         <StyledEngineProvider injectFirst>
@@ -137,30 +76,33 @@ function App() {
                 {isLoggedIn !== undefined &&
                 <React.Suspense fallback={<LinearProgress/>}>
                     <ColorModeContext.Provider value={colorMode}>
-                        {!isLoggedIn &&
-                        <PublicRouter backendService={backendService}/>
-                        }
-                        {isLoggedIn &&
-                        <UserContext.Provider value={user}>
-                            <Track>
-                                <Root>
-                                    <DefaultAppBar title={appBar.title}
-                                                   hideBackButton={!appBar.showBackButton}
-                                                   children={appBar.children()}/>
-                                    <DefaultDrawer/>
-                                    <Content>
-                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                            <PrivateRouter
-                                                backendService={backendService}
-                                                setAppBar={setAppBarCb}
-                                            />
-                                        </LocalizationProvider>
-                                    </Content>
-                                </Root>
-                                <DefaultBottomNavigation/>
-                            </Track>
-                        </UserContext.Provider>
-                        }
+                        <Router basename={`${process.env.PUBLIC_URL}#`} getUserConfirmation={userConfirm}>
+                            {!isLoggedIn &&
+                            <PublicRouter backendService={backendService}/>
+                            }
+                            {isLoggedIn &&
+                            <UserContext.Provider value={user}>
+                                <Track>
+                                    <Root>
+                                        <DefaultAppBar title={appBar.title}
+                                                       hideBackButton={!appBar.showBackButton}
+                                                       children={appBar.children()}/>
+                                        <DefaultDrawer/>
+                                        <Content>
+                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                                <PrivateRouter
+                                                    backendService={backendService}
+                                                    setAppBar={setAppBarCb}
+                                                />
+                                            </LocalizationProvider>
+                                        </Content>
+                                    </Root>
+                                    <DefaultBottomNavigation/>
+                                </Track>
+                            </UserContext.Provider>
+                            }
+                            <UserConfirmationDialog {...userConfirmationProps}/>
+                        </Router>
                     </ColorModeContext.Provider>
                 </React.Suspense>
                 }

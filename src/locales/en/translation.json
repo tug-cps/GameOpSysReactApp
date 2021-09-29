@@ -81,5 +81,6 @@
   "thermostat_time": "Time",
   "thermostat_add_entry": "Add Entry",
   "thermostat_edit_entry": "Edit Entry",
-  "thermostat_use_advanced_settings": "Use advanced settings"
+  "thermostat_use_advanced_settings": "Use advanced settings",
+  "confirm_title": "Confirm"
 }
