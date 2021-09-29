@@ -26,6 +26,7 @@ import {ThermostatModel, TimeItem} from "./service/Model";
 import {data_} from "./thermostats/DummyData";
 import {ModifyTimeItemDialog} from "./thermostats/ModifyTimeItemDialog";
 import {ThermostatDaySetting} from "./thermostats/ThermostatDaySetting";
+import {Prompt} from "react-router-dom";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -326,6 +327,7 @@ function Thermostats(props: Props) {
                     </List>
                 </DialogContent>
             </ResponsiveDialog>
+            <Prompt when={modified} message={t('unsaved_changes')}/>
             <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
             <AlertSnackbar {...Error}/>
             <AlertSnackbar severity="success" {...Success}/>

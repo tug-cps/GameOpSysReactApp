@@ -25,7 +25,7 @@ export function ResponsiveDialog(props: React.PropsWithChildren<Props>) {
                         color="inherit"
                         edge="start"
                         onClick={props.onClose}
-                        style={{marginRight: theme.spacing(2)}}
+                        sx={{marginRight: 2}}
                         size="large"><ArrowBack/></IconButton>
                     <Typography variant="h6">{props.title}</Typography>
                 </Toolbar>
