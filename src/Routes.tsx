@@ -15,6 +15,7 @@ import BackendService from "./service/BackendService";
 import Mood from "./Mood";
 import {PrivateRouteProps, UserContext} from "./App";
 import {Page404} from "./Page404";
+import PastBehavior from "./PastBehavior";
 
 export function PublicRouter(props: { backendService: BackendService }) {
     const {backendService} = props;
@@ -41,6 +42,7 @@ export function PrivateRouter(props: PrivateRouteProps) {
         archive: <Route path="/archive"><Archive {...props}/></Route>,
         consumers: <Route path="/consumers"><Consumers {...props}/></Route>,
         behavior: <Route path="/behavior"><Behavior {...props}/></Route>,
+        pastbehavior: <Route path="/pastbehavior"><PastBehavior {...props}/></Route>,
         mood: <Route path="/mood"><Mood  {...props}/></Route>,
         thermostats: <Route path="/thermostats"><Thermostats {...props}/></Route>,
         root: <Route exact path="/"><Home {...props}/></Route>,
@@ -50,7 +52,7 @@ export function PrivateRouter(props: PrivateRouteProps) {
     const commonPaths = [paths.logout, paths.user, paths.home, paths.root]
     const managementPaths = [paths.upload];
     const homeOwnerPaths = [paths.upload, paths.power, paths.consumers, paths.behavior, paths.thermostats, paths.mood];
-    const studentPaths = [paths.archive, paths.consumers, paths.behavior, paths.mood];
+    const studentPaths = [paths.archive, paths.consumers, paths.behavior, paths.mood, paths.pastbehavior];
 
     return (
         <Switch>
