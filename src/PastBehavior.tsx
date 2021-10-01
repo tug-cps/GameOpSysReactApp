@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import React, {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {Prompt} from 'react-router-dom';
+import {Prompt, useLocation} from 'react-router-dom';
 import {PrivateRouteProps} from "./App";
 import BehaviorDragSelect, {Row} from "./behavior/BehaviorDragSelect"
 import {AlertSnackbar} from "./common/AlertSnackbar";
@@ -29,8 +29,6 @@ const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
 const colors = ['lightgreen', 'yellow', 'red']
 const energyAvailable = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0].map(v => colors[v])
-
-const date = new Date().toISOString().slice(0, 10)
 
 const style = {
     userSelect: "none",
@@ -65,7 +63,7 @@ interface ExtendedRow extends Row {
     consumerId: string
 }
 
-function Behavior(props: Props) {
+function PastBehavior(props: Props) {
     const {Track} = useDefaultTracking({page: 'Behavior'});
     const [rows, setRows] = useState<ExtendedRow[]>();
     const [modified, setModified] = useState(false);
@@ -73,9 +71,13 @@ function Behavior(props: Props) {
     const [success, setSuccess] = useSnackBar();
     const {t} = useTranslation();
     const [infoProps, openInfo] = useInfoDialog();
+    const query = new URLSearchParams(useLocation().search);
+    const date = query.get("date");
+
     const {setAppBar, backendService} = props;
 
     useEffect(() => {
+        if (!date) return;
         Promise.all([backendService.getConsumers(), backendService.getPrediction(date)])
             .then(([consumers, predictions]) => {
                 const cellStates = consumers
@@ -99,25 +101,26 @@ function Behavior(props: Props) {
                 setModified(false);
             }, setError)
             .catch(console.log)
-    }, [backendService, setError]);
+    }, [backendService, setError, date]);
 
     const handleChange = useCallback((cells: boolean[][]) => {
         setRows(prevState => prevState?.map((row, i) => ({...row, cellStates: cells[i]})))
         setModified(true);
     }, []);
 
-    const handleSave = useCallback(() =>
-            rows && backendService.putPrediction(date, rows.map((r) => ({consumerId: r.consumerId, data: r.cellStates})))
-                .then(() => {
-                    setSuccess(t('changes_saved'));
-                    setModified(false);
-                }, setError)
-                .catch(console.log)
-        , [rows, backendService, setError, setSuccess, t]);
+    const handleSave = useCallback(() => {
+        if (!date) return;
+        rows && backendService.putPrediction(date, rows.map((r) => ({consumerId: r.consumerId, data: r.cellStates})))
+            .then(() => {
+                setSuccess(t('changes_saved'));
+                setModified(false);
+            }, setError)
+            .catch(console.log)
+    }, [date, rows, backendService, setError, setSuccess, t]);
 
     useEffect(() => {
         setAppBar({
-            title: t('card_behavior_title'),
+            title: t('card_behavior_title') + " " + date,
             showBackButton: false,
             children: () => <>
                 <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
@@ -127,7 +130,7 @@ function Behavior(props: Props) {
                                       onClick={handleSave}/>
             </>
         })
-    }, [t, setAppBar, handleSave, openInfo, modified])
+    }, [t, setAppBar, handleSave, openInfo, modified, date])
 
     if (!rows) return <LinearProgress/>
 
@@ -162,4 +165,4 @@ function Behavior(props: Props) {
         </Track>)
 }
 
-export default Behavior;
+export default PastBehavior;

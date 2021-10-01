@@ -1,31 +1,17 @@
-import React, {useEffect, useState} from "react";
-import BackendService from "../service/BackendService";
-import {UserPredictionModel} from "../service/Model";
-import {Card, CardActionArea, CardContent, Typography} from "@mui/material";
+import React from "react";
+import {ListItem, ListItemAvatar, ListItemText} from "@mui/material";
+import {useHistory} from "react-router-dom";
+import {Done} from "@mui/icons-material";
 
-function ArchiveEntry(props: { date: string, backendService: BackendService }) {
-    const {date, backendService} = props;
-    const [predictions, setPredictions] = useState(new Array<UserPredictionModel>());
-    useEffect(() => {
-        backendService.getPrediction(date)
-            .then((prediction) => setPredictions(prediction))
-            .catch(console.log);
-    }, [backendService, date]);
+function ArchiveEntry(props: { date: string }) {
+    const {date} = props;
+    const history = useHistory();
 
     return (
-        <Card variant="outlined">
-            <CardActionArea>
-                <CardContent>
-                    <Typography variant="h6">{date}</Typography>
-                    {predictions.map((prediction) =>
-                        (
-                            <Typography variant="body1" key={prediction.consumerId}>
-                                {prediction.data.map((v) => v ? '█' : '░')}
-                            </Typography>
-                        ))}
-                </CardContent>
-            </CardActionArea>
-        </Card>
+        <ListItem button onClick={() => history.push(`/pastbehavior?date=${date}`)}>
+            <ListItemAvatar><Done/></ListItemAvatar>
+            <ListItemText>{date}</ListItemText>
+        </ListItem>
     )
 }
 

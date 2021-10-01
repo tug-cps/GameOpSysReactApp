@@ -63,7 +63,8 @@ class BehaviorDragSelect extends React.Component<React.PropsWithChildren<Props> 
 
     render() {
         return this.props.rows.map((row, i) =>
-            <TableRow><TableCell variant="head">{row.header}</TableCell>
+            <TableRow><TableCell
+                sx={{position: "sticky", left: 0, backgroundColor: "background.paper"}}>{row.header}</TableCell>
                 {row.cellStates.map((selected, j) =>
                     <Cell
                         disabled={false}

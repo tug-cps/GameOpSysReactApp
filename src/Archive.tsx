@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Container} from "@mui/material";
+import {Container, List} from "@mui/material";
 import ArchiveEntry from "./archive/ArchiveEntry";
 import {useTranslation} from "react-i18next";
 import {useSnackBar} from "./common/UseSnackBar";
@@ -30,9 +30,11 @@ function Archive(props: Props) {
 
     return (
         <Track>
-            <Container maxWidth="md">
-                {dates.map((value) =>
-                    <ArchiveEntry date={value} key={value} backendService={props.backendService}/>)}
+            <Container maxWidth="sm">
+                <List>
+                    {dates.map((value) =>
+                        <ArchiveEntry date={value} key={value}/>)}
+                </List>
             </Container>
             <AlertSnackbar {...error} />
         </Track>
