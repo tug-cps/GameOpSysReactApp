@@ -1,9 +1,10 @@
 import CloudUploadOutlined from "@mui/icons-material/CloudUploadOutlined";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
-import {Box, Button, Container, Grid, Link, List, ListItem, Typography} from "@mui/material";
+import {Box, Button, Container, Divider, Grid, List, ListItem, Typography} from "@mui/material";
 import {styled} from '@mui/system';
 import React, {useEffect} from 'react';
-import {useTranslation, WithTranslation, withTranslation} from "react-i18next";
+import {useTranslation} from "react-i18next";
+import {Link} from "react-router-dom";
 import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
@@ -16,18 +17,21 @@ const Input = styled('input')({
     display: 'none',
 });
 
-interface Operator {
-    name: string;
-    link: string;
-}
-
-const operators: Operator[] = [
-    {name: 'Netz Oberösterreich', link: 'https://netz-online.netzgmbh.at/eServiceWeb/main.html'},
-    {name: 'Netz Burgenland', link: 'https://smartmeter.netzburgenland.at'},
-    {name: 'Kärnten Netz', link: 'https://meinportal.kaerntennetz.at/meinPortal/Login.aspx?service=verbrauch'},
+const operators = [
+    {name: 'Energienetze Steiermark', link: ''},
+    {name: 'Kelag', link: ''},
+    {name: 'Stromnetz Graz', link: ''},
 ]
 
-interface Props extends PrivateRouteProps, WithTranslation {
+const providers = [
+    {name: 'Energie Graz', link: ''},
+    {name: 'Energie Steiermark', link: ''},
+    {name: 'Naturkraft', link: ''},
+    {name: 'Verbund', link: ''},
+    {name: 'WEB-Windenergie AG', link: ''},
+]
+
+interface Props extends PrivateRouteProps {
 }
 
 function Upload(props: Props) {
@@ -66,13 +70,16 @@ function Upload(props: Props) {
                                 {t('upload_instruction_download')}
                             </Typography>
                             <List>
-                                {operators.map((op) => {
-                                    return (
-                                        <ListItem key={op.name}>
-                                            <Typography><Link href={op.link}>{op.name}</Link></Typography>
-                                        </ListItem>
-                                    )
-                                })}
+                                {[operators, providers].map((list, index) =>
+                                    <>
+                                        {index > 0 && <Divider/>}
+                                        {list.map(item =>
+                                            <ListItem key={item.name} button component={Link} to={item.link}>
+                                                <Typography>{item.name}</Typography>
+                                            </ListItem>)
+                                        }
+                                    </>
+                                )}
                             </List>
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -110,4 +117,4 @@ function Upload(props: Props) {
     );
 }
 
-export default (withTranslation()(Upload));
+export default Upload;
