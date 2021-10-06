@@ -1,10 +1,22 @@
+import {ElectricalServicesOutlined} from "@mui/icons-material";
 import CloudUploadOutlined from "@mui/icons-material/CloudUploadOutlined";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
-import {Box, Button, Container, Divider, Grid, List, ListItem, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Container,
+    Divider,
+    Grid,
+    List,
+    ListItemAvatar,
+    ListItemButton,
+    ListItemText,
+    Paper,
+    Typography
+} from "@mui/material";
 import {styled} from '@mui/system';
 import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
-import {Link} from "react-router-dom";
 import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
@@ -18,17 +30,15 @@ const Input = styled('input')({
 });
 
 const operators = [
-    {name: 'Energienetze Steiermark', link: ''},
-    {name: 'Kelag', link: ''},
-    {name: 'Stromnetz Graz', link: ''},
+    {name: 'Energienetze Steiermark', link: 'https://portal.e-netze.at/'},
+    {name: 'Kelag', link: 'https://services.kelag.at/ISS/Services.aspx'},
+    {name: 'Stromnetz Graz', link: 'https://webportal.stromnetz-graz.at/'},
 ]
 
 const providers = [
-    {name: 'Energie Graz', link: ''},
-    {name: 'Energie Steiermark', link: ''},
-    {name: 'Naturkraft', link: ''},
-    {name: 'Verbund', link: ''},
-    {name: 'WEB-Windenergie AG', link: ''},
+    {name: 'Energie Graz', link: 'https://portal.energie-graz.at/'},
+    {name: 'Energie Steiermark', link: 'https://portal.energie-graz.at/'},
+    {name: 'Verbund', link: 'https://www.verbund.at/login'},
 ]
 
 interface Props extends PrivateRouteProps {
@@ -66,31 +76,43 @@ function Upload(props: Props) {
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={6}>
                             <Typography variant="h5" gutterBottom>{t('upload_title_download')}</Typography>
-                            <Typography color="textSecondary" paragraph>
-                                {t('upload_instruction_download')}
-                            </Typography>
-                            <List>
-                                {[operators, providers].map((list, index) =>
-                                    <>
-                                        {index > 0 && <Divider/>}
-                                        {list.map(item =>
-                                            <ListItem key={item.name} button component={Link} to={item.link}>
-                                                <Typography>{item.name}</Typography>
-                                            </ListItem>)
-                                        }
-                                    </>
-                                )}
-                            </List>
+                            <Typography color="text.secondary" paragraph>{t('upload_instruction_download')}</Typography>
+                            <Paper>
+                                <List>
+                                    <li>
+                                        <Typography
+                                            sx={{mt: 0.5, ml: 2}}
+                                            color="text.secondary"
+                                            display="block"
+                                            variant="caption">Network operators</Typography>
+                                    </li>
+                                    {operators.map(item =>
+                                        <ListItemButton key={item.name} component="a" href={item.link} target="_blank">
+                                            <ListItemAvatar><ElectricalServicesOutlined/></ListItemAvatar>
+                                            <ListItemText primary={item.name}/>
+                                        </ListItemButton>)
+                                    }
+                                    <Divider component="li"/>
+                                    <li>
+                                        <Typography
+                                            sx={{mt: 0.5, ml: 2}}
+                                            color="text.secondary"
+                                            display="block"
+                                            variant="caption">Energy providers</Typography>
+                                    </li>
+                                    {providers.map(item =>
+                                        <ListItemButton key={item.name} component="a" href={item.link} target="_blank">
+                                            <ListItemAvatar><ElectricalServicesOutlined/></ListItemAvatar>
+                                            <ListItemText primary={item.name}/>
+                                        </ListItemButton>)
+                                    }
+
+                                </List>
+                            </Paper>
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <Typography
-                                variant="h5"
-                                gutterBottom
-                            >{t('upload_title_upload')}</Typography>
-                            <Typography
-                                color="textSecondary"
-                                paragraph
-                            >{t('upload_instruction_upload')}</Typography>
+                            <Typography variant="h5" gutterBottom>{t('upload_title_upload')}</Typography>
+                            <Typography color="text.secondary" paragraph>{t('upload_instruction_upload')}</Typography>
                             <label htmlFor="contained-button-file">
                                 <Input
                                     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
