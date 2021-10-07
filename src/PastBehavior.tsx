@@ -17,7 +17,7 @@ import React, {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Prompt, useLocation} from 'react-router-dom';
 import {PrivateRouteProps} from "./App";
-import BehaviorDragSelect, {Row} from "./behavior/BehaviorDragSelect"
+import BehaviorDragSelect, {CellState, Row} from "./behavior/BehaviorDragSelect"
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {backgroundColor, iconLookup, translate} from "./common/ConsumerTools";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
@@ -29,32 +29,6 @@ const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
 const colors = ['lightgreen', 'yellow', 'red']
 const energyAvailable = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0].map(v => colors[v])
-
-const style = {
-    userSelect: "none",
-    borderCollapse: "collapse",
-    "& thead th": {
-        position: "sticky",
-        top: "0px",
-        zIndex: 1,
-    },
-    "& thead>tr:nth-child(2) th": {
-        top: "37px"
-    },
-    "& td": {
-        border: 1,
-        borderColor: 'divider'
-    },
-    "& td.cell-selected": {
-        backgroundColor: 'secondary.main'
-    },
-    "& td.cell-being-selected": {
-        backgroundColor: 'primary.main'
-    },
-    "& td.cell-disabled": {
-        backgroundColor: "red"
-    }
-} as const
 
 interface Props extends PrivateRouteProps {
 }
@@ -95,7 +69,7 @@ function PastBehavior(props: Props) {
                             </Tooltip>
                         ),
                         consumerId: c.consumerId,
-                        cellStates: predictions.find((p) => p.consumerId === c.consumerId)?.data ?? hours.map(() => false)
+                        cellStates: predictions.find((p) => p.consumerId === c.consumerId)?.data ?? hours.map(() => 0)
                     }));
                 setRows(cellStates);
                 setModified(false);
@@ -103,7 +77,7 @@ function PastBehavior(props: Props) {
             .catch(console.log)
     }, [backendService, setError, date]);
 
-    const handleChange = useCallback((cells: boolean[][]) => {
+    const handleChange = useCallback((cells: CellState[][]) => {
         setRows(prevState => prevState?.map((row, i) => ({...row, cellStates: cells[i]})))
         setModified(true);
     }, []);
@@ -121,7 +95,7 @@ function PastBehavior(props: Props) {
     useEffect(() => {
         setAppBar({
             title: t('card_behavior_title') + " " + date,
-            showBackButton: false,
+            showBackButton: true,
             children: () => <>
                 <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
                 <ResponsiveIconButton requiresAttention={modified}
@@ -136,11 +110,11 @@ function PastBehavior(props: Props) {
 
     return (
         <Track>
-            <Container maxWidth="xl">
+            <Container disableGutters maxWidth="xl">
                 <Box style={{display: "grid"}}>
                     <TableContainer
-                        sx={{overflow: 'auto', maxHeight: {xs: 'calc(100vh - 120px)', sm: 'calc(100vh - 70px)'}}}>
-                        <Table stickyHeader size="small" sx={style}>
+                        sx={{overflow: 'auto', maxHeight: {xs: 'calc(100vh - 124px)', sm: 'calc(100vh - 72px)'}}}>
+                        <Table stickyHeader size="small" sx={{userSelect: "none", borderCollapse: "collapse"}}>
                             <TableHead>
                                 <TableRow>
                                     <TableCell variant="head"/>
@@ -148,7 +122,7 @@ function PastBehavior(props: Props) {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell/>
-                                    {energyAvailable.map((v) => <TableCell style={{backgroundColor: v}}/>)}
+                                    {energyAvailable.map((v) => <TableCell sx={{backgroundColor: v, top: "37px"}}/>)}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
