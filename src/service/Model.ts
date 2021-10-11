@@ -1,3 +1,5 @@
+import {CellState} from "../behavior/BehaviorDragSelect";
+
 export interface LoginResponse {
     token: string;
 }
@@ -36,7 +38,7 @@ export interface ThermostatModel {
 
 export interface UserPredictionModel {
     consumerId: string;
-    data: boolean[];
+    data: CellState[];
 }
 
 export interface ProcessedConsumptionModel {
