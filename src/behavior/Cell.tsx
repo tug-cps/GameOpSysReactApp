@@ -48,17 +48,14 @@ export const Cell = React.memo(function (props: CellProps) {
             onMouseMove={onTouchMove}
         />
     }
-    const degrees = 90 * selected;
-    console.log("percentage", degrees)
+    const degrees = 100 - 25 * selected;
     return (
         <TableCell
             ref={tdRef}
             sx={{
                 border: 1,
-                borderRadius: 1,
                 borderColor: 'divider',
-                margin: 10,
-                background: `conic-gradient(from 90deg, #9ccc65 ${degrees}deg, #fff0 ${degrees}deg);`
+                background: `linear-gradient(#fff0 ${degrees}%, #9ccc65 ${degrees}%);`,
             }}
             onMouseDown={onTouchStart}
             onMouseMove={onTouchMove}

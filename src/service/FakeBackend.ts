@@ -20,7 +20,7 @@ class FakeBackend implements Backend {
             let e: Executor = new DefaultExecutor(resolve, reject);
 
             console.log(`FAKEBACKEND DELETE Fake backend call to ${url}`, config)
-            if (!config) return e.error();
+            if (!config?.headers) return e.error();
             const db = getFakeDB();
 
             const token = config.headers.Authorization;
@@ -63,6 +63,7 @@ class FakeBackend implements Backend {
                 }
                 return e.error()
             }
+            if (!config.headers) return e.error();
             const token = config.headers.Authorization;
             const user = db.token[token]
             if (user == null) return e.error();
@@ -110,6 +111,7 @@ class FakeBackend implements Backend {
                 return e.ok({});
             }
 
+            if (!config.headers) return e.error();
             const token = config.headers.Authorization;
             const user = db.token[token]
             if (user == null) return e.error()
@@ -137,7 +139,7 @@ class FakeBackend implements Backend {
         return new Promise<R>((resolve, reject) => {
             let e: Executor = new DefaultExecutor(resolve, reject);
             console.log(`FAKEBACKEND PUT Fake backend call to ${url}`, 'config:', config, 'data:', data)
-            if (!config) return e.error();
+            if (!config?.headers) return e.error();
             const db = getFakeDB();
             const token = config.headers.Authorization;
             const user = db.token[token]
