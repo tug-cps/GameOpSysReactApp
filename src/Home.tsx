@@ -61,7 +61,7 @@ function Home(props: PrivateRouteProps) {
 
     return (
         <Track>
-            <Container maxWidth="lg">
+            <Container maxWidth="lg" sx={{paddingTop: 1}}>
                 <Grid container justifyContent="center">
                     {homeDestinations.map((item: Item, index: number) =>
                         <HomeCard item={item} key={index}/>)}

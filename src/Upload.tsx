@@ -2,7 +2,6 @@ import {ElectricalServicesOutlined} from "@mui/icons-material";
 import CloudUploadOutlined from "@mui/icons-material/CloudUploadOutlined";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {
-    Box,
     Button,
     Container,
     Divider,
@@ -71,66 +70,64 @@ function Upload(props: Props) {
 
     return (
         <Track>
-            <Container maxWidth="md">
-                <Box my={1}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} sm={6}>
-                            <Typography variant="h5" gutterBottom>{t('upload_title_download')}</Typography>
-                            <Typography color="text.secondary" paragraph>{t('upload_instruction_download')}</Typography>
-                            <Paper>
-                                <List>
-                                    <li>
-                                        <Typography
-                                            sx={{mt: 0.5, ml: 2}}
-                                            color="text.secondary"
-                                            display="block"
-                                            variant="caption">Network operators</Typography>
-                                    </li>
-                                    {operators.map(item =>
-                                        <ListItemButton key={item.name} component="a" href={item.link} target="_blank">
-                                            <ListItemAvatar><ElectricalServicesOutlined/></ListItemAvatar>
-                                            <ListItemText primary={item.name}/>
-                                        </ListItemButton>)
-                                    }
-                                    <Divider component="li"/>
-                                    <li>
-                                        <Typography
-                                            sx={{mt: 0.5, ml: 2}}
-                                            color="text.secondary"
-                                            display="block"
-                                            variant="caption">Energy providers</Typography>
-                                    </li>
-                                    {providers.map(item =>
-                                        <ListItemButton key={item.name} component="a" href={item.link} target="_blank">
-                                            <ListItemAvatar><ElectricalServicesOutlined/></ListItemAvatar>
-                                            <ListItemText primary={item.name}/>
-                                        </ListItemButton>)
-                                    }
+            <Container maxWidth="md" sx={{paddingTop: 1}}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                        <Typography variant="h5" gutterBottom>{t('upload_title_download')}</Typography>
+                        <Typography color="text.secondary" paragraph>{t('upload_instruction_download')}</Typography>
+                        <Paper>
+                            <List>
+                                <li>
+                                    <Typography
+                                        sx={{mt: 0.5, ml: 2}}
+                                        color="text.secondary"
+                                        display="block"
+                                        variant="caption">Network operators</Typography>
+                                </li>
+                                {operators.map(item =>
+                                    <ListItemButton key={item.name} component="a" href={item.link} target="_blank">
+                                        <ListItemAvatar><ElectricalServicesOutlined/></ListItemAvatar>
+                                        <ListItemText primary={item.name}/>
+                                    </ListItemButton>)
+                                }
+                                <Divider component="li"/>
+                                <li>
+                                    <Typography
+                                        sx={{mt: 0.5, ml: 2}}
+                                        color="text.secondary"
+                                        display="block"
+                                        variant="caption">Energy providers</Typography>
+                                </li>
+                                {providers.map(item =>
+                                    <ListItemButton key={item.name} component="a" href={item.link} target="_blank">
+                                        <ListItemAvatar><ElectricalServicesOutlined/></ListItemAvatar>
+                                        <ListItemText primary={item.name}/>
+                                    </ListItemButton>)
+                                }
 
-                                </List>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography variant="h5" gutterBottom>{t('upload_title_upload')}</Typography>
-                            <Typography color="text.secondary" paragraph>{t('upload_instruction_upload')}</Typography>
-                            <label htmlFor="contained-button-file">
-                                <Input
-                                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                    id="contained-button-file"
-                                    type="file"
-                                    onChange={(e) => e.target?.files && onUpload(e.target.files[0])}
-                                />
-                                <Button variant="contained"
-                                        size="large"
-                                        color="primary"
-                                        fullWidth
-                                        component="span"
-                                        startIcon={<CloudUploadOutlined/>}
-                                >{t('action_upload')}</Button>
-                            </label>
-                        </Grid>
+                            </List>
+                        </Paper>
                     </Grid>
-                </Box>
+                    <Grid item xs={12} sm={6}>
+                        <Typography variant="h5" gutterBottom>{t('upload_title_upload')}</Typography>
+                        <Typography color="text.secondary" paragraph>{t('upload_instruction_upload')}</Typography>
+                        <label htmlFor="contained-button-file">
+                            <Input
+                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                id="contained-button-file"
+                                type="file"
+                                onChange={(e) => e.target?.files && onUpload(e.target.files[0])}
+                            />
+                            <Button variant="contained"
+                                    size="large"
+                                    color="primary"
+                                    fullWidth
+                                    component="span"
+                                    startIcon={<CloudUploadOutlined/>}
+                            >{t('action_upload')}</Button>
+                        </label>
+                    </Grid>
+                </Grid>
             </Container>
             <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
             <AlertSnackbar severity="success" {...success} />

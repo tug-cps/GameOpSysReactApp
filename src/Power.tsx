@@ -1,4 +1,4 @@
-import {Card, CardContent, Container, Typography} from "@mui/material";
+import {Container, Stack} from "@mui/material";
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
@@ -29,15 +29,10 @@ function Power(props: Props) {
     return (
         <Track>
             {dates &&
-            <Container maxWidth="md">
-                {dates.map((date) =>
-                    <Card variant="outlined" key={date} sx={{marginTop: 2}}>
-                        <CardContent>
-                            <Typography variant="h6">{date}</Typography>
-                            <PowerEntry date={date} backendService={backendService}/>
-                        </CardContent>
-                    </Card>
-                )}
+            <Container maxWidth="md" sx={{paddingTop: 1}}>
+                <Stack spacing={1}>
+                    {dates.map((date) => <PowerEntry date={date} backendService={backendService}/>)}
+                </Stack>
             </Container>
             }
         </Track>

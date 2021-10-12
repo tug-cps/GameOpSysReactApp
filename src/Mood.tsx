@@ -1,11 +1,11 @@
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import SaveAlt from "@mui/icons-material/SaveAlt";
-import {Box, Card, CardContent, Container, Typography, useTheme} from "@mui/material";
+import {Card, CardContent, Container, Typography, useTheme} from "@mui/material";
 import 'chartjs-plugin-dragdata';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Bubble, defaults} from "react-chartjs-2";
 import {useTranslation} from "react-i18next";
-import {PrivateRouteProps} from "./App";
+import {PrivateRouteProps, UserContext} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
@@ -103,6 +103,7 @@ function Mood(props: PrivateRouteProps) {
     const [modified, setModified] = useState(false);
 
     const {backendService, setAppBar} = props;
+    const user = useContext(UserContext);
 
     useEffect(() => {
         backendService.getMood(date)
@@ -137,18 +138,18 @@ function Mood(props: PrivateRouteProps) {
         })
     }, [t, setAppBar, onSaveClick, openInfo, modified])
 
+    const title_key = user?.type === "student" ? "mood_please_select_mood_student" : "mood_please_select_mood_homeowner";
+
     return <Track>
-        <Container maxWidth="sm">
-            <Box py={3}>
-                <Typography variant="h5" align="center">{t('mood_please_select_mood')}</Typography>
-                <Card>
-                    {mood &&
-                    <CardContent>
-                        <DraggableGraph mood={mood} onChange={onMoodChange}/>
-                    </CardContent>
-                    }
-                </Card>
-            </Box>
+        <Container maxWidth="sm" sx={{paddingTop: 3}}>
+            <Typography variant="h5" align="center" paragraph>{t(title_key)}</Typography>
+            <Card>
+                {mood &&
+                <CardContent>
+                    <DraggableGraph mood={mood} onChange={onMoodChange}/>
+                </CardContent>
+                }
+            </Card>
         </Container>
         <Prompt when={modified} message={t('unsaved_changes')}/>
         <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
