@@ -2,7 +2,6 @@ import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import SaveAlt from "@mui/icons-material/SaveAlt";
 import {
     Avatar,
-    Box,
     Container,
     LinearProgress,
     Table,
@@ -24,6 +23,7 @@ import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
+import {parse} from "date-fns";
 
 const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
@@ -46,7 +46,8 @@ function PastBehavior(props: Props) {
     const {t} = useTranslation();
     const [infoProps, openInfo] = useInfoDialog();
     const query = new URLSearchParams(useLocation().search);
-    const date = query.get("date");
+    const date = query.get("date")!;
+    const dateParsed = parse(date, 'yyyy-MM-dd', new Date());
 
     const {setAppBar, backendService} = props;
 
@@ -61,8 +62,7 @@ function PastBehavior(props: Props) {
                             <Tooltip title={translate(c.name, c.customName)} enterTouchDelay={0}>
                                 <Avatar
                                     variant="rounded"
-                                    style={{backgroundColor: backgroundColor(c.consumerId)}}
-                                    sx={{width: 30, height: 30}}
+                                    sx={{backgroundColor: backgroundColor(c.consumerId), width: 30, height: 30}}
                                 >
                                     {iconLookup(c.type)}
                                 </Avatar>
@@ -94,7 +94,7 @@ function PastBehavior(props: Props) {
 
     useEffect(() => {
         setAppBar({
-            title: t('card_behavior_title') + " " + date,
+            title: t('card_behavior_full_title', {date: dateParsed}),
             showBackButton: true,
             children: () => <>
                 <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
@@ -104,33 +104,31 @@ function PastBehavior(props: Props) {
                                       onClick={handleSave}/>
             </>
         })
-    }, [t, setAppBar, handleSave, openInfo, modified, date])
+    }, [t, setAppBar, handleSave, openInfo, modified, date, dateParsed])
 
     if (!rows) return <LinearProgress/>
 
     return (
         <Track>
-            <Container disableGutters maxWidth="xl">
-                <Box style={{display: "grid"}}>
-                    <TableContainer
-                        sx={{overflow: 'auto', maxHeight: {xs: 'calc(100vh - 124px)', sm: 'calc(100vh - 72px)'}}}>
-                        <Table stickyHeader size="small" sx={{userSelect: "none", borderCollapse: "collapse"}}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell variant="head"/>
-                                    {hours.map((value) => <TableCell align="center">{String(value)}⁰⁰</TableCell>)}
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell/>
-                                    {energyAvailable.map((v) => <TableCell sx={{backgroundColor: v, top: "37px"}}/>)}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                <BehaviorDragSelect rows={rows} onChange={handleChange}/>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Box>
+            <Container disableGutters maxWidth="xl" sx={{paddingTop: 1, display: "grid"}}>
+                <TableContainer
+                    sx={{overflow: 'auto', maxHeight: {xs: 'calc(100vh - 124px)', sm: 'calc(100vh - 72px)'}}}>
+                    <Table stickyHeader size="small" sx={{userSelect: "none", borderCollapse: "collapse"}}>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell variant="head"/>
+                                {hours.map((value) => <TableCell align="center">{String(value)}⁰⁰</TableCell>)}
+                            </TableRow>
+                            <TableRow>
+                                <TableCell/>
+                                {energyAvailable.map((v) => <TableCell sx={{backgroundColor: v, top: "37px"}}/>)}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <BehaviorDragSelect rows={rows} onChange={handleChange}/>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Container>
             <Prompt when={modified} message={t('unsaved_changes')}/>
             <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps}/>

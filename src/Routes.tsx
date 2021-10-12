@@ -51,7 +51,7 @@ export function PrivateRouter(props: PrivateRouteProps) {
 
     const commonPaths = [paths.logout, paths.user, paths.home, paths.root]
     const managementPaths = [paths.upload];
-    const homeOwnerPaths = [paths.upload, paths.power, paths.consumers, paths.behavior, paths.thermostats, paths.mood];
+    const homeOwnerPaths = [paths.upload, paths.power, paths.consumers, paths.behavior, paths.mood];
     const studentPaths = [paths.archive, paths.consumers, paths.behavior, paths.mood, paths.pastbehavior];
 
     return (

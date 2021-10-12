@@ -240,7 +240,7 @@ function Thermostats(props: Props) {
 
     return (
         <Track>
-            <Container maxWidth="xl">
+            <Container maxWidth="xl" sx={{paddingTop: 1}}>
                 <Stack direction="row" spacing={1} sx={{alignItems: "center", justifyContent: "end", pb: 1}}>
                     <Typography variant="subtitle1"
                                 sx={{textTransform: 'uppercase'}}

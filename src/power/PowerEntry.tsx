@@ -1,55 +1,49 @@
 import {ChartOptions} from "chart.js";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Line} from "react-chartjs-2";
 import BackendService from "../service/BackendService";
+import {Card, CardContent, CardHeader} from "@mui/material";
+import {parse} from "date-fns";
+import {useTranslation} from "react-i18next";
 
-interface EntryProps {
+interface Props {
     backendService: BackendService;
     date: string;
-}
-
-interface EntryState {
-    data: any;
 }
 
 const options: ChartOptions = {
     animation: false
 };
 
-export class PowerEntry extends React.Component<EntryProps, EntryState> {
-    constructor(props: Readonly<EntryProps>) {
-        super(props);
-        this.state = {
-            data: {}
-        }
-    }
-
-    componentDidMount() {
-        const {backendService, date} = this.props;
+export function PowerEntry(props: Props) {
+    const {backendService, date} = props;
+    const dateParsed = parse(date, 'yyyy-MM-dd', new Date());
+    const {t} = useTranslation();
+    const [data, setData] = useState<any>();
+    useEffect(() => {
         backendService.getProcessedConsumption(date)
             .then((consumptions) => {
-                this.setState({
-                    data: {
-                        labels: Array.from(Array(24).keys()),
-                        datasets: consumptions.map((c) => ({
-                                label: c.type,
-                                data: c.data,
-                                fill: false,
-                                backgroundColor: (c.type === 'actual') ? 'rgb(255, 99, 132)' : 'green',
-                                borderColor: 'rgba(255, 99, 132, 0.2)',
-                            })
-                        )
-                    }
+                setData({
+                    labels: Array.from(Array(24).keys()),
+                    datasets: consumptions.map((c) => ({
+                            label: c.type,
+                            data: c.data,
+                            fill: false,
+                            backgroundColor: (c.type === 'actual') ? 'rgb(255, 99, 132)' : 'green',
+                            borderColor: 'rgba(255, 99, 132, 0.2)',
+                        })
+                    )
                 })
             })
             .catch(console.log)
-    }
+    }, [backendService, date]);
 
-    render() {
-        const {data} = this.state;
-        console.log(data)
-        return (
-            <Line data={data} options={options}/>
-        )
-    }
+    return (
+        <Card variant="outlined" key={date}>
+            <CardHeader title={t('archive_entry_date', {date: dateParsed})}/>
+            <CardContent>
+                <Line data={data} options={options}/>
+            </CardContent>
+        </Card>
+    )
 }

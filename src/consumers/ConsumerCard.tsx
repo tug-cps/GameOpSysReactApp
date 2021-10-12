@@ -40,7 +40,7 @@ const ConsumerCard = React.memo((props: Props) => {
                   button={button as false | undefined}
                   onClick={() => clickEdit && clickEdit(consumer)}>
             <ListItemAvatar>
-                <Avatar style={{backgroundColor: backgroundColor(consumer.consumerId)}}>
+                <Avatar sx={{backgroundColor: backgroundColor(consumer.consumerId)}}>
                     {iconLookup(consumer.type)}
                 </Avatar>
             </ListItemAvatar>

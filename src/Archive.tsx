@@ -6,6 +6,8 @@ import {useSnackBar} from "./common/UseSnackBar";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import useDefaultTracking from "./common/Tracking";
 import {PrivateRouteProps} from "./App";
+import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
+import {InfoOutlined} from "@mui/icons-material";
 
 
 interface Props extends PrivateRouteProps {
@@ -25,7 +27,11 @@ function Archive(props: Props) {
     }, [backendService, setError])
 
     useEffect(() => {
-        setAppBar({title: t('card_archive_title'), showBackButton: true, children: () => <></>})
+        setAppBar({
+            title: t('card_archive_title'),
+            showBackButton: true,
+            children: () => <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>}/>
+        });
     }, [t, setAppBar])
 
     return (

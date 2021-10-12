@@ -61,11 +61,7 @@ export function Content(props: React.PropsWithChildren<{}>) {
 
     return <Box sx={{flexGrow: 1}}>
         <AppBarSpace/>
-        <React.Suspense fallback={<LinearProgress/>}>
-            <Box paddingTop={1}>
-                {props.children}
-            </Box>
-        </React.Suspense>
+        <React.Suspense fallback={<LinearProgress/>} children={props.children}/>
     </Box>
 }
 

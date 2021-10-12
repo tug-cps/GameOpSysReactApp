@@ -1,25 +1,19 @@
-import ArrowRight from "@mui/icons-material/ArrowRight"
-import Brightness4Outlined from "@mui/icons-material/Brightness4Outlined"
-import Email from "@mui/icons-material/Email"
-import ExitToApp from "@mui/icons-material/ExitToApp"
-import InfoOutlined from "@mui/icons-material/InfoOutlined"
-import Language from "@mui/icons-material/Language"
-import MyLocation from "@mui/icons-material/MyLocation"
-import Power from "@mui/icons-material/Power"
-import Container from "@mui/material/Container"
-import Divider from "@mui/material/Divider"
-import LinearProgress from "@mui/material/LinearProgress"
-import List from "@mui/material/List"
-import ListItem from "@mui/material/ListItem"
-import ListItemIcon from "@mui/material/ListItemIcon"
-import ListItemText from "@mui/material/ListItemText"
-import Paper from "@mui/material/Paper"
-import ToggleButton from "@mui/material/ToggleButton"
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
-import Typography from "@mui/material/Typography"
+import {
+    Container,
+    Divider,
+    LinearProgress,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Paper,
+    ToggleButton,
+    ToggleButtonGroup,
+    Typography
+} from "@mui/material";
 import i18next from "i18next";
 import React, {useContext, useEffect, useState} from 'react';
-import {useTranslation, withTranslation, WithTranslation} from "react-i18next";
+import {useTranslation} from "react-i18next";
 import {Link as RouterLink, useHistory} from "react-router-dom";
 import {AppBarProps, ColorMode, ColorModeContext} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
@@ -29,6 +23,16 @@ import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 import BackendService from "./service/BackendService";
 import {UserModel} from "./service/Model";
+import {
+    ArrowRight,
+    Brightness4Outlined,
+    Email,
+    ExitToApp,
+    InfoOutlined,
+    Language,
+    MyLocation,
+    Power
+} from "@mui/icons-material";
 
 function UserInfo(props: { user: UserModel }) {
     const {user} = props;
@@ -106,7 +110,7 @@ function ColorModeInfo(props: {}) {
     )
 }
 
-interface Props extends WithTranslation {
+interface Props {
     backendService: BackendService
     setAppBar: (props: AppBarProps) => void
 }
@@ -117,7 +121,8 @@ function User(props: Props) {
     const [user, setUser] = useState<UserModel>()
     const [error, setError] = useSnackBar();
     const history = useHistory();
-    const {backendService, t, setAppBar} = props;
+    const {t} = useTranslation();
+    const {backendService, setAppBar} = props;
 
     useEffect(() => {
         backendService.getUser()
@@ -144,7 +149,7 @@ function User(props: Props) {
     return (
         <Track>
             {user &&
-            <Container maxWidth="sm">
+            <Container maxWidth="sm" sx={{paddingTop: 1}}>
                 <Paper variant="outlined" square>
                     <List>
                         <UserInfo user={user}/>
@@ -164,4 +169,4 @@ function User(props: Props) {
     )
 }
 
-export default withTranslation()(User);
+export default User;

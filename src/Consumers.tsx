@@ -1,5 +1,5 @@
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
-import {Box, Container, DialogContentText, List, Paper} from "@mui/material";
+import {Container, DialogContentText, List, Paper} from "@mui/material";
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
@@ -47,20 +47,18 @@ function Consumers(props: Props) {
 
     return (
         <Track>
-            <Container maxWidth="sm">
-                <Box pb={10}>
-                    <Paper variant="outlined">
-                        <List>
-                            {consumers && consumers.map((it) =>
-                                <ConsumerCard
-                                    key={it.consumerId}
-                                    consumer={it}
-                                    clickActive={applyChangeActive}
-                                />
-                            )}
-                        </List>
-                    </Paper>
-                </Box>
+            <Container maxWidth="sm" sx={{paddingTop: 1, paddingBottom: 10}}>
+                <Paper variant="outlined">
+                    <List>
+                        {consumers && consumers.map((it) =>
+                            <ConsumerCard
+                                key={it.consumerId}
+                                consumer={it}
+                                clickActive={applyChangeActive}
+                            />
+                        )}
+                    </List>
+                </Paper>
             </Container>
             <AlertSnackbar {...error}/>
             <InfoDialog title={t('info')} content={content()} {...infoProps}/>
