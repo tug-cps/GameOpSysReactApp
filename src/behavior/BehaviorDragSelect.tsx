@@ -8,8 +8,10 @@ import {eventToCellLocation, isValidEvent, minMax} from "./helpers";
 export type CellState = 0 | 1 | 2 | 3 | 4;
 
 export interface Row {
-    header: JSX.Element;
-    cellStates: CellState[];
+    header: JSX.Element
+    cellStates: CellState[]
+    colorSelected?: string
+    colorBeingSelected?: string
 }
 
 interface Props {
@@ -54,15 +56,20 @@ class BehaviorDragSelect extends React.Component<Props, State> {
         return <>
             {rows.map((row, i) =>
                 <TableRow>
-                    <TableCell sx={{position: "sticky", left: 0, backgroundColor: "background.paper"}}>
-                        {row.header}
-                    </TableCell>
+                    <TableCell children={row.header} sx={{
+                        position: "sticky",
+                        left: 0,
+                        backgroundColor: "background.paper",
+                        border: 0,
+                    }}/>
                     {row.cellStates.map((selected, j) =>
                         <Cell
                             beingSelected={this.isCellBeingSelected(i, j)}
                             selected={selected}
                             onTouchStart={this.handleTouchStartCell}
                             onTouchMove={this.handleTouchMoveCell}
+                            colorSelected={row.colorSelected}
+                            colorBeingSelected={row.colorBeingSelected}
                         />)}
                 </TableRow>
             )}

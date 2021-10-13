@@ -1,17 +1,28 @@
-import React, {useEffect, useRef} from "react";
-import {TableCell} from "@mui/material";
+import {TableCell, useMediaQuery} from "@mui/material";
+import React, {useContext, useEffect, useRef} from "react";
+import {ColorModeContext} from "../App";
 
 interface CellProps {
     beingSelected: boolean
     selected: 0 | 1 | 2 | 3 | 4
     onTouchStart: any
     onTouchMove: any
+    colorSelected?: string
+    colorBeingSelected?: string
+}
+
+const useDarkMode = () => {
+    const colorContext = useContext(ColorModeContext);
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    if (!colorContext.mode) return prefersDarkMode;
+    return colorContext.mode === "dark";
 }
 
 const compareCellProps = (a: CellProps, b: CellProps) => a.selected === b.selected && a.beingSelected === b.beingSelected;
 export const Cell = React.memo(function (props: CellProps) {
-    const {beingSelected, selected, onTouchStart, onTouchMove} = props;
+    const {beingSelected, selected, onTouchStart, onTouchMove, colorSelected, colorBeingSelected} = props;
     const tdRef = useRef<HTMLElement>();
+    const borderColor = useDarkMode() ? 'grey.800' : 'grey.400';
 
     useEffect(() => {
         const td = tdRef.current;
@@ -27,7 +38,11 @@ export const Cell = React.memo(function (props: CellProps) {
     if (beingSelected) {
         return <TableCell
             ref={tdRef}
-            sx={{border: 1, borderColor: 'divider', backgroundColor: "primary.main"}}
+            sx={{
+                border: 1,
+                borderColor: borderColor,
+                backgroundColor: colorBeingSelected ?? "primary.main"
+            }}
             onMouseDown={onTouchStart}
             onMouseMove={onTouchMove}
         />
@@ -35,7 +50,10 @@ export const Cell = React.memo(function (props: CellProps) {
     if (selected === 0) {
         return <TableCell
             ref={tdRef}
-            sx={{border: 1, borderColor: 'divider'}}
+            sx={{
+                border: 1,
+                borderColor: borderColor,
+            }}
             onMouseDown={onTouchStart}
             onMouseMove={onTouchMove}
         />
@@ -43,7 +61,11 @@ export const Cell = React.memo(function (props: CellProps) {
     if (selected === 4) {
         return <TableCell
             ref={tdRef}
-            sx={{border: 1, borderColor: 'divider', backgroundColor: "secondary.main"}}
+            sx={{
+                border: 1,
+                borderColor: borderColor,
+                backgroundColor: colorSelected ?? "secondary.main"
+            }}
             onMouseDown={onTouchStart}
             onMouseMove={onTouchMove}
         />
@@ -54,8 +76,8 @@ export const Cell = React.memo(function (props: CellProps) {
             ref={tdRef}
             sx={{
                 border: 1,
-                borderColor: 'divider',
-                background: `linear-gradient(#fff0 ${degrees}%, #9ccc65 ${degrees}%);`,
+                borderColor: borderColor,
+                backgroundImage: `linear-gradient(transparent ${degrees}%, ${colorSelected ?? '#9ccc65'} ${degrees}%);`,
             }}
             onMouseDown={onTouchStart}
             onMouseMove={onTouchMove}

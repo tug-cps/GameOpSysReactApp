@@ -3,8 +3,8 @@ import React, {useEffect, useState} from "react";
 import {Line} from "react-chartjs-2";
 import BackendService from "../service/BackendService";
 import {Card, CardContent, CardHeader} from "@mui/material";
-import {parse} from "date-fns";
 import {useTranslation} from "react-i18next";
+import {useParsedDate} from "../common/Date";
 
 interface Props {
     backendService: BackendService;
@@ -17,7 +17,7 @@ const options: ChartOptions = {
 
 export function PowerEntry(props: Props) {
     const {backendService, date} = props;
-    const dateParsed = parse(date, 'yyyy-MM-dd', new Date());
+    const dateParsed = useParsedDate(date);
     const {t} = useTranslation();
     const [data, setData] = useState<any>();
     useEffect(() => {

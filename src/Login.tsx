@@ -1,4 +1,5 @@
-import {Avatar, Box, Button, Container, Grid, TextField, Typography} from "@mui/material";
+import {InfoOutlined} from "@mui/icons-material";
+import {Avatar, Box, Button, Container, Grid, InputAdornment, TextField, Typography} from "@mui/material";
 import {styled} from "@mui/system";
 import React, {useState} from 'react';
 import {withTranslation, WithTranslation} from "react-i18next";
@@ -52,16 +53,6 @@ function Login(props: Props) {
                             <form onSubmit={handleSubmit}>
                                 <TextField
                                     autoFocus
-                                    id="shared_password"
-                                    label={t('login_shared_password')}
-                                    variant="outlined"
-                                    margin="normal"
-                                    value={state.shared_password}
-                                    onChange={(e) => setState({...state, shared_password: e.target.value})}
-                                    required
-                                    fullWidth
-                                />
-                                <TextField
                                     autoComplete="email"
                                     id="email"
                                     label={t('login_email_address')}
@@ -71,6 +62,20 @@ function Login(props: Props) {
                                     onChange={(e) => setState({...state, email: e.target.value})}
                                     required
                                     fullWidth
+                                />
+                                <TextField
+                                    id="shared_password"
+                                    label={t('login_shared_password')}
+                                    variant="outlined"
+                                    margin="normal"
+                                    value={state.shared_password}
+                                    onChange={(e) => setState({...state, shared_password: e.target.value})}
+                                    required
+                                    fullWidth
+                                    InputProps={{
+                                        endAdornment: (<InputAdornment position="end"><InfoOutlined
+                                            color="inherit"/></InputAdornment>),
+                                    }}
                                 />
                                 <Button
                                     type="submit"

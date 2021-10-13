@@ -3,7 +3,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {CssBaseline, LinearProgress, StyledEngineProvider, ThemeProvider,} from "@mui/material";
 import React, {useCallback, useEffect, useState} from "react";
 import {useTracking} from "react-tracking";
-import DefaultAppBar, {Content, DefaultDrawer, Root} from "./common/DefaultAppBar";
+import {Content, DefaultAppBar, DefaultDrawer, Root} from "./common/DefaultAppBar";
 import DefaultBottomNavigation from "./common/DefaultBottomNavigation";
 import Config from "./Config";
 import {PrivateRouter, PublicRouter} from "./Routes";
