@@ -30,8 +30,7 @@ export interface Props {
     multiLine?: React.ReactNode;
 }
 
-export function DefaultDrawer() {
-
+export const DefaultDrawer = React.memo(() => {
     const {t} = useTranslation();
     const destinations = useNavDrawerDestinations();
 
@@ -40,9 +39,9 @@ export function DefaultDrawer() {
             <Hidden smDown>
                 <Drawer open variant="persistent">
                     <Box role="presentation" sx={{width: drawerWidth}}>
-                        <AppBarSpace/>
+                        <Toolbar/>
                         <Divider/>
-                        <List>
+                        <List disablePadding>
                             {destinations.map((d) =>
                                 <ListItem button key={d.title} component={RouterLink} to={d.to}>
                                     <ListItemIcon><SvgIcon component={d.icon}/></ListItemIcon>
@@ -55,12 +54,11 @@ export function DefaultDrawer() {
             </Hidden>
         </Box>
     );
-}
+}, () => true);
 
 export function Content(props: React.PropsWithChildren<{}>) {
-
     return <Box sx={{flexGrow: 1}}>
-        <AppBarSpace/>
+        <Toolbar/>
         <React.Suspense fallback={<LinearProgress/>} children={props.children}/>
     </Box>
 }
@@ -69,11 +67,7 @@ export function Root(props: React.PropsWithChildren<{}>) {
     return <Box sx={{display: 'flex'}} children={props.children}/>
 }
 
-export function AppBarSpace() {
-    return <Toolbar/>
-}
-
-function DefaultAppBar(props: React.PropsWithChildren<Props> & { hideBackButton?: boolean }) {
+export function DefaultAppBar(props: React.PropsWithChildren<Props> & { hideBackButton?: boolean }) {
     const {title} = props;
     const trigger = useScrollTrigger();
 
@@ -100,5 +94,3 @@ function DefaultAppBar(props: React.PropsWithChildren<Props> & { hideBackButton?
         </Slide>
     );
 }
-
-export default DefaultAppBar;

@@ -18,7 +18,7 @@ import {Prompt} from 'react-router-dom';
 import {PrivateRouteProps} from "./App";
 import BehaviorDragSelect, {CellState, Row} from "./behavior/BehaviorDragSelect"
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {backgroundColor, iconLookup, translate} from "./common/ConsumerTools";
+import {consumerLookup, translate} from "./common/ConsumerTools";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
@@ -54,20 +54,25 @@ function Behavior(props: Props) {
             .then(([consumers, predictions]) => {
                 const cellStates = consumers
                     .filter((c) => c.active)
-                    .map((c) => ({
-                        header: (
-                            <Tooltip title={translate(c.name, c.customName)} enterTouchDelay={0}>
-                                <Avatar
-                                    variant="rounded"
-                                    sx={{width: 30, height: 30, backgroundColor: backgroundColor(c.consumerId)}}
-                                >
-                                    {iconLookup(c.type)}
-                                </Avatar>
-                            </Tooltip>
-                        ),
-                        consumerId: c.consumerId,
-                        cellStates: predictions.find((p) => p.consumerId === c.consumerId)?.data ?? hours.map(() => 0)
-                    }));
+                    .map((c) => {
+                        const consumerType = consumerLookup(c.type);
+                        return {
+                            header: (
+                                <Tooltip title={translate(c.name, c.customName)} enterTouchDelay={0}>
+                                    <Avatar
+                                        variant="rounded"
+                                        sx={{width: 30, height: 30, backgroundColor: consumerType.color}}
+                                    >
+                                        {consumerType.icon}
+                                    </Avatar>
+                                </Tooltip>
+                            ),
+                            consumerId: c.consumerId,
+                            cellStates: predictions.find((p) => p.consumerId === c.consumerId)?.data ?? hours.map(() => 0),
+                            colorSelected: consumerType.color,
+                            colorBeingSelected: consumerType.colorAlt
+                        }
+                    });
                 setRows(cellStates);
                 setModified(false);
             }, setError)
@@ -112,12 +117,13 @@ function Behavior(props: Props) {
                     <Table stickyHeader size="small" sx={{userSelect: "none", borderCollapse: "collapse"}}>
                         <TableHead>
                             <TableRow>
-                                <TableCell variant="head"/>
+                                <TableCell variant="head" sx={{border: 0}}/>
                                 {hours.map((value) => <TableCell align="center">{String(value)}⁰⁰</TableCell>)}
                             </TableRow>
                             <TableRow>
-                                <TableCell/>
-                                {energyAvailable.map((v) => <TableCell sx={{backgroundColor: v, top: "37px"}}/>)}
+                                <TableCell sx={{border: 0}}/>
+                                {energyAvailable.map((v) => <TableCell
+                                    sx={{border: 0, backgroundColor: v, top: "37px"}}/>)}
                             </TableRow>
                         </TableHead>
                         <TableBody>

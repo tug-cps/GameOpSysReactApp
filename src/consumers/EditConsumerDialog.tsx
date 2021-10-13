@@ -50,7 +50,7 @@ export function EditConsumerDialog(props: Props) {
                 <Paper variant="outlined">
                     <List>
                         <ListItem role={undefined}>
-                            <ListItemAvatar><Avatar>{iconLookup(props.consumer?.type)}</Avatar></ListItemAvatar>
+                            <ListItemAvatar><Avatar>{iconLookup(props.consumer?.type ?? "misc")}</Avatar></ListItemAvatar>
                             <ListItemText primary={props.consumerName}/>
                         </ListItem>
                     </List>

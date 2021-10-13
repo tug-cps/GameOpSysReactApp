@@ -43,7 +43,6 @@ export function useBottomBarDestinations(): Destination[] {
     }
 }
 
-
 export function useNavDrawerDestinations(): Destination[] {
     const user = useContext(UserContext)
     switch (user?.type) {
@@ -55,20 +54,6 @@ export function useNavDrawerDestinations(): Destination[] {
             return [destinations.home, destinations.upload, destinations.behavior, destinations.user];
         default:
             return [];
-    }
-}
-
-export function useHomeDestinations(): Destination[] {
-    const user = useContext(UserContext)
-    switch (user?.type) {
-        case "management":
-            return [destinations.upload, destinations.user]
-        case "student":
-            return [destinations.archive, destinations.mood]
-        case "homeowner":
-            return [destinations.power, destinations.upload, destinations.mood]
-        default:
-            return []
     }
 }
 

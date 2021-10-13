@@ -2,12 +2,12 @@ import React from "react";
 import {ListItem, ListItemAvatar, ListItemText} from "@mui/material";
 import {useHistory} from "react-router-dom";
 import {Done} from "@mui/icons-material";
-import {parse} from "date-fns";
 import {useTranslation} from "react-i18next";
+import {useParsedDate} from "../common/Date";
 
 function ArchiveEntry(props: { date: string }) {
     const {date} = props;
-    const parsedDate = parse(date, 'yyyy-MM-dd', new Date());
+    const parsedDate = useParsedDate(date);
     const history = useHistory();
     const {t} = useTranslation();
 

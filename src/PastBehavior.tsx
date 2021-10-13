@@ -12,18 +12,20 @@ import {
     TableRow,
     Tooltip,
 } from "@mui/material";
+import {isPast, isValid} from "date-fns";
 import React, {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {Prompt, useLocation} from 'react-router-dom';
+import {Prompt, Redirect, useLocation} from 'react-router-dom';
 import {PrivateRouteProps} from "./App";
 import BehaviorDragSelect, {CellState, Row} from "./behavior/BehaviorDragSelect"
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {backgroundColor, iconLookup, translate} from "./common/ConsumerTools";
+import {consumerLookup, translate} from "./common/ConsumerTools";
+import {useParsedDate} from "./common/Date";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
-import {parse} from "date-fns";
+import {ConsumerModel} from "./service/Model";
 
 const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
@@ -37,6 +39,23 @@ interface ExtendedRow extends Row {
     consumerId: string
 }
 
+interface HeaderProps {
+    consumer: ConsumerModel
+}
+
+const compareConsumerProps = (a: HeaderProps, b: HeaderProps) => a.consumer.consumerId === b.consumer.consumerId
+const ConsumerHeader = React.memo((props: { consumer: ConsumerModel }) => {
+    const {consumer} = props;
+    const consumerType = consumerLookup(consumer.type);
+    return (<Tooltip title={translate(consumer.name, consumer.customName)} enterTouchDelay={0}>
+        <Avatar
+            variant="rounded"
+            sx={{backgroundColor: consumerType.color, width: 30, height: 30}}
+            children={consumerType.icon}
+        />
+    </Tooltip>)
+}, compareConsumerProps);
+
 function PastBehavior(props: Props) {
     const {Track} = useDefaultTracking({page: 'Behavior'});
     const [rows, setRows] = useState<ExtendedRow[]>();
@@ -47,35 +66,32 @@ function PastBehavior(props: Props) {
     const [infoProps, openInfo] = useInfoDialog();
     const query = new URLSearchParams(useLocation().search);
     const date = query.get("date")!;
-    const dateParsed = parse(date, 'yyyy-MM-dd', new Date());
+    const dateParsed = useParsedDate(date);
+    const validDate = isValid(dateParsed) && isPast(dateParsed);
 
     const {setAppBar, backendService} = props;
 
     useEffect(() => {
-        if (!date) return;
+        if (!validDate) return;
         Promise.all([backendService.getConsumers(), backendService.getPrediction(date)])
             .then(([consumers, predictions]) => {
                 const cellStates = consumers
                     .filter((c) => c.active)
-                    .map((c) => ({
-                        header: (
-                            <Tooltip title={translate(c.name, c.customName)} enterTouchDelay={0}>
-                                <Avatar
-                                    variant="rounded"
-                                    sx={{backgroundColor: backgroundColor(c.consumerId), width: 30, height: 30}}
-                                >
-                                    {iconLookup(c.type)}
-                                </Avatar>
-                            </Tooltip>
-                        ),
-                        consumerId: c.consumerId,
-                        cellStates: predictions.find((p) => p.consumerId === c.consumerId)?.data ?? hours.map(() => 0)
-                    }));
+                    .map((c) => {
+                        const consumerType = consumerLookup(c.type);
+                        return ({
+                            header: <ConsumerHeader consumer={c}/>,
+                            consumerId: c.consumerId,
+                            cellStates: predictions.find((p) => p.consumerId === c.consumerId)?.data ?? hours.map(() => 0),
+                            colorSelected: consumerType.color,
+                            colorBeingSelected: consumerType.colorAlt
+                        });
+                    });
                 setRows(cellStates);
                 setModified(false);
             }, setError)
             .catch(console.log)
-    }, [backendService, setError, date]);
+    }, [validDate, backendService, setError, date]);
 
     const handleChange = useCallback((cells: CellState[][]) => {
         setRows(prevState => prevState?.map((row, i) => ({...row, cellStates: cells[i]})))
@@ -83,17 +99,16 @@ function PastBehavior(props: Props) {
     }, []);
 
     const handleSave = useCallback(() => {
-        if (!date) return;
         rows && backendService.putPrediction(date, rows.map((r) => ({consumerId: r.consumerId, data: r.cellStates})))
             .then(() => {
                 setSuccess(t('changes_saved'));
                 setModified(false);
             }, setError)
             .catch(console.log)
-    }, [date, rows, backendService, setError, setSuccess, t]);
+    }, [backendService, date, rows, setError, setSuccess, t]);
 
     useEffect(() => {
-        setAppBar({
+        validDate && setAppBar({
             title: t('card_behavior_full_title', {date: dateParsed}),
             showBackButton: true,
             children: () => <>
@@ -104,8 +119,9 @@ function PastBehavior(props: Props) {
                                       onClick={handleSave}/>
             </>
         })
-    }, [t, setAppBar, handleSave, openInfo, modified, date, dateParsed])
+    }, [validDate, dateParsed, handleSave, modified, openInfo, setAppBar, t])
 
+    if (!validDate) return <Redirect to={'/'}/>
     if (!rows) return <LinearProgress/>
 
     return (

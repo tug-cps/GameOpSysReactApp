@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import {useTranslation} from "react-i18next";
-import {backgroundColor, iconLookup, translate} from "../common/ConsumerTools";
+import {consumerLookup, translate} from "../common/ConsumerTools";
 import {ConsumerModel} from "../service/Model";
 
 interface Props {
@@ -29,20 +29,19 @@ export const compareConsumers = (a: ConsumerModel, b: ConsumerModel) =>
     a.active === b.active
 
 const ConsumerCard = React.memo((props: Props) => {
-    const {t} = useTranslation()
+    const {t} = useTranslation();
     const {consumer, clickEdit, clickActive, clickDelete} = props;
-    const button = !!clickEdit
-    const showButtonTooltip = consumer.active ? t("hide_consumer") : t("show_consumer")
-    const consumerName = translate(consumer.name, consumer.customName)
+    const button = !!clickEdit;
+    const showButtonTooltip = consumer.active ? t("hide_consumer") : t("show_consumer");
+    const consumerName = translate(consumer.name, consumer.customName);
+    const consumerType = consumerLookup(consumer.type);
     return (
         <ListItem key={consumer.consumerId}
                   role={undefined}
                   button={button as false | undefined}
                   onClick={() => clickEdit && clickEdit(consumer)}>
             <ListItemAvatar>
-                <Avatar sx={{backgroundColor: backgroundColor(consumer.consumerId)}}>
-                    {iconLookup(consumer.type)}
-                </Avatar>
+                <Avatar sx={{backgroundColor: consumerType.color}} children={consumerType.icon}/>
             </ListItemAvatar>
             <ListItemText primary={consumerName}/>
             <ListItemSecondaryAction>
