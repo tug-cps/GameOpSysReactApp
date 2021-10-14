@@ -1,6 +1,6 @@
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import SaveAlt from "@mui/icons-material/SaveAlt";
-import {Card, CardContent, Container, Typography, useTheme} from "@mui/material";
+import {Card, CardContent, Container, LinearProgress, Typography, useTheme} from "@mui/material";
 import 'chartjs-plugin-dragdata';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Bubble, defaults} from "react-chartjs-2";
@@ -99,7 +99,7 @@ function Mood(props: PrivateRouteProps) {
     const [infoProps, openInfo] = useInfoDialog();
     const [success, setSuccess] = useSnackBar();
     const [error, setError] = useSnackBar();
-    const [mood, setMood] = useState<MoodModel>({x: 5, y: 5});
+    const [mood, setMood] = useState<MoodModel>();
     const [modified, setModified] = useState(false);
 
     const {backendService, setAppBar} = props;
@@ -113,7 +113,8 @@ function Mood(props: PrivateRouteProps) {
     }, [backendService, setError])
 
     const onSaveClick = useCallback(() => {
-        backendService.putMood(date, mood!)
+        if (!mood) return;
+        backendService.putMood(date, mood)
             .then(() => setSuccess(t('changes_saved')), setError)
             .then(() => setModified(false))
             .catch(console.log);
@@ -138,8 +139,9 @@ function Mood(props: PrivateRouteProps) {
         })
     }, [t, setAppBar, onSaveClick, openInfo, modified])
 
-    const title_key = user?.type === "student" ? "mood_please_select_mood_student" : "mood_please_select_mood_homeowner";
+    if (!mood) return <LinearProgress />;
 
+    const title_key = user?.type === "student" ? "mood_please_select_mood_student" : "mood_please_select_mood_homeowner";
     return <Track>
         <Container maxWidth="sm" sx={{paddingTop: 3}}>
             <Typography variant="h5" align="center" paragraph>{t(title_key)}</Typography>

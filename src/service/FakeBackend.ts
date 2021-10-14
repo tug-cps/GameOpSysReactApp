@@ -14,35 +14,41 @@ function findInDict(dict: any, matcher: (value: any) => boolean): any {
     return null;
 }
 
+const delay = 0;
+function delayedPromise<T>(promise: Promise<T>): Promise<T> {
+    return promise.then(value => new Promise<T>(resolve => setTimeout(() => resolve(value), delay)));
+}
+
 class FakeBackend implements Backend {
     delete<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-        return new Promise<R>((resolve, reject) => {
+        const promise = new Promise<R>((resolve, reject) => {
             let e: Executor = new DefaultExecutor(resolve, reject);
 
-            console.log(`FAKEBACKEND DELETE Fake backend call to ${url}`, config)
+            console.log(`FAKEBACKEND DELETE Fake backend call to ${url}`, config);
             if (!config?.headers) return e.error();
             const db = getFakeDB();
 
             const token = config.headers.Authorization;
-            const user = db.token[token]
-            if (user == null) return e.error()
+            const user = db.token[token];
+            if (user == null) return e.error();
             if (db.user[user].userId === "faulty") e = new FaultyExecutor(e);
 
             if (url.includes('/consumer/')) {
-                const id = url.substring(url.lastIndexOf('/') + 1)
-                const index = db.consumer[user].findIndex((it: any) => it.consumerId.toString() === id.toString())
-                if (index < 0) return e.error()
-                db.consumer[user].splice(index, 1)
+                const id = url.substring(url.lastIndexOf('/') + 1);
+                const index = db.consumer[user].findIndex((it: any) => it.consumerId.toString() === id.toString());
+                if (index < 0) return e.error();
+                db.consumer[user].splice(index, 1);
 
-                saveFakeDB(db)
-                return e.ok({})
+                saveFakeDB(db);
+                return e.ok({});
             }
-            return e.error()
-        })
+            return e.error();
+        });
+        return delayedPromise(promise);
     }
 
     get<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-        return new Promise<R>((resolve, reject) => {
+        const promise = new Promise<R>((resolve, reject) => {
             let e: Executor = new DefaultExecutor(resolve, reject);
 
             console.log(`FAKEBACKEND GET Fake backend call to ${url}`, config)
@@ -94,8 +100,8 @@ class FakeBackend implements Backend {
             } else {
                 e.error()
             }
-
-        })
+        });
+        return delayedPromise(promise);
     }
 
     post<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: AxiosRequestConfig): Promise<R> {

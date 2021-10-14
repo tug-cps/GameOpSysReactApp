@@ -2,16 +2,18 @@ import {LocalizationProvider} from "@mui/lab";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {CssBaseline, LinearProgress, StyledEngineProvider, ThemeProvider,} from "@mui/material";
 import React, {useCallback, useEffect, useState} from "react";
+import {BrowserRouter as Router} from 'react-router-dom';
 import {useTracking} from "react-tracking";
+import {AlertSnackbar} from "./common/AlertSnackbar";
 import {Content, DefaultAppBar, DefaultDrawer, Root} from "./common/DefaultAppBar";
 import DefaultBottomNavigation from "./common/DefaultBottomNavigation";
+import {UserConfirmationDialog, useUserConfirmationDialog} from "./common/UserConfirmationDialog";
+import {useSnackBar} from "./common/UseSnackBar";
+import {useThemeBuilder} from "./common/UseThemeBuilder";
 import Config from "./Config";
-import {PrivateRouter, PublicRouter} from "./Routes";
+import {LoadingRouter, PrivateRouter, PublicRouter} from "./Routes";
 import BackendService from "./service/BackendService";
 import {UserModel} from "./service/Model";
-import {BrowserRouter as Router} from 'react-router-dom';
-import {UserConfirmationDialog, useUserConfirmationDialog} from "./common/UserConfirmationDialog";
-import {useThemeBuilder} from "./common/UseThemeBuilder";
 
 export type ColorMode = 'light' | 'dark' | undefined
 
@@ -43,6 +45,7 @@ function App() {
     const [theme, colorMode] = useThemeBuilder();
     const [user, setUser] = useState<UserModel>();
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>();
+    const [error, setError] = useSnackBar();
     const dispatchTracking = useCallback((data: any) => backendService.postTracking(data).catch(console.log), [])
     const {Track} = useTracking({}, {dispatch: dispatchTracking});
 
@@ -51,15 +54,17 @@ function App() {
             .subscribe((value) => setIsLoggedIn(value));
     }, []);
 
+    //FIXME fix retry
     useEffect(() => {
+        console.log('sending get user to server...........')
         if (!isLoggedIn) {
             setUser(undefined);
         } else {
             backendService.getUser()
-                .then(setUser)
+                .then(setUser, setError)
                 .catch(console.error);
         }
-    }, [isLoggedIn])
+    }, [isLoggedIn, setError])
 
     const [appBar, setAppBar] = useState<AppBarProps>({
         title: "",
@@ -80,7 +85,7 @@ function App() {
                             {!isLoggedIn &&
                             <PublicRouter backendService={backendService}/>
                             }
-                            {isLoggedIn &&
+                            {isLoggedIn && user &&
                             <UserContext.Provider value={user}>
                                 <Track>
                                     <Root>
@@ -101,7 +106,11 @@ function App() {
                                 </Track>
                             </UserContext.Provider>
                             }
+                            {isLoggedIn && !user &&
+                            <LoadingRouter backendService={backendService} setAppBar={() => undefined}/>
+                            }
                             <UserConfirmationDialog {...userConfirmationProps}/>
+                            <AlertSnackbar {...error} severity="error"/>
                         </Router>
                     </ColorModeContext.Provider>
                 </React.Suspense>

@@ -3,52 +3,14 @@ import EditOutlined from "@mui/icons-material/EditOutlined";
 import History from "@mui/icons-material/History";
 import Mood from "@mui/icons-material/Mood";
 import ShowChart from "@mui/icons-material/ShowChart";
-import {Box, Card, CardActionArea, CardContent, CardMedia, Container, Stack, SvgIcon, Typography,} from "@mui/material";
+import {Container, Stack, Typography,} from "@mui/material";
 import React, {useContext, useEffect} from 'react';
 import {useTranslation} from "react-i18next";
-import {Link as RouterLink} from "react-router-dom";
 import {PrivateRouteProps, UserContext} from "./App";
+import {DestinationCard, DestinationCardProps} from "./common/DestinationCard";
 import useDefaultTracking from "./common/Tracking";
 
-interface Item {
-    title: string
-    subtitle: string
-    icon: any
-    to: string
-}
-
-interface CardProps {
-    item: Item,
-    done: boolean
-}
-
-function HomeCard(props: CardProps) {
-    const {item, done} = props
-    const {t} = useTranslation()
-
-    return (
-        <Card sx={{borderColor: done ? undefined : "warning.main"}}>
-            <CardActionArea component={RouterLink} to={item.to}>
-                <Box display="flex">
-                    <CardMedia sx={{
-                        backgroundColor: done ? "secondary.main" : "warning.main",
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "8px"
-                    }}>
-                        <SvgIcon component={item.icon} sx={{color: 'background.paper'}}/>
-                    </CardMedia>
-                    <CardContent>
-                        <Typography variant="h6">{t(item.title)}</Typography>
-                        <Typography color="textSecondary" noWrap>{t(item.subtitle)}</Typography>
-                    </CardContent>
-                </Box>
-            </CardActionArea>
-        </Card>
-    )
-}
-
-const destinations = {
+const destinations: { [key: string]: DestinationCardProps } = {
     upload: {title: 'card_upload_title', subtitle: 'card_upload_subtitle', icon: CloudUploadOutlined, to: '/upload'},
     behavior: {title: 'card_behavior_title', subtitle: 'card_behavior_subtitle', icon: EditOutlined, to: '/behavior'},
     power: {title: 'card_power_title', subtitle: 'card_power_subtitle', icon: ShowChart, to: '/power'},
@@ -101,15 +63,28 @@ function Home(props: PrivateRouteProps) {
                     {interactions &&
                     <Stack spacing={1}>
                         <Typography textAlign="center" variant="h5">Ihre Aufmerksamkeit wird benötigt</Typography>
-                        {interactions.map((item: Item, index: number) =>
-                            <HomeCard item={item} done={false} key={index}/>)}
+                        {interactions.map((item, index) =>
+                            <DestinationCard
+                                {...item}
+                                title={t(item.title)}
+                                subtitle={t(item.subtitle)}
+                                key={index}
+                            />
+                        )}
                     </Stack>
                     }
                     {results &&
                     <Stack spacing={1}>
                         <Typography textAlign="center" variant="h5">Neue Ergebnisse verfügbar</Typography>
-                        {results.map((item: Item, index: number) =>
-                            <HomeCard item={item} done key={index}/>)}
+                        {results.map((item, index) =>
+                            <DestinationCard
+                                {...item}
+                                title={t(item.title)}
+                                subtitle={t(item.subtitle)}
+                                done
+                                key={index}
+                            />
+                        )}
                     </Stack>
                     }
                 </Stack>

@@ -1,21 +1,21 @@
+import {Done, InfoOutlined} from "@mui/icons-material";
+import {Container, LinearProgress, Stack} from "@mui/material";
+import {parse} from "date-fns";
 import React, {useEffect, useState} from 'react';
-import {Container, List} from "@mui/material";
-import ArchiveEntry from "./archive/ArchiveEntry";
 import {useTranslation} from "react-i18next";
-import {useSnackBar} from "./common/UseSnackBar";
-import {AlertSnackbar} from "./common/AlertSnackbar";
-import useDefaultTracking from "./common/Tracking";
 import {PrivateRouteProps} from "./App";
+import {AlertSnackbar} from "./common/AlertSnackbar";
+import {DestinationCard} from "./common/DestinationCard";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
-import {InfoOutlined} from "@mui/icons-material";
-
+import useDefaultTracking from "./common/Tracking";
+import {useSnackBar} from "./common/UseSnackBar";
 
 interface Props extends PrivateRouteProps {
 }
 
 function Archive(props: Props) {
     const {Track} = useDefaultTracking({page: 'Archive'});
-    const [dates, setDates] = useState(new Array<string>());
+    const [dates, setDates] = useState<string[]>();
     const {t} = useTranslation();
     const [error, setError] = useSnackBar();
     const {backendService, setAppBar} = props;
@@ -34,13 +34,24 @@ function Archive(props: Props) {
         });
     }, [t, setAppBar])
 
+    if (!dates) return <LinearProgress/>
+
     return (
         <Track>
-            <Container maxWidth="sm">
-                <List>
-                    {dates.map((value) =>
-                        <ArchiveEntry date={value} key={value}/>)}
-                </List>
+            <Container maxWidth="sm" sx={{pt: 1}}>
+                <Stack spacing={1}>
+                    {dates.map((date, index) => {
+                            const parsedDate = parse(date, 'yyyy-MM-dd', new Date())
+                            return <DestinationCard
+                                to={`/pastbehavior?date=${date}`}
+                                icon={index ? Done : InfoOutlined}
+                                title={t('archive_entry_date', {date: parsedDate})}
+                                subtitle={index ? 'Bereits erledigt' : 'Bitte überpüfen'}
+                                done={!!index}
+                            />
+                        }
+                    )}
+                </Stack>
             </Container>
             <AlertSnackbar {...error} />
         </Track>
