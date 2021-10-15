@@ -81,7 +81,7 @@ export function getFakeDB() {
                     [v]: dates.reduce((map: any, val: any) => {
                         map[val] = [...Array(10)].map((v, id) => ({
                             "consumerId": id.toString(),
-                            "data": [...Array(24)].map(() => Math.random() < 0.5 ? 4 : 0)
+                            "data": [...Array(24)].map(() => 0)
                         }));
                         return map
                     }, {})

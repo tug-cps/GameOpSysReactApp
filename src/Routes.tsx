@@ -1,5 +1,5 @@
-import {Box, Button, Container, LinearProgress, Paper, Stack, Typography} from "@mui/material";
-import {Link as RouterLink, Redirect, Route, Switch} from "react-router-dom";
+import {LinearProgress} from "@mui/material";
+import {Redirect, Route, Switch} from "react-router-dom";
 import Login from "./Login";
 import Verify from "./Verify";
 import Logout from "./Logout";
@@ -17,45 +17,27 @@ import Mood from "./Mood";
 import {PrivateRouteProps, UserContext} from "./App";
 import {Page404} from "./Page404";
 import PastBehavior from "./PastBehavior";
+import {LoadingPage} from "./LoadingPage";
 
 export function PublicRouter(props: { backendService: BackendService }) {
-    const {backendService} = props;
     return <>
         <Redirect to="/login"/>
         <Switch>
-            <Route path="/verify"><Verify backendService={backendService}/></Route>
-            <Route path="/login"><Login backendService={backendService}/></Route>
+            <Route path="/verify"><Verify {...props}/></Route>
+            <Route path="/login"><Login {...props}/></Route>
             <Route><Page404 path="/login"/></Route>
         </Switch>
     </>
 }
 
-export function LoadingRouter(props: PrivateRouteProps) {
+export function LoadingRouter(props: { backendService: BackendService, retry: () => void }) {
     return (
         <Switch>
             <Route path="/logout"><Logout {...props}/></Route>,
-            <Route exact path="/"><LoadingPage/></Route>,
-            <Route exact path={`${process.env.PUBLIC_URL}`}><LoadingPage/></Route>,
+            <Route exact path="/"><LoadingPage retry={props.retry}/></Route>,
+            <Route exact path={`${process.env.PUBLIC_URL}`}><LoadingPage retry={props.retry}/></Route>,
             <Route><Page404 path="/"/></Route>
         </Switch>
-    )
-}
-
-
-function LoadingPage() {
-    return (
-        <Container maxWidth="xs"
-                   sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"}}>
-            <Paper variant="outlined" sx={{width: "100%", p: 1}}>
-                <Typography variant="h5" textAlign="center">Logging in...</Typography>
-                <Box mt={5}/>
-                <LinearProgress/>
-                <Stack direction="row" sx={{justifyContent: "flex-end"}}>
-                    <Button component={RouterLink} to="/logout" sx={{mr: 2}} children="Logout"/>
-                    <Button children="Retry"/>
-                </Stack>
-            </Paper>
-        </Container>
     )
 }
 
@@ -72,7 +54,7 @@ export function PrivateRouter(props: PrivateRouteProps) {
         consumers: <Route path="/consumers"><Consumers {...props}/></Route>,
         behavior: <Route path="/behavior"><Behavior {...props}/></Route>,
         pastbehavior: <Route path="/pastbehavior"><PastBehavior {...props}/></Route>,
-        mood: <Route path="/mood"><Mood  {...props}/></Route>,
+        mood: <Route path="/mood"><Mood {...props}/></Route>,
         thermostats: <Route path="/thermostats"><Thermostats {...props}/></Route>,
         root: <Route exact path="/"><Home {...props}/></Route>,
         home: <Route exact path={`${process.env.PUBLIC_URL}`}><Home {...props}/></Route>,
