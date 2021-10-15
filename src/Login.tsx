@@ -1,15 +1,15 @@
 import {InfoOutlined} from "@mui/icons-material";
-import {Avatar, Box, Button, Container, Grid, InputAdornment, TextField, Typography} from "@mui/material";
+import {Avatar, Box, Container, Grid, InputAdornment, TextField, Typography} from "@mui/material";
 import {styled} from "@mui/system";
-import React, {useState} from 'react';
-import {withTranslation, WithTranslation} from "react-i18next";
-import {withRouter} from "react-router";
-import {RouteComponentProps} from 'react-router-dom';
+import React, {useCallback, useState} from 'react';
+import {useTranslation} from "react-i18next";
+import {useHistory} from 'react-router-dom';
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
 import BackendService from "./service/BackendService";
+import {LoadingButton} from "@mui/lab";
 
-interface Props extends RouteComponentProps, WithTranslation {
+interface Props {
     backendService: BackendService
 }
 
@@ -29,19 +29,24 @@ const StyledGrid = styled(Grid)({
 function Login(props: Props) {
     const [state, setState] = useState<State>({shared_password: '', email: ''});
     const [error, setError] = useSnackBar();
-    const {t, backendService, history} = props;
+    const {t} = useTranslation();
+    const history = useHistory();
+    const {backendService} = props;
+    const [progress, setProgress] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = useCallback((e: React.FormEvent) => {
         e.preventDefault();
+        setProgress(true);
         backendService.requestPin(state.shared_password, state.email)
             .then(() => history.push('/verify', {email: state.email}))
             .catch(setError)
-    }
+            .finally(() => setProgress(false))
+    }, [backendService, history, setError, state.email, state.shared_password]);
 
     return (
         (<>
-            <Box sx={{display: 'flex', alignItems: 'center', height: '100vh'}}>
-                <Container maxWidth="lg">
+            <Container maxWidth="lg">
+                <Box sx={{display: 'flex', alignItems: 'center', height: '100vh'}}>
                     <Grid container spacing={2}>
                         <StyledGrid item xs={12} md>
                             <Typography paragraph component="h1" variant="h2">ANSERS</Typography>
@@ -54,6 +59,7 @@ function Login(props: Props) {
                                 <TextField
                                     autoFocus
                                     autoComplete="email"
+                                    disabled={progress}
                                     id="email"
                                     label={t('login_email_address')}
                                     variant="outlined"
@@ -65,6 +71,7 @@ function Login(props: Props) {
                                 />
                                 <TextField
                                     id="shared_password"
+                                    disabled={progress}
                                     label={t('login_shared_password')}
                                     variant="outlined"
                                     margin="normal"
@@ -77,23 +84,24 @@ function Login(props: Props) {
                                             color="inherit"/></InputAdornment>),
                                     }}
                                 />
-                                <Button
+                                <LoadingButton
                                     type="submit"
                                     fullWidth
                                     variant="contained"
                                     color="primary"
                                     sx={{marginTop: 1}}
+                                    loading={progress}
                                 >
                                     {t('login_submit')}
-                                </Button>
+                                </LoadingButton>
                             </form>
                         </StyledGrid>
                     </Grid>
-                </Container>
-            </Box>
+                </Box>
+            </Container>
             <AlertSnackbar {...error} />
         </>)
     );
 }
 
-export default withRouter((withTranslation()(Login)));
+export default Login;

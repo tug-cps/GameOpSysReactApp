@@ -14,9 +14,11 @@ function findInDict(dict: any, matcher: (value: any) => boolean): any {
     return null;
 }
 
-const delay = 0;
+const delay = 30;
 function delayedPromise<T>(promise: Promise<T>): Promise<T> {
-    return promise.then(value => new Promise<T>(resolve => setTimeout(() => resolve(value), delay)));
+    return promise
+        .then(value => new Promise<T>(resolve => setTimeout(() => resolve(value), delay)))
+        .catch(reason => new Promise<T>((resolve, reject) => setTimeout(() => reject(reason), delay)));
 }
 
 class FakeBackend implements Backend {

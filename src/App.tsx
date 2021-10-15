@@ -48,15 +48,17 @@ function App() {
     const [error, setError] = useSnackBar();
     const dispatchTracking = useCallback((data: any) => backendService.postTracking(data).catch(console.log), [])
     const {Track} = useTracking({}, {dispatch: dispatchTracking});
+    const [userConfirmationProps, userConfirm] = useUserConfirmationDialog();
+    const [retry, setRetry] = useState(0);
+    const onRetry = useCallback(() => setRetry(prevState => prevState + 1), []);
+    const isAuthenticated = user!!;
 
     useEffect(() => {
         backendService.isLoggedIn()
             .subscribe((value) => setIsLoggedIn(value));
     }, []);
 
-    //FIXME fix retry
     useEffect(() => {
-        console.log('sending get user to server...........')
         if (!isLoggedIn) {
             setUser(undefined);
         } else {
@@ -64,15 +66,9 @@ function App() {
                 .then(setUser, setError)
                 .catch(console.error);
         }
-    }, [isLoggedIn, setError])
+    }, [isLoggedIn, setError, retry])
 
-    const [appBar, setAppBar] = useState<AppBarProps>({
-        title: "",
-        showBackButton: false,
-        children: () => <></>
-    });
-    const setAppBarCb = useCallback((props: AppBarProps) => setAppBar(props), [])
-    const [userConfirmationProps, userConfirm] = useUserConfirmationDialog();
+    const [appBar, setAppBar] = useState<AppBarProps>({title: "", showBackButton: false, children: () => <></>});
 
     return (
         <StyledEngineProvider injectFirst>
@@ -82,10 +78,8 @@ function App() {
                 <React.Suspense fallback={<LinearProgress/>}>
                     <ColorModeContext.Provider value={colorMode}>
                         <Router basename={`${process.env.PUBLIC_URL}#`} getUserConfirmation={userConfirm}>
-                            {!isLoggedIn &&
-                            <PublicRouter backendService={backendService}/>
-                            }
-                            {isLoggedIn && user &&
+                            {!isLoggedIn && <PublicRouter backendService={backendService}/>}
+                            {isLoggedIn && isAuthenticated &&
                             <UserContext.Provider value={user}>
                                 <Track>
                                     <Root>
@@ -97,7 +91,7 @@ function App() {
                                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                                 <PrivateRouter
                                                     backendService={backendService}
-                                                    setAppBar={setAppBarCb}
+                                                    setAppBar={setAppBar}
                                                 />
                                             </LocalizationProvider>
                                         </Content>
@@ -106,8 +100,8 @@ function App() {
                                 </Track>
                             </UserContext.Provider>
                             }
-                            {isLoggedIn && !user &&
-                            <LoadingRouter backendService={backendService} setAppBar={() => undefined}/>
+                            {isLoggedIn && !isAuthenticated &&
+                            <LoadingRouter backendService={backendService} retry={onRetry}/>
                             }
                             <UserConfirmationDialog {...userConfirmationProps}/>
                             <AlertSnackbar {...error} severity="error"/>

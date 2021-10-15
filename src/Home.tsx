@@ -62,7 +62,7 @@ function Home(props: PrivateRouteProps) {
                 <Stack spacing={3}>
                     {interactions &&
                     <Stack spacing={1}>
-                        <Typography textAlign="center" variant="h5">Ihre Aufmerksamkeit wird benötigt</Typography>
+                        <Typography variant="h5">{t('home_item_todos')}</Typography>
                         {interactions.map((item, index) =>
                             <DestinationCard
                                 {...item}
@@ -75,7 +75,7 @@ function Home(props: PrivateRouteProps) {
                     }
                     {results &&
                     <Stack spacing={1}>
-                        <Typography textAlign="center" variant="h5">Neue Ergebnisse verfügbar</Typography>
+                        <Typography variant="h5">{t('home_item_results')}</Typography>
                         {results.map((item, index) =>
                             <DestinationCard
                                 {...item}

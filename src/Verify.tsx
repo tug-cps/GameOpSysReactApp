@@ -1,25 +1,20 @@
-import {Avatar, Button, Container, TextField, Typography} from "@mui/material";
+import {Avatar, Container, TextField, Typography} from "@mui/material";
 import {styled} from '@mui/system';
-import React, {useEffect, useState} from 'react';
-import {withTranslation, WithTranslation} from "react-i18next";
-import {withRouter} from "react-router";
-import {RouteComponentProps} from "react-router-dom";
+import React, {useCallback, useState} from 'react';
+import {useTranslation} from "react-i18next";
+import {Redirect, useHistory, useLocation} from "react-router-dom";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
 import BackendService from "./service/BackendService";
+import {LoadingButton} from "@mui/lab";
 
 const Form = styled('form')({
     width: '100%',
     marginTop: 1
 });
 
-interface Props extends RouteComponentProps, WithTranslation {
+interface Props {
     backendService: BackendService
-}
-
-interface State {
-    email?: string
-    password: string
 }
 
 const StyledContainer = styled('div')({
@@ -27,59 +22,59 @@ const StyledContainer = styled('div')({
     padding: 8,
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
+    height: '100vh'
 })
 
 function Verify(props: Props) {
-    const [state, setState] = useState<State>({password: ''})
+    const [password, setPassword] = useState<string>('')
     const [error, setError] = useSnackBar()
-    const {location, history, backendService, t} = props;
+    const {t} = useTranslation();
+    const location = useLocation<{ email: string }>();
+    const history = useHistory();
+    const [progress, setProgress] = useState(false);
+    const {email} = location.state;
+    const {backendService} = props;
 
-    useEffect(() => {
-        // @ts-ignore
-        if (!location?.state?.email) {
-            history.push('/')
-        }
-    }, [location, history])
-
-    const handleSubmit = (e: React.FormEvent) => {
-        const {password} = state;
-        // @ts-ignore
-        const {email} = location.state;
-
+    const handleSubmit = useCallback((e: React.FormEvent) => {
         e.preventDefault();
+        setProgress(true);
         backendService.login(email, password)
-            .then(() => history.push('/'))
-            .catch(setError)
-    }
+            .then(() => history.push('/'), setError)
+            .catch(console.log)
+            .finally(() => setProgress(false))
+    }, [backendService, email, history, password, setError]);
 
+    const handleChange = useCallback(e => setPassword(e.target.value), []);
+
+    if (!email) return <Redirect to={'/'}/>
     return (
         (<>
             <Container component="main" maxWidth="sm">
                 <StyledContainer>
-                    <Avatar sx={{
-                        margin: '1px',
-                        backgroundColor: 'secondary.main',
-                    }}/>
+                    <Avatar sx={{margin: '1px', backgroundColor: 'secondary.main'}}/>
                     <Typography component="h1" variant="h5">{t('verify_title')}</Typography>
                     <Form onSubmit={handleSubmit}>
                         <TextField
+                            disabled={progress}
                             autoFocus
                             id="otp"
                             label="Pin"
                             variant="outlined"
                             margin="normal"
-                            value={state.password}
-                            onChange={(e) => setState({...state, password: e.target.value})}
+                            value={password}
+                            onChange={handleChange}
                             required
                             fullWidth/>
-                        <Button
+                        <LoadingButton
+                            loading={progress}
                             type="submit"
                             fullWidth
                             variant="contained"
                             color="primary"
                             sx={{marginTop: 1}}
-                        >{t('verify_login')}</Button>
+                        >{t('verify_login')}</LoadingButton>
                     </Form>
                 </StyledContainer>
             </Container>
@@ -88,4 +83,4 @@ function Verify(props: Props) {
     );
 }
 
-export default withRouter((withTranslation()(Verify)));
+export default Verify;
