@@ -87,5 +87,10 @@
   "logging_in": "Anmeldung...",
   "retry": "wiederholen",
   "home_item_todos": "Aktuelle Aufgaben",
-  "home_item_results": "Persönliche Ergebnisse"
+  "home_item_results": "Persönliche Ergebnisse",
+  "no": "nein",
+  "yes": "ja",
+  "mood_question_home": "Sind Sie derzeit zu Hause?",
+  "mood_come_back_later": "Bitte versuchen Sie es später wieder",
+  "go_back": "zurück"
 }

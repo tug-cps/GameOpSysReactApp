@@ -87,5 +87,10 @@
   "logging_in": "Logging in…",
   "retry": "retry",
   "home_item_todos": "Current tasks",
-  "home_item_results": "Individual results"
+  "home_item_results": "Individual results",
+  "no": "no",
+  "yes": "yes",
+  "mood_question_home": "Are you currently at home?",
+  "mood_come_back_later": "Please come back later",
+  "go_back": "go back"
 }

@@ -1,5 +1,5 @@
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
-import {Container, LinearProgress, Paper, Typography, useTheme} from "@mui/material";
+import {Box, Button, Container, LinearProgress, Paper, Stack, Typography, useTheme} from "@mui/material";
 import 'chartjs-plugin-dragdata';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Bubble, defaults} from "react-chartjs-2";
@@ -11,8 +11,9 @@ import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 import {MoodModel} from "./service/Model";
-import {Prompt} from "react-router-dom";
+import {Link as RouterLink, Prompt} from "react-router-dom";
 import {CheckCircleOutlined} from "@mui/icons-material";
+import {TabContext, TabPanel} from "@mui/lab";
 
 interface GraphProps {
     mood: { x: number, y: number }
@@ -97,6 +98,7 @@ function Mood(props: PrivateRouteProps) {
     const [error, setError] = useSnackBar();
     const [mood, setMood] = useState<MoodModel>();
     const [modified, setModified] = useState(false);
+    const [panel, setPanel] = useState("0");
 
     const {backendService, setAppBar} = props;
     const user = useContext(UserContext);
@@ -125,25 +127,58 @@ function Mood(props: PrivateRouteProps) {
         setAppBar({
             title: t('card_mood_title'),
             showBackButton: true,
-            children: () => <>
-                <ResponsiveIconButton icon={<InfoOutlined/>} onClick={openInfo} description={t('info')}/>
-                <ResponsiveIconButton requiresAttention={modified}
-                                      icon={<CheckCircleOutlined/>}
-                                      onClick={onSaveClick}
-                                      description={t('save')}/>
-            </>
+            children: () => {
+                if (panel !== "1") return <></>
+                return <>
+                    <ResponsiveIconButton icon={<InfoOutlined/>} onClick={openInfo} description={t('info')}/>
+                    <ResponsiveIconButton requiresAttention={modified}
+                                          icon={<CheckCircleOutlined/>}
+                                          onClick={onSaveClick}
+                                          description={t('save')}/>
+                </>
+            }
         })
-    }, [t, setAppBar, onSaveClick, openInfo, modified])
+    }, [t, setAppBar, onSaveClick, openInfo, modified, panel])
 
     if (!mood) return <LinearProgress/>;
 
     const titleKey = user?.type === "student" ? "mood_please_select_mood_student" : "mood_please_select_mood_homeowner";
     return <Track>
-        <Container maxWidth="sm" sx={{paddingTop: 3}}>
-            <Typography variant="h5" align="center" paragraph>{t(titleKey)}</Typography>
-            <Paper square variant="outlined" sx={{p: 2}}>
-                <DraggableGraph mood={mood} onChange={onMoodChange}/>
-            </Paper>
+        <Container maxWidth="sm" sx={{paddingTop: 3}} disableGutters>
+            <TabContext value={panel}>
+                <TabPanel value="0">
+                    <Paper variant="outlined" sx={{p: 2}}>
+                        <Typography variant="h5">{t('mood_question_home')}</Typography>
+                        <Box mt={5}/>
+                        <Stack direction="row" sx={{justifyContent: "flex-end", pt: 2}}>
+                            <Button
+                                variant="contained"
+                                onClick={() => setPanel('1')}
+                                children={t('yes')}/>
+                            <Button
+                                sx={{marginLeft: 2}}
+                                variant="contained"
+                                onClick={() => setPanel('2')}
+                                children={t('no')}/>
+                        </Stack>
+                    </Paper>
+                </TabPanel>
+                <TabPanel value="1">
+                    <Typography variant="h5" align="center" paragraph>{t(titleKey)}</Typography>
+                    <Paper variant="outlined" sx={{p: 2}}>
+                        <DraggableGraph mood={mood} onChange={onMoodChange}/>
+                    </Paper>
+                </TabPanel>
+                <TabPanel value="2">
+                    <Paper square variant="outlined" sx={{p: 2}}>
+                        <Typography variant="h5">{t('mood_come_back_later')}</Typography>
+                        <Box mt={5}/>
+                        <Stack direction="row" sx={{justifyContent: "flex-end", pt: 2}}>
+                            <Button variant="contained" component={RouterLink} to="/">{t('go_back')}</Button>
+                        </Stack>
+                    </Paper>
+                </TabPanel>
+            </TabContext>
         </Container>
         <Prompt when={modified} message={t('unsaved_changes')}/>
         <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
