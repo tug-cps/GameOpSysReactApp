@@ -1,5 +1,5 @@
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
-import {Container, DialogContentText, List, Paper} from "@mui/material";
+import {Container, DialogContentText, LinearProgress, List, Paper} from "@mui/material";
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
@@ -16,7 +16,7 @@ interface Props extends PrivateRouteProps {
 
 function Consumers(props: Props) {
     const {Track} = useDefaultTracking({page: 'Consumers'});
-    const [consumers, setConsumers] = useState<ConsumerModel[]>([]);
+    const [consumers, setConsumers] = useState<ConsumerModel[]>();
     const [error, setError] = useSnackBar();
     const [infoProps, openInfo] = useInfoDialog();
     const {t} = useTranslation();
@@ -28,12 +28,12 @@ function Consumers(props: Props) {
             .catch(console.log)
     }, [backendService, setError])
 
-    const applyChangeActive = useCallback((consumer: ConsumerModel) =>
-            backendService.putConsumer({...consumer, active: !consumer.active})
-                .then(() => backendService.getConsumers())
-                .then(setConsumers, setError)
-                .catch(console.log),
-        [backendService, setError])
+    const applyChangeActive = useCallback((consumer: ConsumerModel) => {
+        return backendService.putConsumer({...consumer, active: !consumer.active})
+            .then(() => backendService.getConsumers())
+            .then(setConsumers, setError)
+            .catch(console.log);
+    }, [backendService, setError])
 
     useEffect(() => setAppBar({
         title: t('edit_consumers'),
@@ -44,6 +44,8 @@ function Consumers(props: Props) {
     const content = () => <DialogContentText>
         {t('consumer_help').split('\n').map((s) => <p>{s}</p>)}
     </DialogContentText>
+
+    if (!consumers) return <LinearProgress/>;
 
     return (
         <Track>
