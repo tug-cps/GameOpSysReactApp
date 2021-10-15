@@ -1,4 +1,4 @@
-import {Done, InfoOutlined} from "@mui/icons-material";
+import {CheckCircleOutlined, InfoOutlined, RadioButtonUncheckedOutlined} from "@mui/icons-material";
 import {Container, LinearProgress, Stack} from "@mui/material";
 import {parse} from "date-fns";
 import React, {useEffect, useState} from 'react';
@@ -44,7 +44,7 @@ function Archive(props: Props) {
                             const parsedDate = parse(date, 'yyyy-MM-dd', new Date())
                             return <DestinationCard
                                 to={`/pastbehavior?date=${date}`}
-                                icon={index ? Done : InfoOutlined}
+                                icon={index ? CheckCircleOutlined : RadioButtonUncheckedOutlined}
                                 title={t('archive_entry_date', {date: parsedDate})}
                                 subtitle={index ? 'Bereits erledigt' : 'Bitte überpüfen'}
                                 done={!!index}

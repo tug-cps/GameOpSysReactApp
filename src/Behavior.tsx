@@ -1,5 +1,4 @@
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
-import SaveAlt from "@mui/icons-material/SaveAlt";
 import {
     Avatar,
     Container,
@@ -23,6 +22,7 @@ import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
+import {CheckCircleOutlined} from "@mui/icons-material";
 
 const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
@@ -84,14 +84,14 @@ function Behavior(props: Props) {
         setModified(true);
     }, []);
 
-    const handleSave = useCallback(() =>
-            rows && backendService.putPrediction(isoDate, rows.map((r) => ({consumerId: r.consumerId, data: r.cellStates})))
-                .then(() => {
-                    setSuccess(t('changes_saved'));
-                    setModified(false);
-                }, setError)
-                .catch(console.log)
-        , [rows, backendService, setError, setSuccess, t]);
+    const handleSave = useCallback(() => {
+        rows && backendService.putPrediction(isoDate, rows.map((r) => ({consumerId: r.consumerId, data: r.cellStates})))
+            .then(() => {
+                setSuccess(t('changes_saved'));
+                setModified(false);
+            }, setError)
+            .catch(console.log)
+    }, [rows, backendService, setError, setSuccess, t]);
 
     useEffect(() => {
         setAppBar({
@@ -101,7 +101,7 @@ function Behavior(props: Props) {
                 <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
                 <ResponsiveIconButton requiresAttention={modified}
                                       description={t('save')}
-                                      icon={<SaveAlt/>}
+                                      icon={<CheckCircleOutlined/>}
                                       onClick={handleSave}/>
             </>
         })

@@ -1,6 +1,5 @@
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
-import SaveAlt from "@mui/icons-material/SaveAlt";
-import {Card, CardContent, Container, LinearProgress, Typography, useTheme} from "@mui/material";
+import {Container, LinearProgress, Paper, Typography, useTheme} from "@mui/material";
 import 'chartjs-plugin-dragdata';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Bubble, defaults} from "react-chartjs-2";
@@ -13,6 +12,7 @@ import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 import {MoodModel} from "./service/Model";
 import {Prompt} from "react-router-dom";
+import {CheckCircleOutlined} from "@mui/icons-material";
 
 interface GraphProps {
     mood: { x: number, y: number }
@@ -74,19 +74,15 @@ const DraggableGraph = React.memo(function (props: GraphProps) {
                 dragData: {
                     dragX: true,
                     showTooltip: true,
-                    onDragStart: (e: any, element: any) => null,
-                    onDrag: (e: any, datasetIndex: any, index: number, value: number) => null,
+                    onDragStart: () => null,
+                    onDrag: () => null,
                     onDragEnd: (e: any, datasetIndex: any, index: number, value: { x: number, y: number, r: number }) => {
                         e.target.style.cursor = 'default'
                         props.onChange(value);
                     },
                 },
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    enabled: false
-                }
+                legend: {display: false},
+                tooltip: {enabled: false}
             }
         }} height={100} width={100}/>
 }, compareProps)
@@ -132,26 +128,22 @@ function Mood(props: PrivateRouteProps) {
             children: () => <>
                 <ResponsiveIconButton icon={<InfoOutlined/>} onClick={openInfo} description={t('info')}/>
                 <ResponsiveIconButton requiresAttention={modified}
-                                      icon={<SaveAlt/>}
+                                      icon={<CheckCircleOutlined/>}
                                       onClick={onSaveClick}
                                       description={t('save')}/>
             </>
         })
     }, [t, setAppBar, onSaveClick, openInfo, modified])
 
-    if (!mood) return <LinearProgress />;
+    if (!mood) return <LinearProgress/>;
 
-    const title_key = user?.type === "student" ? "mood_please_select_mood_student" : "mood_please_select_mood_homeowner";
+    const titleKey = user?.type === "student" ? "mood_please_select_mood_student" : "mood_please_select_mood_homeowner";
     return <Track>
         <Container maxWidth="sm" sx={{paddingTop: 3}}>
-            <Typography variant="h5" align="center" paragraph>{t(title_key)}</Typography>
-            <Card>
-                {mood &&
-                <CardContent>
-                    <DraggableGraph mood={mood} onChange={onMoodChange}/>
-                </CardContent>
-                }
-            </Card>
+            <Typography variant="h5" align="center" paragraph>{t(titleKey)}</Typography>
+            <Paper square variant="outlined" sx={{p: 2}}>
+                <DraggableGraph mood={mood} onChange={onMoodChange}/>
+            </Paper>
         </Container>
         <Prompt when={modified} message={t('unsaved_changes')}/>
         <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
