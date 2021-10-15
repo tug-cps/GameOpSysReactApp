@@ -27,7 +27,6 @@ const drawerWidth = 240;
 export interface Props {
     hideBackButton?: boolean;
     title: string;
-    multiLine?: React.ReactNode;
 }
 
 export const DefaultDrawer = React.memo(() => {
@@ -67,6 +66,8 @@ export function Root(props: React.PropsWithChildren<{}>) {
     return <Box sx={{display: 'flex'}} children={props.children}/>
 }
 
+const style = {ml: {sm: `${drawerWidth}px`}, width: {sm: `calc(100% - ${drawerWidth}px)`}};
+
 export function DefaultAppBar(props: React.PropsWithChildren<Props> & { hideBackButton?: boolean }) {
     const {title} = props;
     const trigger = useScrollTrigger();
@@ -74,7 +75,7 @@ export function DefaultAppBar(props: React.PropsWithChildren<Props> & { hideBack
     const history = useHistory();
     return (
         <Slide appear={false} direction="down" in={!trigger}>
-            <AppBar sx={{ml: {sm: `${drawerWidth}px`}, width: {sm: `calc(100% - ${drawerWidth}px)`}}}>
+            <AppBar sx={style}>
                 <Toolbar>
                     {!props.hideBackButton &&
                     <IconButton
@@ -89,7 +90,6 @@ export function DefaultAppBar(props: React.PropsWithChildren<Props> & { hideBack
                     <Box mx="auto"/>
                     {props.children}
                 </Toolbar>
-                {props.multiLine}
             </AppBar>
         </Slide>
     );

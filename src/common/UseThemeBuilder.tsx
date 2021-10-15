@@ -6,9 +6,10 @@ export const useThemeBuilder = () => {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const [mode, setMode] = useState<'light' | 'dark' | undefined>();
     const colorMode = useMemo(() => ({mode: mode, toggleColorMode: setMode}), [setMode, mode]);
+    const useDarkTheme = mode ? mode === 'dark' : prefersDarkMode;
     const theme: ThemeOptions = useMemo(() => createTheme({
         palette: {
-            mode: mode ? mode : (prefersDarkMode ? 'dark' : 'light'),
+            mode: useDarkTheme ? "dark" : "light",
             primary: {
                 main: lightGreen[600],
                 contrastText: '#fff'
@@ -18,6 +19,12 @@ export const useThemeBuilder = () => {
             },
         },
         components: {
+            MuiAppBar: {
+                defaultProps: {
+                    elevation: useDarkTheme ? 1 : 0,
+                    color: "inherit",
+                },
+            },
             MuiUseMediaQuery: {
                 defaultProps: {
                     noSsr: true,
@@ -58,6 +65,6 @@ export const useThemeBuilder = () => {
                 }
             }
         },
-    }), [prefersDarkMode, mode]);
+    }), [useDarkTheme]);
     return [theme, colorMode] as const
 }
