@@ -102,7 +102,7 @@
     "Go through category by category and enter the correct electricity consumption for that day! At the end please save your entry by clicking on \"Save\".",
     "The name of each category appears when you hover over the category.\nThe following electricity-consuming appliances are assigned to the respective categories:"
   ],
-  "info_past_behavior_consumers": [
+  "consumer_help": [
     "* Laundry: washing machine, tumble dryer, iron, etc.",
     "* Cooking: oven, stove, microwave, toaster, electric grill, kettle, coffee machine, cooker hood ventilator, etc.",
     "* Dishes: dishwasher, hot water (only if the hot water is generated with electricity!)",
@@ -116,7 +116,8 @@
     "* Other (average consumption): xxxx",
     "* Other (low consumption): xxx"
   ],
-  "info_mood": ["Please indicate here how you feel about the climate in your student room/apartment at the moment. Think about it, is the climate in the student room/apartment (un)pleasant for you and do you perceive it as cold or hot?",
+  "info_mood": [
+    "Please indicate here how you feel about the climate in your student room/apartment at the moment. Think about it, is the climate in the student room/apartment (un)pleasant for you and do you perceive it as cold or hot?",
     "Please enter your sensation in the coordinate system. For example, if you find it very hot and very pleasant at the moment, please move the green dot to the top right corner with the cursor. For example, if you find the climate very cold and very uncomfortable, then please move the green dot to the lower left corner with the cursor.",
     "As soon as you have moved the green dot according to your sensation, please save the sensation by clicking on \"Save\"."
   ],
@@ -127,5 +128,10 @@
     "Download the electricity consumption data for the last three months at 15-minute intervals if possible!",
     "Save the file which you receive on your device!",
     "Then upload this file in the app by clicking or tapping on the “Upload” Button in \"Upload” at “2. Upload your consumption\". Select the file in the window that appears and upload it!"
+  ],
+  "info_consumers": [
+    "You can hide different categories for electrical appliances here. These categories then no longer appear for the forecast of electricity consumption and also no longer for the older predictions. This makes it easier for you to enter the expected electricity consumption and to correct older predictions.",
+    "Before you hide categories, please think about which categories you will never use in your dormitory/apartment. For example, if you never use wellness equipment such as a sauna, whirlpool, steam bath, infrared cabin, massage chair, etc., then click or tap on the eye symbol next to the Wellness category to hide the category.",
+    "The following electricity-consuming appliances are assigned to the respective categories:"
   ]
 }
