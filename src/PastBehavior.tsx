@@ -2,6 +2,7 @@ import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {
     Avatar,
     Container,
+    DialogContentText,
     LinearProgress,
     Table,
     TableBody,
@@ -20,7 +21,7 @@ import BehaviorDragSelect, {CellState, Row} from "./behavior/BehaviorDragSelect"
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {consumerLookup, translate} from "./common/ConsumerTools";
 import {useParsedDate} from "./common/Date";
-import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
+import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
@@ -124,6 +125,15 @@ function PastBehavior(props: Props) {
     if (!validDate) return <Redirect to={'/'}/>
     if (!rows) return <LinearProgress/>
 
+    const InfoContent = () => {
+        const infoText = t('info_past_behavior', {returnObjects: true}) as string[]
+        const infoConsumers = t('consumer_help', {returnObjects: true}) as string[]
+        return <>
+            {infoText.map(text => <DialogContentText paragraph children={text}/>)}
+            {infoConsumers.map(text => <DialogContentText children={text}/>)}
+        </>
+    }
+
     return (
         <Track>
             <Container disableGutters maxWidth="xl" sx={{paddingTop: 1, display: "grid"}}>
@@ -147,7 +157,7 @@ function PastBehavior(props: Props) {
                 </TableContainer>
             </Container>
             <Prompt when={modified} message={t('unsaved_changes')}/>
-            <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps}/>
+            <InfoDialog title={t('info')} content={<InfoContent/>} {...infoProps}/>
             <AlertSnackbar {...success} severity="success"/>
             <AlertSnackbar {...error} />
         </Track>)

@@ -41,9 +41,14 @@ function Consumers(props: Props) {
         children: () => <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
     }), [t, setAppBar, openInfo])
 
-    const content = () => <DialogContentText>
-        {t('consumer_help').split('\n').map((s) => <p>{s}</p>)}
-    </DialogContentText>
+    const content = () => {
+        const infoText = t('info_consumers', {returnObjects: true}) as string[]
+        const consumerHelp = t('consumer_help', {returnObjects: true}) as string[]
+        return <>
+            {infoText.map(text => <DialogContentText paragraph children={text}/>)}
+            {consumerHelp.map(text => <DialogContentText children={text}/>)}
+        </>
+    }
 
     if (!consumers) return <LinearProgress/>;
 
