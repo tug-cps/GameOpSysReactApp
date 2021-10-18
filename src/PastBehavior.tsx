@@ -125,12 +125,14 @@ function PastBehavior(props: Props) {
     if (!validDate) return <Redirect to={'/'}/>
     if (!rows) return <LinearProgress/>
 
-    const infoText = t('info_past_behavior', {returnObjects: true}) as string[]
-    const infoConsumers = t('consumer_help', {returnObjects: true}) as string[]
-    const infoContent = <>
-        {infoText.map(text => <DialogContentText paragraph children={text}/>)}
-        {infoConsumers.map(text => <DialogContentText children={text}/>)}
-    </>
+    const InfoContent = () => {
+        const infoText = t('info_past_behavior', {returnObjects: true}) as string[]
+        const infoConsumers = t('consumer_help', {returnObjects: true}) as string[]
+        return <>
+            {infoText.map(text => <DialogContentText paragraph children={text}/>)}
+            {infoConsumers.map(text => <DialogContentText children={text}/>)}
+        </>
+    }
 
     return (
         <Track>
@@ -155,7 +157,7 @@ function PastBehavior(props: Props) {
                 </TableContainer>
             </Container>
             <Prompt when={modified} message={t('unsaved_changes')}/>
-            <InfoDialog title={t('info')} content={infoContent} {...infoProps}/>
+            <InfoDialog title={t('info')} content={<InfoContent/>} {...infoProps}/>
             <AlertSnackbar {...success} severity="success"/>
             <AlertSnackbar {...error} />
         </Track>)

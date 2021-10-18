@@ -133,5 +133,11 @@
     "You can hide different categories for electrical appliances here. These categories then no longer appear for the forecast of electricity consumption and also no longer for the older predictions. This makes it easier for you to enter the expected electricity consumption and to correct older predictions.",
     "Before you hide categories, please think about which categories you will never use in your dormitory/apartment. For example, if you never use wellness equipment such as a sauna, whirlpool, steam bath, infrared cabin, massage chair, etc., then click or tap on the eye symbol next to the Wellness category to hide the category.",
     "The following electricity-consuming appliances are assigned to the respective categories:"
+  ],
+  "info_behavior": [
+    "Please enter here how much electricity you will probably use on the next day!",
+    "Go through category by category and think about when you will be using which appliances. For example, when will you be cooking the next day, roughly how much time will it take to use the kitchen appliances? You do not have to be absolutely precise when making your forecast, but estimate from today's perspective how much electricity you will probably use tomorrow!\nFor electricity consumption in a special category, mark the corresponding hour with a click or tap, if you will not be using the appliance or appliances in this category for more than 15 minutes, with two clicks or taps if you are using the appliances not for more than 30 minutes, with three clicks or three taps if you will not be using the appliances for more than 45 minutes, and with four clicks or four taps if you will need the appliances for an entire hour. Another click or another tap resets the time to zero.\nPlease only mark those categories in which you expect electricity consumption!",
+    "When you have entered your anticipated electricity consumption for each category for tomorrow, please click or tap “Save”!",
+    "The following electricity-consuming appliances are assigned to the respective categories:"
   ]
 }

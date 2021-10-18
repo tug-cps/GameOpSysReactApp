@@ -133,5 +133,13 @@
     "Sie können hier verschiedene Kategorien für Elektrogeräte verstecken. Diese Kategorien erscheinen dann nicht mehr für die Vorhersage des Stromverbrauchs und auch nicht mehr bei den älteren Vorhersagen. Dies erleichtert Ihnen das Eintragen des voraussichtlichen Stromverbrauchs und das Korrigieren älterer Vorhersagen.",
     "Bevor Sie Kategorien verstecken, überlegen Sie bitte, welche Kategorien Sie niemals in Ihrem Studentenheim/Ihrer Wohnung nutzen. Sollten Sie zum Beispiel niemals Wellness-Geräte wie Sauna, Whirlpool, Dampfbad, Infrarotkabine, Massagesessel, etc. verwenden, dann klicken bzw. tippen Sie auf das Auge-Symbol neben der Kategorie Wellness, um die Kategorie zu verstecken.",
     "Folgende stromverbrauchenden Geräte sind den jeweiligen Kategorien zugeordnet:"
+  ],
+  "info_behavior": [
+    "Bitte tragen Sie hier ein, wieviel Strom Sie voraussichtlich am kommenden Tag verbrauchen werden!",
+    "Gehen Sie hierfür Kategorie für Kategorie durch und überlegen Sie, wann Sie in etwa welche Geräte verwenden werden. Zum Beispiel, wann werden Sie am kommenden Tag in etwa kochen, wieviel Zeit wird dabei die Verwendung der Küchengeräte in etwa in Anspruch nehmen? Sie müssen bei Ihrer Vorhersage nicht absolut exakt vorgehen, sondern schätzen Sie aus heutiger Sicht ab, wieviel Strom Sie morgen voraussichtlich verbrauchen werden!",
+    "Für Stromverbrauch in einer speziellen Kategorie markieren Sie die entsprechende Stunde mit einem Klick bzw. Tippen, wenn Sie das Gerät bzw. die Geräte dieser Kategorie nicht mehr als 15 min. verwenden werden, mit zwei Klicks bzw. zwei Mal Tippen, wenn Sie die Geräte nicht mehr als 30 min. verwenden werden, mit drei Klicks bzw. drei Mal Tippen, wenn Sie die Geräte nicht mehr als 45 min. verwenden werden, und mit vier Klicks bzw. vier Mal Tippen, wenn Sie die Geräte eine ganze Stunde brauchen werden. Ein weiterer Klick bzw. ein weiteres Tippen setzt die Zeit wieder auf Null.",
+    "Bitte markieren Sie dabei wirklich nur in jene Kategorien, in denen Sie Stromverbrauch erwarten!",
+    "Wenn Sie für jede Kategorie Ihren voraussichtlichen morgigen Stromverbrauch eingetragen haben, klicken bzw. tippen Sie bitte auf „Speichern“!",
+    "Folgende stromverbrauchenden Geräte sind den jeweiligen Kategorien zugeordnet:"
   ]
 }
