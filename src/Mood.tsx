@@ -1,12 +1,22 @@
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
-import {Box, Button, Container, LinearProgress, Paper, Stack, Typography, useTheme} from "@mui/material";
+import {
+    Box,
+    Button,
+    Container,
+    DialogContentText,
+    LinearProgress,
+    Paper,
+    Stack,
+    Typography,
+    useTheme
+} from "@mui/material";
 import 'chartjs-plugin-dragdata';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Bubble, defaults} from "react-chartjs-2";
 import {useTranslation} from "react-i18next";
 import {PrivateRouteProps, UserContext} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
+import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
@@ -142,6 +152,9 @@ function Mood(props: PrivateRouteProps) {
 
     if (!mood) return <LinearProgress/>;
 
+    const infoText = t('info_mood', {returnObjects: true}) as string[];
+    const infoContent = <>{infoText.map(text => <DialogContentText paragraph children={text}/>)}</>
+
     const titleKey = user?.type === "student" ? "mood_please_select_mood_student" : "mood_please_select_mood_homeowner";
     return <Track>
         <Container maxWidth="sm" sx={{paddingTop: 3}} disableGutters>
@@ -181,7 +194,7 @@ function Mood(props: PrivateRouteProps) {
             </TabContext>
         </Container>
         <Prompt when={modified} message={t('unsaved_changes')}/>
-        <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
+        <InfoDialog title={t('info')} content={infoContent} {...infoProps} />
         <AlertSnackbar {...success} severity="success"/>
         <AlertSnackbar {...error} />
     </Track>

@@ -116,5 +116,10 @@
     "* Sonstiges (hoher Verbrauch): xxx",
     "* Sonstiges (mittlerer Verbrauch): xxxx",
     "* Sonstiges (niedriger Verbrauch): xxx"
+  ],
+  "info_mood": [
+    "Bitte geben Sie hier an, wie Sie das Klima in Ihrem Zimmer/Ihrer Wohnung gerade empfinden. Überlegen Sie, ist Ihnen das Klima im Zimmer/in der Wohnung (un)angenehm und empfinden Sie es eher als kalt oder heiß?",
+    "Tragen Sie bitte Ihre Empfindung in das Koordinatensystem ein. Wenn Sie es zum Beispiel gerade sehr heiß und sehr angenehm empfinden, dann schieben Sie bitte den grünen Punkt mit dem Cursor in die rechte obere Ecke. Wenn Sie zum Beispiel das Klima als sehr kalt und sehr unangenehm empfinden, dann schieben Sie bitte den grünen Punkt mit dem Cursor in die linke untere Ecke.",
+    "Sobald Sie den grünen Punkt entsprechend Ihrer Empfindung verschoben haben, speichern Sie bitte die Empfindung, indem Sie auf „Speichern“ klicken."
   ]
 }
