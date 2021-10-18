@@ -1,5 +1,6 @@
 import {
     Container,
+    DialogContentText,
     Divider,
     LinearProgress,
     List,
@@ -17,7 +18,7 @@ import {useTranslation} from "react-i18next";
 import {Link as RouterLink, useHistory} from "react-router-dom";
 import {AppBarProps, ColorMode, ColorModeContext} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
+import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
@@ -163,7 +164,7 @@ function User(props: Props) {
             </Container>
             }
             {!user && <LinearProgress/>}
-            <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps}/>
+            <InfoDialog title={t('info')} content={<DialogContentText children={t('info_settings')}/>} {...infoProps}/>
             <AlertSnackbar {...error}/>
         </Track>
     )
