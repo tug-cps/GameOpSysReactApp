@@ -47,10 +47,6 @@ export const useThemeBuilder = () => {
                         position: 'fixed',
                         bottom: '10px',
                         right: '10px',
-                        // When bottom bar is shown, raise FAB position
-                        '@media (max-width:599.95px)': {
-                            bottom: '70px'
-                        }
                     }
                 }
             },
