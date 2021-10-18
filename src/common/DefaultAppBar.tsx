@@ -80,11 +80,12 @@ export function DefaultAppBar(props: React.PropsWithChildren<Props> & { hideBack
                     {!props.hideBackButton &&
                     <IconButton
                         color="inherit"
+                        edge="start"
                         sx={{marginRight: 2}}
                         onClick={history.goBack}
-                        size="large">
-                        <ArrowBack/>
-                    </IconButton>
+                        size="large"
+                        children={<ArrowBack/>}
+                    />
                     }
                     <Typography color="inherit" variant="h6">{title}</Typography>
                     <Box mx="auto"/>
