@@ -93,5 +93,27 @@
   "mood_question_home": "Are you currently at home?",
   "mood_come_back_later": "Please come back later",
   "go_back": "go back",
-  "info_archive": "Please select the days for which you have not yet corrected your forecast of electricity consumption and revise your electricity consumption for the respective day in the open window!"
+  "info_archive": "Please select the days for which you have not yet corrected your forecast of electricity consumption and revise your electricity consumption for the respective day in the open window!",
+  "info_past_behavior": [
+    "Please remember, when did you actually use electricity for how long that day?",
+    "Go through category by category; for example, when did you cook that day? Does the specified time match your actual time you were cooking on that day? Have you actually cooked that long?",
+    "If so, please leave the color marking as it is.",
+    "However, if the cooking time does not match, please change both the time and the length of the cooking process by clicking or tapping on the colored markings. With a simple click or tap, 15 minutes more appear than before. When the hour is full (after 60 min. or 4 clicks/taps) then another click or tap causes the time to be reset to zero and the colored marking disappears. Delete incorrect colored markings and add new colored markings!",
+    "Go through category by category and enter the correct electricity consumption for that day! At the end please save your entry by clicking on \"Save\".",
+    "The name of each category appears when you hover over the category.\nThe following electricity-consuming appliances are assigned to the respective categories:"
+  ],
+  "info_past_behavior_consumers": [
+    "* Laundry: washing machine, tumble dryer, iron, etc.",
+    "* Cooking: oven, stove, microwave, toaster, electric grill, kettle, coffee machine, cooker hood ventilator, etc.",
+    "* Dishes: dishwasher, hot water (only if the hot water is generated with electricity!)",
+    "* Hygiene/cleaning: hair dryer, vacuum cleaner, hot water (only if the hot water is generated with electricity!), high-pressure cleaner, etc.",
+    "* Entertainment: TV, audio/radio, computer games, projectors, etc.",
+    "* Home office: PC, (charging a) laptop, printer, etc.",
+    "* Charging e-mobility: e-car, e-bike, e-scooter, etc.",
+    "* Electric heating/cooling: electric heating, air conditioning, room air conditioner, fan, etc.",
+    "* Wellness: sauna, whirlpool, steam bath, infrared cabin, massage chair, etc.",
+    "* Other (high consumption): xxx",
+    "* Other (average consumption): xxxx",
+    "* Other (low consumption): xxx"
+  ]
 }

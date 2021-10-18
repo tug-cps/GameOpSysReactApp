@@ -93,5 +93,28 @@
   "mood_question_home": "Sind Sie derzeit zu Hause?",
   "mood_come_back_later": "Bitte versuchen Sie es später wieder",
   "go_back": "zurück",
-  "info_archive": "Wählen Sie hier bitte jene Tage aus, für die Sie Ihre Vorhersage des Stromverbrauchs noch nicht korrigiert haben und überarbeiten Sie im sich öffnenden Fenster Ihren Stromverbrauch für den entsprechenden Tag!"
+  "info_archive": "Wählen Sie hier bitte jene Tage aus, für die Sie Ihre Vorhersage des Stromverbrauchs noch nicht korrigiert haben und überarbeiten Sie im sich öffnenden Fenster Ihren Stromverbrauch für den entsprechenden Tag!",
+  "info_past_behavior": [
+    "Bitte erinnern Sie sich, wann haben Sie an diesem Tag tatsächlich wie lange Strom verbraucht?",
+    "Gehen Sie Kategorie für Kategorie durch; wann haben Sie an diesem Tag zum Beispiel gekocht? Stimmt die angegebene Uhrzeit mit Ihrer tatsächlichen Kochzeit an diesem Tag überein? Haben Sie tatsächlich so lange gekocht?",
+    "Wenn ja, dann lassen Sie bitte die farbliche Markierung, wie sie ist.",
+    "Stimmt die Kochzeit allerdings nicht überein, dann verändern Sie bitte sowohl die Uhrzeit als auch die Länge des Kochvorgangs, in dem Sie auf die farblichen Markierungen klicken oder tippen. Mit einem einfachen Klicken bzw. Tippen erscheinen jeweils 15 min. mehr als zuvor. Wenn die Stunde voll ist (nach 60 min. bzw. 4x Klicken/Tippen) dann führt ein weiteres Klicken bzw. Tippen dazu, dass die Zeit wieder auf Null gesetzt wird und die farbige Markierung verschwindet. Löschen Sie so unkorrekte farbliche Markierungen und fügen Sie neue farbliche Markierungen dazu!",
+    "Gehen Sie so Kategorie für Kategorie durch und tragen Sie so den korrekten Stromverbrauch für diesen Tag ein! Am Schluss speichern Sie bitte Ihre Eingabe, indem Sie auf „Speichern“ klicken.",
+    "Der Name jeder Kategorie erscheint, wenn Sie mit dem Cursor über die Kategorie fahren.",
+    "Folgende stromverbrauchenden Geräte sind den jeweiligen Kategorien zugeordnet:"
+  ],
+  "info_past_behavior_consumers": [
+    "* Wäsche: Waschmaschine, Wäschetrockner, Bügeleisen, etc.",
+    "* Kochen: Backrohr, Herd, Mikrowelle, Toaster, Elektrogrill, Wasserkocher, Kaffeemaschine, Abzugshaube, etc.",
+    "* Spülen: Geschirrspüler, Warmwasser (nur wenn das Warmwasser mit Strom erzeugt wird!)",
+    "* Hygiene/Reinigung: Haarfön, Staubsauger, Warmwasser (nur wenn das Warmwasser mit Strom erzeugt wird!), Hochdruckreiniger, etc.",
+    "* Entertainment: TV, Audio/Radio, Computerspiele, Beamer, etc.",
+    "* Home-Office: PC, (Laden von) Laptop, Drucker, etc.",
+    "* Laden E-Mobilität: E-Auto, E-Bike, E-Scooter, etc.",
+    "* Stromheizung/- Kühlung: Stromheizung, Klimaanlage, Raumklimagerät, Ventilator, etc.",
+    "* Wellness: Sauna, Whirlpool, Dampfbad, Infrarotkabine, Massagesessel, etc.",
+    "* Sonstiges (hoher Verbrauch): xxx",
+    "* Sonstiges (mittlerer Verbrauch): xxxx",
+    "* Sonstiges (niedriger Verbrauch): xxx"
+  ]
 }
