@@ -122,5 +122,12 @@
     "Tragen Sie bitte Ihre Empfindung in das Koordinatensystem ein. Wenn Sie es zum Beispiel gerade sehr heiß und sehr angenehm empfinden, dann schieben Sie bitte den grünen Punkt mit dem Cursor in die rechte obere Ecke. Wenn Sie zum Beispiel das Klima als sehr kalt und sehr unangenehm empfinden, dann schieben Sie bitte den grünen Punkt mit dem Cursor in die linke untere Ecke.",
     "Sobald Sie den grünen Punkt entsprechend Ihrer Empfindung verschoben haben, speichern Sie bitte die Empfindung, indem Sie auf „Speichern“ klicken."
   ],
-  "info_settings": "Hier können Sie Ihre Einstellungen überprüfen (E-Mail-Adresse, Studentenheim/Wohnhausanlage), und verändern (Elektrogeräte nach Kategorien anzeigen oder nicht anzeigen lassen, Sprache, Bildschirmhelligkeit). Um Veränderungen vorzunehmen, klicken bzw. tippen Sie einfach auf das entsprechende Feld!"
+  "info_settings": "Hier können Sie Ihre Einstellungen überprüfen (E-Mail-Adresse, Studentenheim/Wohnhausanlage), und verändern (Elektrogeräte nach Kategorien anzeigen oder nicht anzeigen lassen, Sprache, Bildschirmhelligkeit). Um Veränderungen vorzunehmen, klicken bzw. tippen Sie einfach auf das entsprechende Feld!",
+  "info_upload": [
+    "Laden Sie bitte hier Ihren Stromverbrauch der letzten Monate hoch!",
+    "Wählen Sie bitte hierfür unter „1. Stromverbrauch herunterladen“ Ihren Stromnetzbetreiber bzw. Stromerzeuger aus und loggen Sie sich dann auf der Seite des Stromnetzbetreibers/Erzeugers mit Ihren Zugangsdaten ein!",
+    "Laden Sie die Stromverbrauchsdaten für die letzte drei Monate möglichst in 15-Minuten-Abständen herunter!",
+    "Speichern Sie die Datei, die Sie erhalten, auf Ihrem Gerät!",
+    "Laden Sie dann diese Datei in der App hoch, indem Sie in der unter dem Punkt „Hochladen“ und „2. Stromverbrauch hochladen“ auf den Button „Hochladen“ klicken bzw. tippen. Wählen Sie die Datei im erscheinenden Fenster aus und laden Sie sie hoch!"
+  ]
 }

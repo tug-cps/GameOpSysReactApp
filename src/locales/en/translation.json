@@ -120,5 +120,12 @@
     "Please enter your sensation in the coordinate system. For example, if you find it very hot and very pleasant at the moment, please move the green dot to the top right corner with the cursor. For example, if you find the climate very cold and very uncomfortable, then please move the green dot to the lower left corner with the cursor.",
     "As soon as you have moved the green dot according to your sensation, please save the sensation by clicking on \"Save\"."
   ],
-  "info_settings": "You can check your settings here (e-mail address, dormitory / residential complex) and change them ((not) display electrical appliances according to categories, language, brightness of screen). To make changes, just click or tap on the appropriate field!"
+  "info_settings": "You can check your settings here (e-mail address, dormitory / residential complex) and change them ((not) display electrical appliances according to categories, language, brightness of screen). To make changes, just click or tap on the appropriate field!",
+  "info_upload": [
+    "Please upload your electricity consumption over the last few months here!",
+    "To do this, please select your network operator or energy provider under \"1. Download most recent data\" and then log in to the network operator/energy provider's website with your login data!",
+    "Download the electricity consumption data for the last three months at 15-minute intervals if possible!",
+    "Save the file which you receive on your device!",
+    "Then upload this file in the app by clicking or tapping on the “Upload” Button in \"Upload” at “2. Upload your consumption\". Select the file in the window that appears and upload it!"
+  ]
 }

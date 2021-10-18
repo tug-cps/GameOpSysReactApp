@@ -4,6 +4,7 @@ import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {
     Button,
     Container,
+    DialogContentText,
     Divider,
     Grid,
     List,
@@ -18,7 +19,7 @@ import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
+import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
@@ -67,6 +68,9 @@ function Upload(props: Props) {
             <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
         </>
     }), [t, setAppBar, openInfo])
+
+    const infoText = t('info_upload', {returnObjects: true}) as string[];
+    const infoContent = <>{infoText.map(text => <DialogContentText paragraph children={text}/>)}</>
 
     return (
         <Track>
@@ -129,7 +133,7 @@ function Upload(props: Props) {
                     </Grid>
                 </Grid>
             </Container>
-            <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
+            <InfoDialog title={t('info')} content={infoContent} {...infoProps} />
             <AlertSnackbar severity="success" {...success} />
             <AlertSnackbar {...error} />
         </Track>
