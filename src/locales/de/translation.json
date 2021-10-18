@@ -141,5 +141,15 @@
     "Bitte markieren Sie dabei wirklich nur in jene Kategorien, in denen Sie Stromverbrauch erwarten!",
     "Wenn Sie für jede Kategorie Ihren voraussichtlichen morgigen Stromverbrauch eingetragen haben, klicken bzw. tippen Sie bitte auf „Speichern“!",
     "Folgende stromverbrauchenden Geräte sind den jeweiligen Kategorien zugeordnet:"
+  ],
+  "info_personal_code": [
+    "Zur Anonymisierung Ihrer Daten, bitten wir Sie, Ihren eigenen ProbandInnen-Code zu generieren.",
+    "Geben Sie dazu folgende Buchstaben und Zahlen an (in Blockbuchstaben):",
+    "1. Stelle: Letzter Buchstabe des eigenen Nachnamen",
+    "2. Stelle: Zweiter Buchstabe des eigenen Vornamens",
+    "3. Stelle: Geburtstag (bestehend aus zwei Ziffern)",
+    "4. Stelle: Erster Buchstabe des eigenen Geburtsortes",
+    "Beispiel: UR01W",
+    "Erika Musterfrau; geboren am 01.02.2003 in Wien"
   ]
 }

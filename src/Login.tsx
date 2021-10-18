@@ -1,5 +1,15 @@
 import {InfoOutlined} from "@mui/icons-material";
-import {Avatar, Box, Container, Grid, InputAdornment, TextField, Typography} from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Container,
+    DialogContentText,
+    Grid,
+    IconButton,
+    InputAdornment,
+    TextField,
+    Typography
+} from "@mui/material";
 import {styled} from "@mui/system";
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from "react-i18next";
@@ -8,6 +18,7 @@ import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
 import BackendService from "./service/BackendService";
 import {LoadingButton} from "@mui/lab";
+import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 
 interface Props {
     backendService: BackendService
@@ -32,6 +43,7 @@ function Login(props: Props) {
     const {t} = useTranslation();
     const history = useHistory();
     const {backendService} = props;
+    const [infoProps, openInfo] = useInfoDialog();
     const [progress, setProgress] = useState(false);
 
     const handleSubmit = useCallback((e: React.FormEvent) => {
@@ -42,6 +54,11 @@ function Login(props: Props) {
             .catch(setError)
             .finally(() => setProgress(false))
     }, [backendService, history, setError, state.email, state.shared_password]);
+
+    const InfoContent = () => {
+        const infoText = t('info_personal_code', {returnObjects: true}) as string[];
+        return <>{infoText.map(text => <DialogContentText children={text}/>)}</>
+    }
 
     return (
         (<>
@@ -80,8 +97,12 @@ function Login(props: Props) {
                                     required
                                     fullWidth
                                     InputProps={{
-                                        endAdornment: (<InputAdornment position="end"><InfoOutlined
-                                            color="inherit"/></InputAdornment>),
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton onClick={openInfo}>
+                                                    <InfoOutlined color="inherit"/>
+                                                </IconButton>
+                                            </InputAdornment>),
                                     }}
                                 />
                                 <LoadingButton
@@ -99,6 +120,7 @@ function Login(props: Props) {
                     </Grid>
                 </Box>
             </Container>
+            <InfoDialog title={t('info')} content={<InfoContent/>} {...infoProps}/>
             <AlertSnackbar {...error} />
         </>)
     );
