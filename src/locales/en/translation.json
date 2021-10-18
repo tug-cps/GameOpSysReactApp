@@ -92,5 +92,6 @@
   "yes": "yes",
   "mood_question_home": "Are you currently at home?",
   "mood_come_back_later": "Please come back later",
-  "go_back": "go back"
+  "go_back": "go back",
+  "info_archive": "Please select the days for which you have not yet corrected your forecast of electricity consumption and revise your electricity consumption for the respective day in the open window!"
 }

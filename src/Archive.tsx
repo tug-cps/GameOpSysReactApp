@@ -1,5 +1,5 @@
 import {CheckCircleOutlined, InfoOutlined, RadioButtonUncheckedOutlined} from "@mui/icons-material";
-import {Container, LinearProgress, Stack} from "@mui/material";
+import {Container, DialogContentText, LinearProgress, Stack} from "@mui/material";
 import {parse} from "date-fns";
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
@@ -9,12 +9,14 @@ import {DestinationCard} from "./common/DestinationCard";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
+import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 
 interface Props extends PrivateRouteProps {
 }
 
 function Archive(props: Props) {
     const {Track} = useDefaultTracking({page: 'Archive'});
+    const [infoProps, openInfo] = useInfoDialog();
     const [dates, setDates] = useState<string[]>();
     const {t} = useTranslation();
     const [error, setError] = useSnackBar();
@@ -30,9 +32,13 @@ function Archive(props: Props) {
         setAppBar({
             title: t('card_archive_title'),
             showBackButton: true,
-            children: () => <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>}/>
+            children: () => <ResponsiveIconButton
+                description={t('info')}
+                icon={<InfoOutlined/>}
+                onClick={openInfo}
+            />
         });
-    }, [t, setAppBar])
+    }, [t, setAppBar, openInfo])
 
     if (!dates) return <LinearProgress/>
 
@@ -53,6 +59,7 @@ function Archive(props: Props) {
                     )}
                 </Stack>
             </Container>
+            <InfoDialog title={t('info')} content={<DialogContentText children={t('info_archive')}/>} {...infoProps}/>
             <AlertSnackbar {...error} />
         </Track>
     )
