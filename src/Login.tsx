@@ -1,12 +1,16 @@
-import {InfoOutlined} from "@mui/icons-material";
+import {InfoOutlined, LanguageOutlined} from "@mui/icons-material";
 import {
     Avatar,
     Box,
     Container,
     DialogContentText,
+    Fab,
     Grid,
     IconButton,
     InputAdornment,
+    List,
+    ListItemButton,
+    ListItemText,
     TextField,
     Typography
 } from "@mui/material";
@@ -19,6 +23,7 @@ import {useSnackBar} from "./common/UseSnackBar";
 import BackendService from "./service/BackendService";
 import {LoadingButton} from "@mui/lab";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
+import {ResponsiveDialog} from "./common/ResponsiveDialog";
 
 interface Props {
     backendService: BackendService
@@ -37,12 +42,35 @@ const StyledGrid = styled(Grid)({
     alignItems: 'center',
 })
 
+function ChangeLanguageDialog(props: {
+    open: boolean
+    onClose: () => void
+}) {
+    const {t, i18n} = useTranslation();
+    const changeLanguage = React.useCallback((language: string) =>
+            i18n.changeLanguage(language)
+                .catch(console.log)
+                .finally(() => props.onClose())
+        , [i18n, props])
+    return <ResponsiveDialog title={t('change_language')} {...props}>
+        <List sx={{pt: 0}}>
+            <ListItemButton onClick={() => changeLanguage('en')}>
+                <ListItemText primary={t('lang_english')}/>
+            </ListItemButton>
+            <ListItemButton onClick={() => changeLanguage('de')}>
+                <ListItemText primary={t('lang_german')}/>
+            </ListItemButton>
+        </List>
+    </ResponsiveDialog>
+}
+
 function Login(props: Props) {
     const [state, setState] = useState<State>({shared_password: '', email: ''});
     const [error, setError] = useSnackBar();
     const {t} = useTranslation();
     const history = useHistory();
     const {backendService} = props;
+    const [langDialogProps, openLangDialog] = useInfoDialog();
     const [infoProps, openInfo] = useInfoDialog();
     const [progress, setProgress] = useState(false);
 
@@ -120,6 +148,12 @@ function Login(props: Props) {
                     </Grid>
                 </Box>
             </Container>
+            <Fab title={t('change_language')}
+                 color="primary"
+                 size="medium"
+                 onClick={openLangDialog}
+                 children={<LanguageOutlined/>}/>
+            <ChangeLanguageDialog {...langDialogProps}/>
             <InfoDialog title={t('info')} content={<InfoContent/>} {...infoProps}/>
             <AlertSnackbar {...error} />
         </>)

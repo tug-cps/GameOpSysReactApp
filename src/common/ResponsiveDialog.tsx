@@ -26,12 +26,14 @@ export function ResponsiveDialog(props: React.PropsWithChildren<Props>) {
                         edge="start"
                         onClick={props.onClose}
                         sx={{marginRight: 2}}
-                        size="large"><ArrowBack/></IconButton>
+                        size="large"
+                        children={<ArrowBack/>}
+                    />
                     <Typography variant="h6">{props.title}</Typography>
                 </Toolbar>
             </AppBar>
             }
-            <DialogTitle>{props.title}</DialogTitle>
+            <DialogTitle children={props.title}/>
             {props.children}
         </Dialog>
     );
