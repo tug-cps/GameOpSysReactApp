@@ -1,6 +1,6 @@
 import {LocalizationProvider} from "@mui/lab";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import {CssBaseline, LinearProgress, StyledEngineProvider, ThemeProvider,} from "@mui/material";
+import {CssBaseline, LinearProgress, ThemeProvider,} from "@mui/material";
 import React, {useCallback, useEffect, useState} from "react";
 import {BrowserRouter as Router} from 'react-router-dom';
 import {useTracking} from "react-tracking";
@@ -71,46 +71,44 @@ function App() {
     const [appBar, setAppBar] = useState<AppBarProps>({title: "", showBackButton: false, children: () => <></>});
 
     return (
-        <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={theme}>
-                <CssBaseline/>
-                {isLoggedIn !== undefined &&
-                <React.Suspense fallback={<LinearProgress/>}>
-                    <ColorModeContext.Provider value={colorMode}>
-                        <Router basename={`${process.env.PUBLIC_URL}#`} getUserConfirmation={userConfirm}>
-                            {!isLoggedIn && <PublicRouter backendService={backendService}/>}
-                            {isLoggedIn && isAuthenticated &&
-                            <UserContext.Provider value={user}>
-                                <Track>
-                                    <Root>
-                                        <DefaultAppBar title={appBar.title}
-                                                       hideBackButton={!appBar.showBackButton}
-                                                       children={appBar.children()}/>
-                                        <DefaultDrawer/>
-                                        <Content>
-                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                                <PrivateRouter
-                                                    backendService={backendService}
-                                                    setAppBar={setAppBar}
-                                                />
-                                            </LocalizationProvider>
-                                        </Content>
-                                    </Root>
-                                    <DefaultBottomNavigation/>
-                                </Track>
-                            </UserContext.Provider>
-                            }
-                            {isLoggedIn && !isAuthenticated &&
-                            <LoadingRouter backendService={backendService} retry={onRetry}/>
-                            }
-                            <UserConfirmationDialog {...userConfirmationProps}/>
-                            <AlertSnackbar {...error} severity="error"/>
-                        </Router>
-                    </ColorModeContext.Provider>
-                </React.Suspense>
-                }
-            </ThemeProvider>
-        </StyledEngineProvider>
+        <ThemeProvider theme={theme}>
+            <CssBaseline/>
+            {isLoggedIn !== undefined &&
+            <React.Suspense fallback={<LinearProgress/>}>
+                <ColorModeContext.Provider value={colorMode}>
+                    <Router basename={`${process.env.PUBLIC_URL}#`} getUserConfirmation={userConfirm}>
+                        {!isLoggedIn && <PublicRouter backendService={backendService}/>}
+                        {isLoggedIn && isAuthenticated &&
+                        <UserContext.Provider value={user}>
+                            <Track>
+                                <Root>
+                                    <DefaultAppBar title={appBar.title}
+                                                   hideBackButton={!appBar.showBackButton}
+                                                   children={appBar.children()}/>
+                                    <DefaultDrawer/>
+                                    <Content>
+                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                            <PrivateRouter
+                                                backendService={backendService}
+                                                setAppBar={setAppBar}
+                                            />
+                                        </LocalizationProvider>
+                                    </Content>
+                                </Root>
+                                <DefaultBottomNavigation/>
+                            </Track>
+                        </UserContext.Provider>
+                        }
+                        {isLoggedIn && !isAuthenticated &&
+                        <LoadingRouter backendService={backendService} retry={onRetry}/>
+                        }
+                        <UserConfirmationDialog {...userConfirmationProps}/>
+                        <AlertSnackbar {...error} severity="error"/>
+                    </Router>
+                </ColorModeContext.Provider>
+            </React.Suspense>
+            }
+        </ThemeProvider>
     );
 }
 
