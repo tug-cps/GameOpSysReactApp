@@ -3,12 +3,12 @@ import {Box, Button, Container, LinearProgress, Paper, Stack, Typography} from "
 import {Link as RouterLink} from "react-router-dom";
 import React from "react";
 
-const style = {display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"};
+const sx = {display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"};
 
 export function LoadingPage(props: { retry: () => void }) {
     const {t} = useTranslation();
     return (
-        <Container maxWidth="xs" sx={style}>
+        <Container maxWidth="xs" sx={sx}>
             <Paper square variant="outlined" sx={{width: "100%", p: 2}}>
                 <Typography variant="h5" textAlign="center" children={t('logging_in')}/>
                 <Box mt={5}/>
