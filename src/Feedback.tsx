@@ -20,6 +20,8 @@ const barChartData: ChartData = {
         {
             data: [15, 10],
             backgroundColor: [red["500"], blue["500"]],
+            borderColor: "#efefef",
+            borderWidth: 2,
             barPercentage: 0.9,
             categoryPercentage: 0.9
         },
@@ -42,16 +44,10 @@ const pieChartData: ChartData = {
 const options: ChartOptions = {
     scales: {
         xAxis: {
-            ticks: {
-                display: false
-            },
-            grid: {
-                display: false
-            }
+            ticks: {display: false},
+            grid: {display: false}
         },
-        yAxis: {
-            display: false,
-        }
+        yAxis: {display: false}
     },
     plugins: {
         legend: {
@@ -69,9 +65,7 @@ const options: ChartOptions = {
                 }
             }
         },
-        tooltip: {
-            enabled: false
-        },
+        tooltip: {enabled: false},
         datalabels: {
             color: 'black',
             formatter: (value, context) => value + " kWh"
@@ -82,16 +76,10 @@ const options: ChartOptions = {
 const barChartOptions: ChartOptions = {
     scales: {
         xAxis: {
-            ticks: {
-                display: false
-            },
-            grid: {
-                display: false
-            }
+            ticks: {display: false},
+            grid: {display: false}
         },
-        yAxis: {
-            display: false,
-        }
+        yAxis: {display: false}
     },
     plugins: {
         legend: {position: 'bottom'},
@@ -128,7 +116,7 @@ function Feedback(props: PrivateRouteProps) {
             <Grid container spacing={1}>
                 <Grid item xs={12} md={6}>
                     <Paper variant="outlined" sx={{p: 2, height: "100%", display: "flex", alignItems: "flex-end"}}>
-                        <Bar plugins={[ChartDataLabels]} data={barChartData} options={options} height={200}/>
+                        <Bar plugins={[ChartDataLabels]} data={barChartData} options={options} height={300}/>
                     </Paper>
                 </Grid>
                 <Grid item xs={12} md={6}>
