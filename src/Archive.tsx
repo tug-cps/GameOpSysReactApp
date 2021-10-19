@@ -1,13 +1,14 @@
 import {CheckCircleOutlined, InfoOutlined, RadioButtonUncheckedOutlined} from "@mui/icons-material";
 import {Container, DialogContentText, LinearProgress, Stack} from "@mui/material";
 import {parse} from "date-fns";
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {DestinationCard} from "./common/DestinationCard";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
-import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
+import ResponsiveIconButton from "./common/ResponsiveIconButton";
+import RetryMessage from "./common/RetryMessage";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 
@@ -15,15 +16,21 @@ function Archive(props: PrivateRouteProps) {
     const {Track} = useDefaultTracking({page: 'Archive'});
     const [infoProps, openInfo] = useInfoDialog();
     const [dates, setDates] = useState<string[]>();
+    const [progress, setProgress] = useState(true);
     const {t} = useTranslation();
     const [error, setError] = useSnackBar();
     const {backendService, setAppBar} = props;
+    const failed = !progress && !dates;
 
-    useEffect(() => {
+    const initialLoad = useCallback(() => {
+        setProgress(true);
         backendService.getPredictions()
             .then(setDates, setError)
             .catch(console.log)
+            .finally(() => setProgress(false))
     }, [backendService, setError])
+
+    useEffect(initialLoad, [initialLoad])
 
     useEffect(() => {
         setAppBar({
@@ -37,10 +44,11 @@ function Archive(props: PrivateRouteProps) {
         });
     }, [t, setAppBar, openInfo])
 
-    if (!dates) return <LinearProgress/>
-
     return (
         <Track>
+            {progress && <LinearProgress/>}
+            {failed && <RetryMessage retry={initialLoad}/>}
+            {dates &&
             <Container maxWidth="sm" sx={{pt: 1}}>
                 <Stack spacing={1}>
                     {dates.map((date, index) => {
@@ -56,6 +64,7 @@ function Archive(props: PrivateRouteProps) {
                     )}
                 </Stack>
             </Container>
+            }
             <InfoDialog title={t('info')} content={<DialogContentText children={t('info_archive')}/>} {...infoProps}/>
             <AlertSnackbar {...error} />
         </Track>

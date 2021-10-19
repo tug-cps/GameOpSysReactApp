@@ -156,5 +156,6 @@
   "page_not_found": "Seite nicht gefunden",
   "cancel": "Abbrechen",
   "file_upload_success": "Datei erfolgreich hochgeladen",
-  "network_operators": "Netzbetreiber"
+  "network_operators": "Netzbetreiber",
+  "error_please_retry": "Etwas ist schief gelaufen, bitte versuchen Sie es erneut!"
 }

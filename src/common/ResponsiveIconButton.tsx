@@ -35,9 +35,12 @@ function LargeIconButton(props: Props) {
     )
 }
 
-export function ResponsiveIconButton(props: Props) {
+function ResponsiveIconButton(props: Props) {
     const theme = useTheme();
     const breakpoint = useMediaQuery(theme.breakpoints.down('sm'));
     if (breakpoint) return <SmallIconButton {...props}/>
     return <LargeIconButton {...props}/>
 }
+
+export default ResponsiveIconButton;
+

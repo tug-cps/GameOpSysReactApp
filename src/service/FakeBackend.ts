@@ -34,7 +34,7 @@ class FakeBackend implements Backend {
             const token = config.headers.Authorization;
             const user = db.token[token];
             if (user == null) return e.error();
-            if (db.user[user].userId === "faulty") e = new FaultyExecutor(e);
+            if (db.user[user].userId.startsWith("faulty")) e = new FaultyExecutor(e);
 
             if (url.includes('/consumer/')) {
                 const id = url.substring(url.lastIndexOf('/') + 1);
@@ -76,7 +76,7 @@ class FakeBackend implements Backend {
             const token = config.headers.Authorization;
             const user = db.token[token]
             if (user == null) return e.error();
-            if (db.user[user].userId === "faulty") e = new FaultyExecutor(e);
+            if (db.user[user].userId.startsWith("faulty")) e = new FaultyExecutor(e);
 
             if (url.endsWith('/logout')) {
                 resetFakeDB()
@@ -124,7 +124,7 @@ class FakeBackend implements Backend {
             const token = config.headers.Authorization;
             const user = db.token[token]
             if (user == null) return e.error()
-            if (db.user[user].userId === "faulty") e = new FaultyExecutor(e);
+            if (db.user[user].userId.startsWith("faulty")) e = new FaultyExecutor(e);
 
             if (url.endsWith('/consumer')) {
                 const {consumer_name} = config.params;
@@ -158,7 +158,7 @@ class FakeBackend implements Backend {
             const token = config.headers.Authorization;
             const user = db.token[token]
             if (user == null) return e.error()
-            if (db.user[user].userId === "faulty") e = new FaultyExecutor(e);
+            if (db.user[user].userId.startsWith("faulty")) e = new FaultyExecutor(e);
 
             const id = url.split('/').pop()
             if (id == null) return e.error()

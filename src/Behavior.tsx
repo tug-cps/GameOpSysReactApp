@@ -1,3 +1,4 @@
+import {CheckCircleOutlined} from "@mui/icons-material";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {
     Avatar,
@@ -20,10 +21,10 @@ import BehaviorDragSelect, {CellState, Row} from "./behavior/BehaviorDragSelect"
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {consumerLookup, translate} from "./common/ConsumerTools";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
-import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
+import ResponsiveIconButton from "./common/ResponsiveIconButton";
+import RetryMessage from "./common/RetryMessage";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
-import {CheckCircleOutlined} from "@mui/icons-material";
 
 const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
@@ -43,14 +44,17 @@ interface ExtendedRow extends Row {
 function Behavior(props: Props) {
     const {Track} = useDefaultTracking({page: 'Behavior'});
     const [rows, setRows] = useState<ExtendedRow[]>();
+    const [progress, setProgress] = useState(true);
     const [modified, setModified] = useState(false);
     const [error, setError] = useSnackBar();
     const [success, setSuccess] = useSnackBar();
     const {t} = useTranslation();
     const [infoProps, openInfo] = useInfoDialog();
     const {setAppBar, backendService} = props;
+    const failed = !progress && !rows;
 
-    useEffect(() => {
+    const initialLoad = useCallback(() => {
+        setProgress(true);
         Promise.all([backendService.getConsumers(), backendService.getPrediction(isoDate)])
             .then(([consumers, predictions]) => {
                 const cellStates = consumers
@@ -78,7 +82,10 @@ function Behavior(props: Props) {
                 setModified(false);
             }, setError)
             .catch(console.log)
+            .finally(() => setProgress(false));
     }, [backendService, setError]);
+
+    useEffect(initialLoad, [initialLoad]);
 
     const handleChange = useCallback((cells: CellState[][]) => {
         setRows(prevState => prevState?.map((row, i) => ({...row, cellStates: cells[i]})))
@@ -86,6 +93,7 @@ function Behavior(props: Props) {
     }, []);
 
     const handleSave = useCallback(() => {
+        if (!rows) return;
         rows && backendService.putPrediction(isoDate, rows.map((r) => ({consumerId: r.consumerId, data: r.cellStates})))
             .then(() => {
                 setSuccess(t('changes_saved'));
@@ -108,8 +116,6 @@ function Behavior(props: Props) {
         })
     }, [t, setAppBar, handleSave, openInfo, modified])
 
-    if (!rows) return <LinearProgress/>
-
     const InfoContent = () => {
         const infoText = t('info_behavior', {returnObjects: true}) as string[]
         const infoConsumers = t('consumer_help', {returnObjects: true}) as string[]
@@ -121,6 +127,9 @@ function Behavior(props: Props) {
 
     return (
         <Track>
+            {progress && <LinearProgress/>}
+            {failed && <RetryMessage retry={initialLoad}/>}
+            {rows &&
             <Container disableGutters maxWidth="xl" sx={{paddingTop: 1, display: "grid"}}>
                 <TableContainer
                     sx={{overflow: 'auto', maxHeight: {xs: 'calc(100vh - 124px)', sm: 'calc(100vh - 72px)'}}}>
@@ -142,6 +151,7 @@ function Behavior(props: Props) {
                     </Table>
                 </TableContainer>
             </Container>
+            }
             <Prompt when={modified} message={t('unsaved_changes')}/>
             <InfoDialog title={t('info')} content={<InfoContent/>} {...infoProps}/>
             <AlertSnackbar {...success} severity="success"/>
