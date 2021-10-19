@@ -101,7 +101,7 @@ const DraggableGraph = React.memo(function (props: GraphProps) {
 const date = new Date().toISOString().slice(0, 10)
 
 function Mood(props: PrivateRouteProps) {
-    const {Track} = useDefaultTracking({page: 'MoodPage'});
+    const {Track} = useDefaultTracking({page: 'Mood'});
     const {t} = useTranslation()
     const [infoProps, openInfo] = useInfoDialog();
     const [success, setSuccess] = useSnackBar();

@@ -13,7 +13,7 @@ function Logout(props: { backendService: BackendService }) {
         backendService
             .logout()
             .catch(console.log)
-            .then(() => push("/login"))
+            .then(() => push("/"))
     }, [backendService, push]);
 
     return <Track><LinearProgress/></Track>;

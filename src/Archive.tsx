@@ -6,15 +6,12 @@ import {useTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {DestinationCard} from "./common/DestinationCard";
+import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
-import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 
-interface Props extends PrivateRouteProps {
-}
-
-function Archive(props: Props) {
+function Archive(props: PrivateRouteProps) {
     const {Track} = useDefaultTracking({page: 'Archive'});
     const [infoProps, openInfo] = useInfoDialog();
     const [dates, setDates] = useState<string[]>();
