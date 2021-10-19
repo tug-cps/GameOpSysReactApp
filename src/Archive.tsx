@@ -1,4 +1,4 @@
-import {CheckCircleOutlined, InfoOutlined, RadioButtonUncheckedOutlined} from "@mui/icons-material";
+import {BarChartOutlined, CheckCircleOutlined, InfoOutlined, RadioButtonUncheckedOutlined} from "@mui/icons-material";
 import {Container, DialogContentText, LinearProgress, Stack} from "@mui/material";
 import {parse} from "date-fns";
 import React, {useCallback, useEffect, useState} from 'react';
@@ -53,12 +53,15 @@ function Archive(props: PrivateRouteProps) {
                 <Stack spacing={1}>
                     {dates.map((date, index) => {
                             const parsedDate = parse(date, 'yyyy-MM-dd', new Date())
+                            const done = !!index;
                             return <DestinationCard
                                 to={`/pastbehavior?date=${date}`}
-                                icon={index ? CheckCircleOutlined : RadioButtonUncheckedOutlined}
+                                icon={done ? CheckCircleOutlined : RadioButtonUncheckedOutlined}
                                 title={t('archive_entry_date', {date: parsedDate})}
-                                subtitle={index ? 'Bereits erledigt' : 'Bitte überpüfen'}
-                                done={!!index}
+                                subtitle={done ? 'Bereits erledigt' : 'Bitte überpüfen'}
+                                done={done}
+                                secondaryTo={(done && `/feedback?date=${date}`) || undefined}
+                                secondaryIcon={(done && BarChartOutlined) || undefined}
                             />
                         }
                     )}

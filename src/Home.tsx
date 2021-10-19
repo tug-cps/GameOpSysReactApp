@@ -25,7 +25,7 @@ const userInteractionNeeded = (type: string) => {
         case "student":
             return [destinations.archive, destinations.mood]
         case "homeowner":
-            return [destinations.upload, destinations.mood]
+            return [destinations.upload, destinations.archive, destinations.mood]
         default:
             return null;
     }
