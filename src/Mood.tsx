@@ -155,7 +155,7 @@ function Mood(props: PrivateRouteProps) {
     const infoText = t('info_mood', {returnObjects: true}) as string[];
     const infoContent = <>{infoText.map(text => <DialogContentText paragraph children={text}/>)}</>
 
-    const titleKey = user?.type === "student" ? "mood_please_select_mood_student" : "mood_please_select_mood_homeowner";
+    const titleKey = user.type === "student" ? "mood_please_select_mood_student" : "mood_please_select_mood_homeowner";
     return <Track>
         <Container maxWidth="sm" sx={{paddingTop: 3}} disableGutters>
             <TabContext value={panel}>

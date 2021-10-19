@@ -1,21 +1,26 @@
-import {ElectricalServicesOutlined} from "@mui/icons-material";
+import {ArrowForward, ElectricalServicesOutlined} from "@mui/icons-material";
 import CloudUploadOutlined from "@mui/icons-material/CloudUploadOutlined";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import {LoadingButton} from "@mui/lab";
 import {
+    Box,
     Button,
+    Collapse,
     Container,
     DialogContentText,
-    Divider,
     Grid,
     List,
     ListItemAvatar,
     ListItemButton,
+    ListItemIcon,
     ListItemText,
     Paper,
+    Stack,
     Typography
 } from "@mui/material";
 import {styled} from '@mui/system';
-import React, {useEffect} from 'react';
+import {CancelTokenSource} from "axios";
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
@@ -35,12 +40,6 @@ const operators = [
     {name: 'Stromnetz Graz', link: 'https://webportal.stromnetz-graz.at/'},
 ]
 
-const providers = [
-    {name: 'Energie Graz', link: 'https://portal.energie-graz.at/'},
-    {name: 'Energie Steiermark', link: 'https://portal.energie-graz.at/'},
-    {name: 'Verbund', link: 'https://www.verbund.at/login'},
-]
-
 interface Props extends PrivateRouteProps {
 }
 
@@ -51,15 +50,27 @@ function Upload(props: Props) {
     const {t} = useTranslation();
     const {backendService, setAppBar} = props;
     const [infoProps, openInfo] = useInfoDialog();
+    const [cancelToken, setCancelToken] = useState<CancelTokenSource | undefined>();
+    const progress = !!cancelToken;
 
-    const onUpload = (file: File) => {
-        backendService.postConsumption(file)
+    const onUpload = useCallback((file: File) => {
+        if (progress) return;
+        const {promise, cancelToken} = backendService.postConsumption(file);
+        setCancelToken(cancelToken);
+        promise
             .then(() => {
-                console.log("File uploaded.")
-                setSuccess("File uploaded");
+                setSuccess(t('file_upload_success'));
+                setCancelToken(undefined)
             }, setError)
             .catch(console.log);
-    }
+    }, [progress, backendService, setSuccess, setError, t])
+
+    const onCancel = useCallback(() => {
+        setCancelToken(prevState => {
+            prevState?.cancel();
+            return undefined;
+        });
+    }, [])
 
     useEffect(() => setAppBar({
         title: t('card_upload_title'),
@@ -86,50 +97,45 @@ function Upload(props: Props) {
                                         sx={{mt: 0.5, ml: 2}}
                                         color="text.secondary"
                                         display="block"
-                                        variant="caption">Network operators</Typography>
+                                        variant="caption">{t('network_operators')}</Typography>
                                 </li>
                                 {operators.map(item =>
                                     <ListItemButton key={item.name} component="a" href={item.link} target="_blank">
                                         <ListItemAvatar><ElectricalServicesOutlined/></ListItemAvatar>
                                         <ListItemText primary={item.name}/>
+                                        <ListItemIcon><ArrowForward/></ListItemIcon>
                                     </ListItemButton>)
                                 }
-                                <Divider component="li"/>
-                                <li>
-                                    <Typography
-                                        sx={{mt: 0.5, ml: 2}}
-                                        color="text.secondary"
-                                        display="block"
-                                        variant="caption">Energy providers</Typography>
-                                </li>
-                                {providers.map(item =>
-                                    <ListItemButton key={item.name} component="a" href={item.link} target="_blank">
-                                        <ListItemAvatar><ElectricalServicesOutlined/></ListItemAvatar>
-                                        <ListItemText primary={item.name}/>
-                                    </ListItemButton>)
-                                }
-
                             </List>
                         </Paper>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Typography variant="h5" gutterBottom>{t('upload_title_upload')}</Typography>
                         <Typography color="text.secondary" paragraph>{t('upload_instruction_upload')}</Typography>
-                        <label htmlFor="contained-button-file">
-                            <Input
-                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                id="contained-button-file"
-                                type="file"
-                                onChange={(e) => e.target?.files && onUpload(e.target.files[0])}
-                            />
-                            <Button variant="contained"
-                                    size="large"
-                                    color="primary"
-                                    fullWidth
-                                    component="span"
-                                    startIcon={<CloudUploadOutlined/>}
-                            >{t('action_upload')}</Button>
-                        </label>
+                        <Stack direction="row" spacing={1}>
+                            <Box sx={{flexGrow: 1}}>
+                                <label htmlFor="contained-button-file">
+                                    <Input
+                                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                        id="contained-button-file"
+                                        type="file"
+                                        onChange={(e) => e.target?.files && onUpload(e.target.files[0])}
+                                    />
+                                    <LoadingButton
+                                        loading={progress}
+                                        fullWidth
+                                        size="large"
+                                        variant="contained"
+                                        component="span"
+                                        loadingPosition="start"
+                                        startIcon={<CloudUploadOutlined/>}
+                                    >{t('action_upload')}</LoadingButton>
+                                </label>
+                            </Box>
+                            <Collapse in={progress} orientation="horizontal">
+                                <Button size="large" onClick={onCancel}>{t('cancel')}</Button>
+                            </Collapse>
+                        </Stack>
                     </Grid>
                 </Grid>
             </Container>
