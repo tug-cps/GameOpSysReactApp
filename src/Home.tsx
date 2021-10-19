@@ -20,21 +20,10 @@ const destinations: { [key: string]: DestinationCardProps } = {
 
 const userInteractionNeeded = (type: string) => {
     switch (type) {
-        case "management":
-            return [destinations.upload]
         case "student":
-            return [destinations.archive, destinations.mood]
+            return [destinations.behavior, destinations.archive, destinations.mood]
         case "homeowner":
-            return [destinations.upload, destinations.archive, destinations.mood]
-        default:
-            return null;
-    }
-}
-
-const userResult = (type: string) => {
-    switch (type) {
-        case "homeowner":
-            return [destinations.power]
+            return [destinations.behavior, destinations.upload, destinations.archive, destinations.mood]
         default:
             return null;
     }
@@ -46,7 +35,6 @@ function Home(props: PrivateRouteProps) {
     const {setAppBar} = props;
     const user = useContext(UserContext);
     const interactions = userInteractionNeeded(user.type);
-    const results = userResult(user.type);
 
     useEffect(() => {
         setAppBar({
@@ -68,20 +56,6 @@ function Home(props: PrivateRouteProps) {
                                 {...item}
                                 title={t(item.title)}
                                 subtitle={t(item.subtitle)}
-                                key={index}
-                            />
-                        )}
-                    </Stack>
-                    }
-                    {results &&
-                    <Stack spacing={1}>
-                        <Typography variant="h5">{t('home_item_results')}</Typography>
-                        {results.map((item, index) =>
-                            <DestinationCard
-                                {...item}
-                                title={t(item.title)}
-                                subtitle={t(item.subtitle)}
-                                done
                                 key={index}
                             />
                         )}
