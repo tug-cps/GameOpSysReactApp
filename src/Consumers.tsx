@@ -5,7 +5,8 @@ import {useTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
-import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
+import ResponsiveIconButton from "./common/ResponsiveIconButton";
+import RetryMessage from "./common/RetryMessage";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 import ConsumerCard from "./consumers/ConsumerCard";
@@ -21,12 +22,18 @@ function Consumers(props: Props) {
     const [infoProps, openInfo] = useInfoDialog();
     const {t} = useTranslation();
     const {backendService, setAppBar} = props;
+    const [progress, setProgress] = useState(true);
+    const failed = !consumers && !progress;
 
-    useEffect(() => {
+    const initialLoad = useCallback(() => {
+        setProgress(true);
         backendService.getConsumers()
             .then(setConsumers, setError)
             .catch(console.log)
-    }, [backendService, setError])
+            .finally(() => setProgress(false));
+    }, [backendService, setError]);
+
+    useEffect(initialLoad, [initialLoad]);
 
     const applyChangeActive = useCallback((consumer: ConsumerModel) => {
         return backendService.putConsumer({...consumer, active: !consumer.active})
@@ -41,7 +48,7 @@ function Consumers(props: Props) {
         children: () => <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
     }), [t, setAppBar, openInfo])
 
-    const content = () => {
+    const InfoContent = () => {
         const infoText = t('info_consumers', {returnObjects: true}) as string[]
         const consumerHelp = t('consumer_help', {returnObjects: true}) as string[]
         return <>
@@ -50,14 +57,15 @@ function Consumers(props: Props) {
         </>
     }
 
-    if (!consumers) return <LinearProgress/>;
-
     return (
         <Track>
+            {progress && <LinearProgress/>}
+            {failed && <RetryMessage retry={initialLoad}/>}
+            {consumers &&
             <Container maxWidth="sm" sx={{paddingTop: 1, paddingBottom: 10}}>
                 <Paper variant="outlined">
                     <List>
-                        {consumers && consumers.map((it) =>
+                        {consumers.map((it) =>
                             <ConsumerCard
                                 key={it.consumerId}
                                 consumer={it}
@@ -67,8 +75,9 @@ function Consumers(props: Props) {
                     </List>
                 </Paper>
             </Container>
+            }
             <AlertSnackbar {...error}/>
-            <InfoDialog title={t('info')} content={content()} {...infoProps}/>
+            <InfoDialog title={t('info')} content={<InfoContent/>} {...infoProps}/>
         </Track>
     );
 }

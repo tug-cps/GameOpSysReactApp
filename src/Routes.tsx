@@ -5,6 +5,7 @@ import {PrivateRouteProps, UserContext} from "./App";
 import Archive from "./Archive";
 import Behavior from "./Behavior";
 import Consumers from "./Consumers";
+import Feedback from "./Feedback";
 import Home from "./Home";
 import LoadingPage from "./LoadingPage";
 import Login from "./Login";
@@ -55,19 +56,26 @@ export function PrivateRouter(props: PrivateRouteProps) {
         pastbehavior: () => <Route path="/pastbehavior"><PastBehavior {...props}/></Route>,
         mood: () => <Route path="/mood"><Mood {...props}/></Route>,
         thermostats: () => <Route path="/thermostats"><Thermostats {...props}/></Route>,
+        feedback: () => <Route path="/feedback"><Feedback {...props}/></Route>,
         root: () => <Route exact path="/"><Home {...props}/></Route>,
         home: () => <Route exact path={`${process.env.PUBLIC_URL}/`}><Home {...props}/></Route>,
     }
 
-    const commonPaths = [paths.logout(), paths.user(), paths.home(), paths.root()]
-    const managementPaths = [paths.upload()];
-    const homeOwnerPaths = [paths.upload(), paths.power(), paths.consumers(), paths.behavior(), paths.mood()];
-    const studentPaths = [paths.archive(), paths.consumers(), paths.behavior(), paths.mood(), paths.pastbehavior()];
+    const commonPaths = [paths.logout(),
+        paths.user(),
+        paths.home(),
+        paths.root(),
+        paths.archive(),
+        paths.consumers(),
+        paths.behavior(),
+        paths.mood(),
+        paths.pastbehavior(),
+        paths.feedback()
+    ]
+    const homeOwnerPaths = [paths.upload()];
 
     return (
         <Switch>
-            {user.type === "management" && managementPaths}
-            {user.type === "student" && studentPaths}
             {user.type === "homeowner" && homeOwnerPaths}
             {commonPaths}
             <Route><Page404/></Route>

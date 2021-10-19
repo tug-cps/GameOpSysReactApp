@@ -154,5 +154,6 @@
   "page_not_found": "Page not found",
   "cancel": "Cancel",
   "file_upload_success": "File successfully uploaded",
-  "network_operators": "Network operators"
+  "network_operators": "Network operators",
+  "error_please_retry": "Something went wrong, please retry!"
 }

@@ -1,4 +1,6 @@
+import {CheckCircleOutlined} from "@mui/icons-material";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import {TabContext, TabPanel} from "@mui/lab";
 import {
     Box,
     Button,
@@ -14,16 +16,15 @@ import 'chartjs-plugin-dragdata';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Bubble, defaults} from "react-chartjs-2";
 import {useTranslation} from "react-i18next";
+import {Link as RouterLink, Prompt} from "react-router-dom";
 import {PrivateRouteProps, UserContext} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
-import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
+import ResponsiveIconButton from "./common/ResponsiveIconButton";
+import RetryMessage from "./common/RetryMessage";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 import {MoodModel} from "./service/Model";
-import {Link as RouterLink, Prompt} from "react-router-dom";
-import {CheckCircleOutlined} from "@mui/icons-material";
-import {TabContext, TabPanel} from "@mui/lab";
 
 interface GraphProps {
     mood: { x: number, y: number }
@@ -109,16 +110,22 @@ function Mood(props: PrivateRouteProps) {
     const [mood, setMood] = useState<MoodModel>();
     const [modified, setModified] = useState(false);
     const [panel, setPanel] = useState("0");
+    const [progress, setProgress] = useState(true);
+    const failed = !progress && !mood;
 
     const {backendService, setAppBar} = props;
     const user = useContext(UserContext);
 
-    useEffect(() => {
+    const initialLoad = useCallback(() => {
+        setProgress(true);
         backendService.getMood(date)
             .then(setMood, setError)
             .then(() => setModified(false))
-            .catch(console.log);
-    }, [backendService, setError])
+            .catch(console.log)
+            .finally(() => setProgress(false));
+    }, [backendService, setError]);
+
+    useEffect(initialLoad, [initialLoad]);
 
     const onSaveClick = useCallback(() => {
         if (!mood) return;
@@ -126,12 +133,12 @@ function Mood(props: PrivateRouteProps) {
             .then(() => setSuccess(t('changes_saved')), setError)
             .then(() => setModified(false))
             .catch(console.log);
-    }, [backendService, mood, setError, setSuccess, t])
+    }, [backendService, mood, setError, setSuccess, t]);
 
     const onMoodChange = useCallback((mood: MoodModel) => {
         setMood(mood);
         setModified(true);
-    }, [])
+    }, []);
 
     useEffect(() => {
         setAppBar({
@@ -150,13 +157,14 @@ function Mood(props: PrivateRouteProps) {
         })
     }, [t, setAppBar, onSaveClick, openInfo, modified, panel])
 
-    if (!mood) return <LinearProgress/>;
-
     const infoText = t('info_mood', {returnObjects: true}) as string[];
     const infoContent = <>{infoText.map(text => <DialogContentText paragraph children={text}/>)}</>
 
     const titleKey = user.type === "student" ? "mood_please_select_mood_student" : "mood_please_select_mood_homeowner";
     return <Track>
+        {progress && <LinearProgress/>}
+        {failed && <RetryMessage retry={initialLoad}/>}
+        {mood &&
         <Container maxWidth="sm" sx={{paddingTop: 3}} disableGutters>
             <TabContext value={panel}>
                 <TabPanel value="0">
@@ -193,6 +201,7 @@ function Mood(props: PrivateRouteProps) {
                 </TabPanel>
             </TabContext>
         </Container>
+        }
         <Prompt when={modified} message={t('unsaved_changes')}/>
         <InfoDialog title={t('info')} content={infoContent} {...infoProps} />
         <AlertSnackbar {...success} severity="success"/>

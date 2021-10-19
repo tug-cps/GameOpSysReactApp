@@ -5,8 +5,9 @@ export function getFakeDB() {
     if (db == null) {
         const users = [
             "user@test.com",
-            "faulty@test.com",
-            "homeowner@test.com"
+            "homeowner@test.com",
+            "faultyuser@test.com",
+            "faultyhomeowner@test.com"
         ];
         const dates = [0, -1, -2, -3, -4].map(o => {
             const today = new Date();
@@ -26,24 +27,24 @@ export function getFakeDB() {
                         location: 'greenbox COOLCITY',
                         type: 'student',
                     },
-                    "faulty@test.com": {
-                        userId: 'faulty',
-                        email: 'faulty@test.com',
-                        location: 'greenbox COOLCITY',
-                        type: 'student',
-                    },
-                    "management@test.com": {
-                        userId: 'user3',
-                        email: 'management@test.com',
-                        location: 'location_1',
-                        type: 'management',
-                    },
                     "homeowner@test.com": {
                         userId: 'user4',
                         email: 'homeowner@test.com',
                         location: 'location_1',
                         type: 'homeowner',
-                    }
+                    },
+                    "faultyuser@test.com": {
+                        userId: 'faultyuser',
+                        email: 'faultyuser@test.com',
+                        location: 'greenbox COOLCITY',
+                        type: 'student',
+                    },
+                    "faultyhomeowner@test.com": {
+                        userId: 'faultyhomeowner',
+                        email: 'faultyhomeowner@test.com',
+                        location: 'location_1',
+                        type: 'homeowner',
+                    },
                 },
                 consumer: Object.assign({}, ...users.map((v) => ({
                     [v]: [
@@ -90,9 +91,9 @@ export function getFakeDB() {
                 mood: Object.assign({}, ...users.map((v) => ({[v]: {}}))),
                 token: {
                     "fakeToken.thistokenisfake": "user@test.com",
-                    "fakeToken.thistokenisfake3": "management@test.com",
                     "fakeToken.thistokenisfake4": "homeowner@test.com",
-                    "fakeToken.thistokenisfake5": "faulty@test.com"
+                    "fakeToken.thistokenisfake5": "faultyuser@test.com",
+                    "fakeToken.thistokenisfake6": "faultyhomeowner@test.com"
                 }
             }
         );

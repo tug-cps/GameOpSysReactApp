@@ -1,3 +1,4 @@
+import {CheckCircleOutlined} from "@mui/icons-material";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {
     Avatar,
@@ -22,11 +23,11 @@ import {AlertSnackbar} from "./common/AlertSnackbar";
 import {consumerLookup, translate} from "./common/ConsumerTools";
 import {useParsedDate} from "./common/Date";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
-import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
+import ResponsiveIconButton from "./common/ResponsiveIconButton";
+import RetryMessage from "./common/RetryMessage";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 import {ConsumerModel} from "./service/Model";
-import {CheckCircleOutlined} from "@mui/icons-material";
 
 const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
@@ -61,6 +62,7 @@ function PastBehavior(props: Props) {
     const {Track} = useDefaultTracking({page: 'PastBehavior'});
     const [rows, setRows] = useState<ExtendedRow[]>();
     const [modified, setModified] = useState(false);
+    const [progress, setProgress] = useState(true);
     const [error, setError] = useSnackBar();
     const [success, setSuccess] = useSnackBar();
     const {t} = useTranslation();
@@ -69,11 +71,13 @@ function PastBehavior(props: Props) {
     const date = query.get("date")!;
     const dateParsed = useParsedDate(date);
     const validDate = isValid(dateParsed) && isPast(dateParsed);
+    const failed = !progress && !rows;
 
     const {setAppBar, backendService} = props;
 
-    useEffect(() => {
+    const initialLoad = useCallback(() => {
         if (!validDate) return;
+        setProgress(true);
         Promise.all([backendService.getConsumers(), backendService.getPrediction(date)])
             .then(([consumers, predictions]) => {
                 const cellStates = consumers
@@ -92,7 +96,10 @@ function PastBehavior(props: Props) {
                 setModified(false);
             }, setError)
             .catch(console.log)
+            .finally(() => setProgress(false));
     }, [validDate, backendService, setError, date]);
+
+    useEffect(initialLoad, [initialLoad]);
 
     const handleChange = useCallback((cells: CellState[][]) => {
         setRows(prevState => prevState?.map((row, i) => ({...row, cellStates: cells[i]})))
@@ -100,12 +107,13 @@ function PastBehavior(props: Props) {
     }, []);
 
     const handleSave = useCallback(() => {
-        rows && backendService.putPrediction(date, rows.map((r) => ({consumerId: r.consumerId, data: r.cellStates})))
+        if (!rows) return;
+        backendService.putPrediction(date, rows.map((r) => ({consumerId: r.consumerId, data: r.cellStates})))
             .then(() => {
                 setSuccess(t('changes_saved'));
                 setModified(false);
             }, setError)
-            .catch(console.log)
+            .catch(console.log);
     }, [backendService, date, rows, setError, setSuccess, t]);
 
     useEffect(() => {
@@ -122,8 +130,7 @@ function PastBehavior(props: Props) {
         })
     }, [validDate, dateParsed, handleSave, modified, openInfo, setAppBar, t])
 
-    if (!validDate) return <Redirect to={'/'}/>
-    if (!rows) return <LinearProgress/>
+    if (!validDate) return <Redirect to='/'/>
 
     const InfoContent = () => {
         const infoText = t('info_past_behavior', {returnObjects: true}) as string[]
@@ -136,6 +143,9 @@ function PastBehavior(props: Props) {
 
     return (
         <Track>
+            {progress && <LinearProgress/>}
+            {failed && <RetryMessage retry={initialLoad}/>}
+            {rows &&
             <Container disableGutters maxWidth="xl" sx={{paddingTop: 1, display: "grid"}}>
                 <TableContainer
                     sx={{overflow: 'auto', maxHeight: {xs: 'calc(100vh - 124px)', sm: 'calc(100vh - 72px)'}}}>
@@ -156,6 +166,7 @@ function PastBehavior(props: Props) {
                     </Table>
                 </TableContainer>
             </Container>
+            }
             <Prompt when={modified} message={t('unsaved_changes')}/>
             <InfoDialog title={t('info')} content={<InfoContent/>} {...infoProps}/>
             <AlertSnackbar {...success} severity="success"/>

@@ -40,7 +40,7 @@ export class FaultyExecutor implements Executor {
     }
 
     ok(data: {}): void {
-        if (Math.random() > 0.3) this.executor.ok(data); else this.executor.error();
+        if (Math.random() > 0.6) this.executor.ok(data); else this.executor.error();
     }
 
     error() {

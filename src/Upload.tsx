@@ -25,7 +25,7 @@ import {useTranslation} from "react-i18next";
 import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
-import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
+import ResponsiveIconButton from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 
@@ -75,9 +75,7 @@ function Upload(props: Props) {
     useEffect(() => setAppBar({
         title: t('card_upload_title'),
         showBackButton: false,
-        children: () => <>
-            <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
-        </>
+        children: () => <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
     }), [t, setAppBar, openInfo])
 
     const infoText = t('info_upload', {returnObjects: true}) as string[];

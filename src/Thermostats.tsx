@@ -18,7 +18,7 @@ import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveDialog} from "./common/ResponsiveDialog";
-import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
+import ResponsiveIconButton from "./common/ResponsiveIconButton";
 import {createTime} from "./common/Time";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";

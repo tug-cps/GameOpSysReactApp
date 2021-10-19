@@ -28,7 +28,7 @@ import {Link as RouterLink, useHistory} from "react-router-dom";
 import {AppBarProps, ColorMode, ColorModeContext, UserContext} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
-import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
+import ResponsiveIconButton from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 import BackendService from "./service/BackendService";
