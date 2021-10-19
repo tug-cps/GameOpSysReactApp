@@ -1,8 +1,8 @@
-import {Backend} from "./Backend";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
-import {getFakeDB, resetFakeDB, saveFakeDB} from "./FakeDB";
-import {DefaultExecutor, Executor, FaultyExecutor} from "./Executor";
 import {v4 as uuidv4} from 'uuid';
+import {Backend} from "./Backend";
+import {DefaultExecutor, Executor, FaultyExecutor} from "./Executor";
+import {getFakeDB, resetFakeDB, saveFakeDB} from "./FakeDB";
 import {ConsumerModel} from "./Model";
 
 function findInDict(dict: any, matcher: (value: any) => boolean): any {
@@ -14,8 +14,9 @@ function findInDict(dict: any, matcher: (value: any) => boolean): any {
     return null;
 }
 
-const delay = 30;
-function delayedPromise<T>(promise: Promise<T>): Promise<T> {
+const defaultDelay = 30;
+
+function delayedPromise<T>(promise: Promise<T>, delay = defaultDelay): Promise<T> {
     return promise
         .then(value => new Promise<T>(resolve => setTimeout(() => resolve(value), delay)))
         .catch(reason => new Promise<T>((resolve, reject) => setTimeout(() => reject(reason), delay)));
@@ -107,7 +108,7 @@ class FakeBackend implements Backend {
     }
 
     post<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: AxiosRequestConfig): Promise<R> {
-        return new Promise<R>((resolve, reject) => {
+        const promise = new Promise<R>((resolve, reject) => {
             let e: Executor = new DefaultExecutor(resolve, reject);
 
             console.log(`FAKEBACKEND POST Fake backend call to ${url}`, config)
@@ -138,13 +139,18 @@ class FakeBackend implements Backend {
                 saveFakeDB(db)
                 return e.ok({});
             }
+            if (url.endsWith('/consumption')) {
+                return e.ok({});
+            }
 
             return e.error();
         })
+        if (url.endsWith('/consumption')) return delayedPromise(promise, 3000);
+        return delayedPromise(promise);
     }
 
     put<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: AxiosRequestConfig): Promise<R> {
-        return new Promise<R>((resolve, reject) => {
+        const promise = new Promise<R>((resolve, reject) => {
             let e: Executor = new DefaultExecutor(resolve, reject);
             console.log(`FAKEBACKEND PUT Fake backend call to ${url}`, 'config:', config, 'data:', data)
             if (!config?.headers) return e.error();
@@ -187,6 +193,7 @@ class FakeBackend implements Backend {
 
             e.error()
         })
+        return delayedPromise(promise);
     }
 }
 

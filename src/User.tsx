@@ -1,8 +1,17 @@
 import {
+    ArrowRight,
+    Brightness4Outlined,
+    Email,
+    ExitToApp,
+    InfoOutlined,
+    Language,
+    MyLocation,
+    Power
+} from "@mui/icons-material";
+import {
     Container,
     DialogContentText,
     Divider,
-    LinearProgress,
     List,
     ListItem,
     ListItemIcon,
@@ -16,27 +25,16 @@ import i18next from "i18next";
 import React, {useContext, useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {Link as RouterLink, useHistory} from "react-router-dom";
-import {AppBarProps, ColorMode, ColorModeContext} from "./App";
+import {AppBarProps, ColorMode, ColorModeContext, UserContext} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveIconButton} from "./common/ResponsiveIconButton";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 import BackendService from "./service/BackendService";
-import {UserModel} from "./service/Model";
-import {
-    ArrowRight,
-    Brightness4Outlined,
-    Email,
-    ExitToApp,
-    InfoOutlined,
-    Language,
-    MyLocation,
-    Power
-} from "@mui/icons-material";
 
-function UserInfo(props: { user: UserModel }) {
-    const {user} = props;
+function UserInfo(props: {}) {
+    const user = useContext(UserContext);
     const items = [
         {icon: <Email/>, text: user.email},
         {icon: <MyLocation/>, text: user.location},
@@ -119,17 +117,11 @@ interface Props {
 function User(props: Props) {
     const {Track} = useDefaultTracking({page: 'User'});
     const [infoProps, openInfo] = useInfoDialog();
-    const [user, setUser] = useState<UserModel>()
     const [error, setError] = useSnackBar();
     const history = useHistory();
     const {t} = useTranslation();
-    const {backendService, setAppBar} = props;
-
-    useEffect(() => {
-        backendService.getUser()
-            .then(setUser, setError)
-            .catch(console.log)
-    }, [backendService, setError])
+    const {setAppBar} = props;
+    const user = useContext(UserContext);
 
     useEffect(() => {
         setAppBar({
@@ -149,11 +141,10 @@ function User(props: Props) {
 
     return (
         <Track>
-            {user &&
             <Container maxWidth="sm" sx={{paddingTop: 1}}>
                 <Paper variant="outlined" square>
                     <List>
-                        <UserInfo user={user}/>
+                        <UserInfo/>
                         <Divider variant="inset" component="li"/>
                         {user.type !== "management" && <ConsumersInfo/>}
                         <LanguageInfo setError={setError}/>
@@ -162,8 +153,6 @@ function User(props: Props) {
                 </Paper>
                 {process.env.REACT_APP_BUILD_SHA && <Typography>{process.env.REACT_APP_BUILD_SHA}</Typography>}
             </Container>
-            }
-            {!user && <LinearProgress/>}
             <InfoDialog title={t('info')} content={<DialogContentText children={t('info_settings')}/>} {...infoProps}/>
             <AlertSnackbar {...error}/>
         </Track>

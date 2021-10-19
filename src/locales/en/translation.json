@@ -151,5 +151,8 @@
     "Erika Musterfrau; born on February 1st, 2003 in Vienna"
   ],
   "change_language": "Change Language",
-  "page_not_found": "Page not found"
+  "page_not_found": "Page not found",
+  "cancel": "Cancel",
+  "file_upload_success": "File successfully uploaded",
+  "network_operators": "Network operators"
 }

@@ -153,5 +153,8 @@
     "Erika Musterfrau; geboren am 01.02.2003 in Wien"
   ],
   "change_language": "Sprache wählen",
-  "page_not_found": "Seite nicht gefunden"
+  "page_not_found": "Seite nicht gefunden",
+  "cancel": "Abbrechen",
+  "file_upload_success": "Datei erfolgreich hochgeladen",
+  "network_operators": "Netzbetreiber"
 }

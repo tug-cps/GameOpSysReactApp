@@ -1,3 +1,4 @@
+import {SettingsOutlined} from "@mui/icons-material";
 import AcUnit from "@mui/icons-material/AcUnit";
 import CloudUploadOutlined from "@mui/icons-material/CloudUploadOutlined";
 import EditOutlined from "@mui/icons-material/EditOutlined";
@@ -8,7 +9,6 @@ import ShowChart from "@mui/icons-material/ShowChart";
 import {SvgIcon} from "@mui/material";
 import {useContext} from "react";
 import {UserContext} from "../App";
-import {SettingsOutlined} from "@mui/icons-material";
 
 interface Destination {
     title: string,
@@ -31,7 +31,7 @@ const destinations = {
 
 export function useBottomBarDestinations(): Destination[] {
     const user = useContext(UserContext)
-    switch (user?.type) {
+    switch (user.type) {
         case "management":
             return [destinations.home, destinations.upload, destinations.user];
         case "student":
@@ -45,7 +45,7 @@ export function useBottomBarDestinations(): Destination[] {
 
 export function useNavDrawerDestinations(): Destination[] {
     const user = useContext(UserContext)
-    switch (user?.type) {
+    switch (user.type) {
         case "management":
             return [destinations.home, destinations.upload, destinations.user];
         case "student":

@@ -18,7 +18,7 @@ const destinations: { [key: string]: DestinationCardProps } = {
     mood: {title: 'card_mood_title', subtitle: 'card_mood_subtitle', icon: Mood, to: '/mood'},
 }
 
-const userInteractionNeeded = (type?: string) => {
+const userInteractionNeeded = (type: string) => {
     switch (type) {
         case "management":
             return [destinations.upload]
@@ -31,7 +31,7 @@ const userInteractionNeeded = (type?: string) => {
     }
 }
 
-const userResult = (type?: string) => {
+const userResult = (type: string) => {
     switch (type) {
         case "homeowner":
             return [destinations.power]
@@ -45,8 +45,8 @@ function Home(props: PrivateRouteProps) {
     const {t} = useTranslation();
     const {setAppBar} = props;
     const user = useContext(UserContext);
-    const interactions = userInteractionNeeded(user?.type);
-    const results = userResult(user?.type);
+    const interactions = userInteractionNeeded(user.type);
+    const results = userResult(user.type);
 
     useEffect(() => {
         setAppBar({

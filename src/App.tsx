@@ -23,7 +23,7 @@ interface ColorModeCtx {
 }
 
 const backendService = new BackendService(Config.backend);
-export const UserContext = React.createContext<UserModel | undefined>(undefined);
+export const UserContext = React.createContext<UserModel>({userId: '', email: '', type: '', location: ''});
 export const ColorModeContext = React.createContext<ColorModeCtx>({
     mode: undefined,
     toggleColorMode: (state: ColorMode) => {

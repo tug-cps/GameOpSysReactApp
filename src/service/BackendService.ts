@@ -1,4 +1,4 @@
-import {AxiosRequestConfig, AxiosResponse} from 'axios';
+import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {BehaviorSubject, map, Observable} from "rxjs";
 import {Backend} from "./Backend";
 import {
@@ -156,10 +156,13 @@ class BackendService {
     }
 
     postConsumption(file: File) {
+        const source = axios.CancelToken.source();
         const formData = new FormData();
         formData.append("upfile", file, file.name)
-        return this.backend
-            .post('/consumption', formData, this.addAuth())
+        return {
+            promise: this.backend.post('/consumption', formData, this.addAuth({cancelToken: source.token})),
+            cancelToken: source
+        }
     }
 
     postTracking(data: any): Promise<AxiosResponse> {
