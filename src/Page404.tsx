@@ -1,15 +1,28 @@
 import {Box, Button, Typography} from "@mui/material";
-import {Link} from "react-router-dom";
 import React from "react";
+import {useTranslation} from "react-i18next";
+import {Link} from "react-router-dom";
 
-export function Page404(props: { path: string }) {
+function Page404(props: {}) {
+    const {t} = useTranslation();
     return (
-        <Box m={16} textAlign='center'>
-            <Typography variant="h1">404</Typography>
-            <Typography variant="h5">Page not found</Typography>
-            <Box m={2}>
-                <Button color="primary" variant="contained" component={Link} to={props.path}>Go home</Button>
-            </Box>
+        <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            height: '70vh',
+            justifyContent: 'center'
+        }}>
+            <Typography variant="h1" children="404" gutterBottom/>
+            <Typography variant="h5" paragraph children={t('page_not_found')}/>
+            <Button
+                color="primary"
+                variant="contained"
+                component={Link}
+                to='/'
+            >{t('go_back')}</Button>
         </Box>
     )
 }
+
+export default Page404;

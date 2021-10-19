@@ -58,7 +58,7 @@ const ConsumerHeader = React.memo((props: { consumer: ConsumerModel }) => {
 }, compareConsumerProps);
 
 function PastBehavior(props: Props) {
-    const {Track} = useDefaultTracking({page: 'Behavior'});
+    const {Track} = useDefaultTracking({page: 'PastBehavior'});
     const [rows, setRows] = useState<ExtendedRow[]>();
     const [modified, setModified] = useState(false);
     const [error, setError] = useSnackBar();

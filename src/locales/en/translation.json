@@ -82,7 +82,7 @@
   "thermostat_edit_entry": "Edit Entry",
   "thermostat_use_advanced_settings": "Use advanced settings",
   "confirm_title": "Confirm",
-  "card_behavior_full_title": "Forecast {{date, iii, dd.MM.}}",
+  "card_behavior_full_title": "{{date, iii, dd.MM.}}",
   "archive_entry_date": "{{date, dd.MM.yyyy}}",
   "logging_in": "Logging in…",
   "retry": "retry",
@@ -150,5 +150,6 @@
     "Example: UR01V",
     "Erika Musterfrau; born on February 1st, 2003 in Vienna"
   ],
-  "change_language": "Change Language"
+  "change_language": "Change Language",
+  "page_not_found": "Page not found"
 }

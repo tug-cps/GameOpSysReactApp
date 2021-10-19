@@ -21,3 +21,5 @@ export function LoadingPage(props: { retry: () => void }) {
         </Container>
     )
 }
+
+export default LoadingPage;
