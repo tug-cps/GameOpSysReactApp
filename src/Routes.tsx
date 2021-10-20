@@ -13,9 +13,7 @@ import Logout from "./Logout";
 import Mood from "./Mood";
 import Page404 from "./Page404";
 import PastBehavior from "./PastBehavior";
-import Power from "./Power";
 import BackendService from "./service/BackendService";
-import Thermostats from "./Thermostats";
 import Upload from "./Upload";
 import User from "./User";
 import Verify from "./Verify";
@@ -49,13 +47,11 @@ export function PrivateRouter(props: PrivateRouteProps) {
         logout: () => <Route path="/logout"><Logout {...props}/></Route>,
         upload: () => <Route path="/upload"><Upload {...props}/></Route>,
         user: () => <Route path="/user"><User {...props}/></Route>,
-        power: () => <Route path="/power"><Power {...props}/></Route>,
         archive: () => <Route path="/archive"><Archive {...props}/></Route>,
         consumers: () => <Route path="/consumers"><Consumers {...props}/></Route>,
         behavior: () => <Route path="/behavior"><Behavior {...props}/></Route>,
         pastbehavior: () => <Route path="/pastbehavior"><PastBehavior {...props}/></Route>,
         mood: () => <Route path="/mood"><Mood {...props}/></Route>,
-        thermostats: () => <Route path="/thermostats"><Thermostats {...props}/></Route>,
         feedback: () => <Route path="/feedback"><Feedback {...props}/></Route>,
         root: () => <Route exact path="/"><Home {...props}/></Route>,
         home: () => <Route exact path={`${process.env.PUBLIC_URL}/`}><Home {...props}/></Route>,
