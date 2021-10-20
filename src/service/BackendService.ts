@@ -1,15 +1,7 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {BehaviorSubject, map, Observable} from "rxjs";
 import {Backend} from "./Backend";
-import {
-    ConsumerModel,
-    LoginResponse,
-    MoodModel,
-    ProcessedConsumptionModel,
-    ThermostatModel,
-    UserModel,
-    UserPredictionModel
-} from "./Model";
+import {ConsumerModel, LoginResponse, MoodModel, UserModel, UserPredictionModel} from "./Model";
 
 function unpack<T>(response: AxiosResponse<T>): T {
     return response.data;
@@ -72,11 +64,6 @@ class BackendService {
             .then(unpack);
     }
 
-    postConsumer(consumer_name: string) {
-        return this.backend
-            .post('/consumer', null, this.addAuth({params: {consumer_name: consumer_name}}))
-    }
-
     putConsumer(consumer: ConsumerModel) {
         return this.backend
             .put('/consumer/' + consumer.consumerId, null, this.addAuth({
@@ -85,23 +72,6 @@ class BackendService {
                     consumer_active: consumer.active
                 }
             }))
-    }
-
-    removeConsumer(consumerId: String): Promise<AxiosResponse> {
-        return this.backend
-            .delete('/consumer/' + consumerId, this.addAuth())
-    }
-
-    getProcessedConsumptions(): Promise<string[]> {
-        return this.backend
-            .get<string[]>('/processedconsumption', this.addAuth())
-            .then(unpack);
-    }
-
-    getProcessedConsumption(date: string): Promise<ProcessedConsumptionModel[]> {
-        return this.backend
-            .get<ProcessedConsumptionModel[]>('/processedconsumption/' + date, this.addAuth())
-            .then(unpack);
     }
 
     getPredictions(): Promise<string[]> {
@@ -119,29 +89,6 @@ class BackendService {
     putPrediction(date: string, predictions: UserPredictionModel[]): Promise<AxiosResponse> {
         return this.backend
             .put('/predictions/' + date, {predictions: predictions}, this.addAuth())
-    }
-
-    getThermostats(): Promise<ThermostatModel | null> {
-        return this.backend
-            .get<ThermostatModel>('/thermostat', this.addAuth())
-            .then(unpack)
-            .then((data) => {
-                if (!data) return data;
-                data.simple = data.simple.map(day => day.map(it => ({
-                    time: new Date(it.time),
-                    temperature: it.temperature
-                })));
-                data.advanced = data.advanced.map(day => day.map(it => ({
-                    time: new Date(it.time),
-                    temperature: it.temperature
-                })));
-                return data;
-            })
-    }
-
-    putThermostats(data: ThermostatModel) {
-        return this.backend
-            .put('/thermostat', {data: data}, this.addAuth())
     }
 
     putMood(date: string, mood: MoodModel): Promise<AxiosResponse> {

@@ -25,29 +25,12 @@ export interface TranslatedString {
     en: string;
 }
 
-export interface TimeItem {
-    time: Date;
-    temperature: number;
-}
-
-export interface ThermostatModel {
-    useAdvanced: boolean
-    simple: TimeItem[][]
-    advanced: TimeItem[][]
-}
-
 export interface UserPredictionModel {
     consumerId: string;
     data: CellState[];
-}
-
-export interface ProcessedConsumptionModel {
-    type: string;
-    data: number[];
 }
 
 export interface MoodModel {
     x: number,
     y: number
 }
-
