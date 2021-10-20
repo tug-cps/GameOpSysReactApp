@@ -1,20 +1,10 @@
 import {CheckCircleOutlined} from "@mui/icons-material";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {TabContext, TabPanel} from "@mui/lab";
-import {
-    Box,
-    Button,
-    Container,
-    DialogContentText,
-    LinearProgress,
-    Paper,
-    Stack,
-    Typography,
-    useTheme
-} from "@mui/material";
+import {Box, Button, Container, DialogContentText, LinearProgress, Paper, Stack, Typography} from "@mui/material";
 import 'chartjs-plugin-dragdata';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {Bubble, defaults} from "react-chartjs-2";
+import {Bubble} from "react-chartjs-2";
 import {useTranslation} from "react-i18next";
 import {Link as RouterLink, Prompt} from "react-router-dom";
 import {PrivateRouteProps, UserContext} from "./App";
@@ -25,79 +15,7 @@ import RetryMessage from "./common/RetryMessage";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 import {MoodModel} from "./service/Model";
-
-interface GraphProps {
-    mood: { x: number, y: number }
-    onChange: (mood: { x: number, y: number }) => void
-}
-
-export const compareProps = (a: GraphProps, b: GraphProps) => a.mood.x === b.mood.x && a.mood.y === b.mood.y
-
-const DraggableGraph = React.memo(function (props: GraphProps) {
-    const theme = useTheme();
-    const {t} = useTranslation();
-
-    defaults.borderColor = theme.palette.divider;
-    defaults.color = theme.palette.text.primary;
-    const commonScaleProps = {
-        alignToPixels: true,
-        max: 10,
-        min: 0,
-        ticks: {display: false},
-        grid: {display: false},
-    }
-
-    return <Bubble
-        data={{
-            labels: ["Red"],
-            datasets: [{
-                data: [{...props.mood, r: 20}],
-                borderWidth: 1,
-                backgroundColor: theme.palette.primary.main,
-                pointHitRadius: 25
-            }]
-        }}
-        options={{
-            maintainAspectRatio: true,
-            aspectRation: 1,
-            scales: {
-                y: {
-                    ...commonScaleProps,
-                    title: {
-                        display: true,
-                        text: [t('mood_very_uncomfortable') + ' ⟵      ⟶ ' + t('mood_very_comfortable')],
-                    },
-                },
-                x: {
-                    ...commonScaleProps,
-                    title: {
-                        display: true,
-                        text: t('mood_very_cold') + ' ⟵      ⟶ ' + t('mood_very_hot'),
-                    },
-                }
-            },
-            onHover: function (e: any) {
-                const point = e.chart.getElementsAtEventForMode(e, 'nearest', {intersect: true}, false)
-                if (point.length) e.native.target.style.cursor = 'grab'
-                else e.native.target.style.cursor = 'default'
-            },
-            plugins: {
-                // @ts-ignore
-                dragData: {
-                    dragX: true,
-                    showTooltip: true,
-                    onDragStart: () => null,
-                    onDrag: () => null,
-                    onDragEnd: (e: any, datasetIndex: any, index: number, value: { x: number, y: number, r: number }) => {
-                        e.target.style.cursor = 'default'
-                        props.onChange(value);
-                    },
-                },
-                legend: {display: false},
-                tooltip: {enabled: false}
-            }
-        }} height={100} width={100}/>
-}, compareProps)
+import {useData, useOptions} from "./mood/Chart";
 
 const date = new Date().toISOString().slice(0, 10)
 
@@ -139,6 +57,8 @@ function Mood(props: PrivateRouteProps) {
         setMood(mood);
         setModified(true);
     }, []);
+    const data = useData(mood?.x ?? 0, mood?.y ?? 0);
+    const options = useOptions(onMoodChange);
 
     useEffect(() => {
         setAppBar({
@@ -187,7 +107,7 @@ function Mood(props: PrivateRouteProps) {
                 <TabPanel value="1">
                     <Typography variant="h5" align="center" paragraph>{t(titleKey)}</Typography>
                     <Paper variant="outlined" sx={{p: 2}}>
-                        <DraggableGraph mood={mood} onChange={onMoodChange}/>
+                        <Bubble data={data} options={options} height={100} width={100}/>
                     </Paper>
                 </TabPanel>
                 <TabPanel value="2">
