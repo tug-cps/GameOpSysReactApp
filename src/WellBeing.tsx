@@ -9,60 +9,59 @@ import {useTranslation} from "react-i18next";
 import {Link as RouterLink, Prompt} from "react-router-dom";
 import {PrivateRouteProps, UserContext} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
+import handle404 from "./common/Handle404";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import ResponsiveIconButton from "./common/ResponsiveIconButton";
 import RetryMessage from "./common/RetryMessage";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
-import {MoodModel} from "./service/Model";
-import {useData, useOptions} from "./mood/Chart";
+import {WellBeingModel} from "./service/Model";
+import {useData, useOptions} from "./wellBeing/Chart";
 
 const date = new Date().toISOString().slice(0, 10)
 
-function Mood(props: PrivateRouteProps) {
-    const {Track} = useDefaultTracking({page: 'Mood'});
+function WellBeing(props: PrivateRouteProps) {
+    const {Track} = useDefaultTracking({page: 'WellBeing'});
     const {t} = useTranslation()
     const [infoProps, openInfo] = useInfoDialog();
     const [success, setSuccess] = useSnackBar();
     const [error, setError] = useSnackBar();
-    const [mood, setMood] = useState<MoodModel>();
+    const [wellBeing, setWellBeing] = useState<WellBeingModel>();
     const [modified, setModified] = useState(false);
     const [panel, setPanel] = useState("0");
     const [progress, setProgress] = useState(true);
-    const failed = !progress && !mood;
+    const failed = !progress && !wellBeing;
 
     const {backendService, setAppBar} = props;
     const user = useContext(UserContext);
 
     const initialLoad = useCallback(() => {
         setProgress(true);
-        backendService.getMood(date)
-            .then(setMood, setError)
-            .then(() => setModified(false))
-            .catch(console.log)
+        handle404(backendService.getWellBeing(date), () => ({x: 5, y: 5}))
+            .then(setWellBeing, setError)
             .finally(() => setProgress(false));
     }, [backendService, setError]);
 
     useEffect(initialLoad, [initialLoad]);
 
     const onSaveClick = useCallback(() => {
-        if (!mood) return;
-        backendService.putMood(date, mood)
+        if (!wellBeing) return;
+        backendService.postWellBeing(wellBeing)
             .then(() => setSuccess(t('changes_saved')), setError)
             .then(() => setModified(false))
             .catch(console.log);
-    }, [backendService, mood, setError, setSuccess, t]);
+    }, [backendService, wellBeing, setError, setSuccess, t]);
 
-    const onMoodChange = useCallback((mood: MoodModel) => {
-        setMood(mood);
+    const onWellBeingChange = useCallback((wellBeing: WellBeingModel) => {
+        setWellBeing(wellBeing);
         setModified(true);
     }, []);
-    const data = useData(mood?.x ?? 0, mood?.y ?? 0);
-    const options = useOptions(onMoodChange);
+    const data = useData(wellBeing?.x ?? 0, wellBeing?.y ?? 0);
+    const options = useOptions(onWellBeingChange);
 
     useEffect(() => {
         setAppBar({
-            title: t('card_mood_title'),
+            title: t('card_well_being_title'),
             showBackButton: true,
             children: () => {
                 if (panel !== "1") return <></>
@@ -77,19 +76,19 @@ function Mood(props: PrivateRouteProps) {
         })
     }, [t, setAppBar, onSaveClick, openInfo, modified, panel])
 
-    const infoText = t('info_mood', {returnObjects: true}) as string[];
+    const infoText = t('info_well_being', {returnObjects: true}) as string[];
     const infoContent = <>{infoText.map(text => <DialogContentText paragraph children={text}/>)}</>
 
-    const titleKey = user.type === "student" ? "mood_please_select_mood_student" : "mood_please_select_mood_homeowner";
+    const titleKey = user.type === "student" ? "well_being_please_select_well_being_student" : "well_being_please_select_well_being_homeowner";
     return <Track>
         {progress && <LinearProgress/>}
         {failed && <RetryMessage retry={initialLoad}/>}
-        {mood &&
+        {wellBeing &&
         <Container maxWidth="sm" sx={{paddingTop: 3}} disableGutters>
             <TabContext value={panel}>
                 <TabPanel value="0">
                     <Paper variant="outlined" sx={{p: 2}}>
-                        <Typography variant="h5">{t('mood_question_home')}</Typography>
+                        <Typography variant="h5">{t('well_being_question_home')}</Typography>
                         <Box mt={5}/>
                         <Stack direction="row" sx={{justifyContent: "flex-end", pt: 2}}>
                             <Button
@@ -112,7 +111,7 @@ function Mood(props: PrivateRouteProps) {
                 </TabPanel>
                 <TabPanel value="2">
                     <Paper square variant="outlined" sx={{p: 2}}>
-                        <Typography variant="h5">{t('mood_come_back_later')}</Typography>
+                        <Typography variant="h5">{t('well_being_come_back_later')}</Typography>
                         <Box mt={5}/>
                         <Stack direction="row" sx={{justifyContent: "flex-end", pt: 2}}>
                             <Button variant="contained" component={RouterLink} to="/">{t('go_back')}</Button>
@@ -129,4 +128,4 @@ function Mood(props: PrivateRouteProps) {
     </Track>
 }
 
-export default Mood;
+export default WellBeing;

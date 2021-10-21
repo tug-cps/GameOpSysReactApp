@@ -1,4 +1,4 @@
-import {CheckCircleOutlined} from "@mui/icons-material";
+import {BarChartOutlined, CheckCircleOutlined} from "@mui/icons-material";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {
     Avatar,
@@ -20,19 +20,17 @@ import {Prompt, Redirect, useLocation} from 'react-router-dom';
 import {PrivateRouteProps} from "./App";
 import BehaviorDragSelect, {CellState, Row} from "./behavior/BehaviorDragSelect"
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {consumerLookup, translate} from "./common/ConsumerTools";
+import colorGradient from "./common/ColorGradient";
+import {consumerLookup} from "./common/ConsumerTools";
 import {useParsedDate} from "./common/Date";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import ResponsiveIconButton from "./common/ResponsiveIconButton";
 import RetryMessage from "./common/RetryMessage";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
-import {ConsumerModel} from "./service/Model";
 
 const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
-const colors = ['lightgreen', 'yellow', 'red']
-const energyAvailable = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0].map(v => colors[v])
 
 interface Props extends PrivateRouteProps {
 }
@@ -41,28 +39,24 @@ interface ExtendedRow extends Row {
     consumerId: string
 }
 
-interface HeaderProps {
-    consumer: ConsumerModel
+const ConsumerHeader = (props: { type: string }) => {
+    const {t} = useTranslation();
+    const {color, icon, tKey} = consumerLookup(props.type);
+    return (
+        <Tooltip title={<>{t(tKey)}</>} enterTouchDelay={0}>
+            <Avatar variant="rounded" sx={{backgroundColor: color, width: 30, height: 30}} children={icon}/>
+        </Tooltip>
+    )
 }
-
-const compareConsumerProps = (a: HeaderProps, b: HeaderProps) => a.consumer.consumerId === b.consumer.consumerId
-const ConsumerHeader = React.memo((props: { consumer: ConsumerModel }) => {
-    const {consumer} = props;
-    const consumerType = consumerLookup(consumer.type);
-    return (<Tooltip title={translate(consumer.name, consumer.customName)} enterTouchDelay={0}>
-        <Avatar
-            variant="rounded"
-            sx={{backgroundColor: consumerType.color, width: 30, height: 30}}
-            children={consumerType.icon}
-        />
-    </Tooltip>)
-}, compareConsumerProps);
 
 function PastBehavior(props: Props) {
     const {Track} = useDefaultTracking({page: 'PastBehavior'});
     const [rows, setRows] = useState<ExtendedRow[]>();
+    const [availableEnergy, setAvailableEnergy] = useState<string[]>();
     const [modified, setModified] = useState(false);
     const [progress, setProgress] = useState(true);
+    const [openFeedback, setOpenFeedback] = useState(false);
+    const [validated, setValidated] = useState<boolean>();
     const [error, setError] = useSnackBar();
     const [success, setSuccess] = useSnackBar();
     const {t} = useTranslation();
@@ -78,23 +72,31 @@ function PastBehavior(props: Props) {
     const initialLoad = useCallback(() => {
         if (!validDate) return;
         setProgress(true);
-        Promise.all([backendService.getConsumers(), backendService.getPrediction(date)])
-            .then(([consumers, predictions]) => {
-                const cellStates = consumers
-                    .filter((c) => c.active)
-                    .map((c) => {
-                        const consumerType = consumerLookup(c.type);
-                        return ({
-                            header: <ConsumerHeader consumer={c}/>,
-                            consumerId: c.consumerId,
-                            cellStates: predictions.find((p) => p.consumerId === c.consumerId)?.data ?? hours.map(() => 0),
-                            colorSelected: consumerType.color,
-                            colorBeingSelected: consumerType.colorAlt
-                        });
+        Promise.all([
+            backendService.getConsumers(),
+            backendService.getPrediction(date),
+            backendService.getAvailableEnergy(date)
+        ]).then(([consumers, predictions, energy]) => {
+            const cellStates = consumers
+                .filter((c) => c.active)
+                .map((c) => {
+                    const consumerType = consumerLookup(c.type);
+                    return ({
+                        header: <ConsumerHeader type={c.type}/>,
+                        consumerId: c.id,
+                        cellStates: predictions.data.find((p) => p.consumerId === c.id)?.data ?? hours.map(() => 0),
+                        colorSelected: consumerType.color,
+                        colorBeingSelected: consumerType.colorAlt
                     });
-                setRows(cellStates);
-                setModified(false);
-            }, setError)
+                });
+            setValidated(predictions.validated);
+            setAvailableEnergy(energy?.map(colorGradient) ?? []);
+            setRows(cellStates);
+            setModified(false);
+        }, (e) => {
+            setError(e);
+            setRows(undefined);
+        })
             .catch(console.log)
             .finally(() => setProgress(false));
     }, [validDate, backendService, setError, date]);
@@ -107,14 +109,15 @@ function PastBehavior(props: Props) {
     }, []);
 
     const handleSave = useCallback(() => {
-        if (!rows) return;
+        if (!rows || validated) return;
         backendService.putPrediction(date, rows.map((r) => ({consumerId: r.consumerId, data: r.cellStates})))
             .then(() => {
                 setSuccess(t('changes_saved'));
                 setModified(false);
+                setOpenFeedback(true);
             }, setError)
             .catch(console.log);
-    }, [backendService, date, rows, setError, setSuccess, t]);
+    }, [backendService, date, rows, setError, setSuccess, t, validated]);
 
     useEffect(() => {
         validDate && setAppBar({
@@ -122,15 +125,23 @@ function PastBehavior(props: Props) {
             showBackButton: true,
             children: () => <>
                 <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
+                {validated !== undefined && !validated &&
                 <ResponsiveIconButton requiresAttention={modified}
                                       description={t('save')}
                                       icon={<CheckCircleOutlined/>}
                                       onClick={handleSave}/>
+                }
+                {validated &&
+                <ResponsiveIconButton description={t('feedback')}
+                                      icon={<BarChartOutlined/>}
+                                      onClick={() => setOpenFeedback(true)}/>
+                }
             </>
         })
-    }, [validDate, dateParsed, handleSave, modified, openInfo, setAppBar, t])
+    }, [validDate, dateParsed, handleSave, modified, openInfo, setAppBar, t, validated])
 
     if (!validDate) return <Redirect to='/'/>
+    if (openFeedback) return <Redirect to={'/feedback?date=' + date}/>
 
     const InfoContent = () => {
         const infoText = t('info_past_behavior', {returnObjects: true}) as string[]
@@ -155,10 +166,12 @@ function PastBehavior(props: Props) {
                                 <TableCell variant="head"/>
                                 {hours.map((value) => <TableCell align="center">{String(value)}⁰⁰</TableCell>)}
                             </TableRow>
+                            {availableEnergy &&
                             <TableRow>
                                 <TableCell/>
-                                {energyAvailable.map((v) => <TableCell sx={{backgroundColor: v, top: "37px"}}/>)}
+                                {availableEnergy.map((v) => <TableCell sx={{backgroundColor: v, top: "37px"}}/>)}
                             </TableRow>
+                            }
                         </TableHead>
                         <TableBody>
                             <BehaviorDragSelect rows={rows} onChange={handleChange}/>

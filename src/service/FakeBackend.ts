@@ -1,9 +1,8 @@
 import {AxiosRequestConfig, AxiosResponse} from "axios";
-import {v4 as uuidv4} from 'uuid';
 import {Backend} from "./Backend";
 import {DefaultExecutor, Executor, FaultyExecutor} from "./Executor";
 import {getFakeDB, resetFakeDB, saveFakeDB} from "./FakeDB";
-import {ConsumerModel} from "./Model";
+import {ConsumerModel, TaskModel} from "./Model";
 
 function findInDict(dict: any, matcher: (value: any) => boolean): any {
     for (let key in dict) {
@@ -23,33 +22,6 @@ function delayedPromise<T>(promise: Promise<T>, delay = defaultDelay): Promise<T
 }
 
 class FakeBackend implements Backend {
-    delete<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-        const promise = new Promise<R>((resolve, reject) => {
-            let e: Executor = new DefaultExecutor(resolve, reject);
-
-            console.log(`FAKEBACKEND DELETE Fake backend call to ${url}`, config);
-            if (!config?.headers) return e.error();
-            const db = getFakeDB();
-
-            const token = config.headers.Authorization;
-            const user = db.token[token];
-            if (user == null) return e.error();
-            if (db.user[user].userId.startsWith("faulty")) e = new FaultyExecutor(e);
-
-            if (url.includes('/consumer/')) {
-                const id = url.substring(url.lastIndexOf('/') + 1);
-                const index = db.consumer[user].findIndex((it: any) => it.consumerId.toString() === id.toString());
-                if (index < 0) return e.error();
-                db.consumer[user].splice(index, 1);
-
-                saveFakeDB(db);
-                return e.ok({});
-            }
-            return e.error();
-        });
-        return delayedPromise(promise);
-    }
-
     get<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
         const promise = new Promise<R>((resolve, reject) => {
             let e: Executor = new DefaultExecutor(resolve, reject);
@@ -58,48 +30,59 @@ class FakeBackend implements Backend {
             if (!config) return e.error();
             const db = getFakeDB();
 
-            if (url.endsWith('/request_pin')) {
-                const {shared_password, email} = config.params;
-                if (shared_password === 'test' && db.user[email] != null) {
-                    return e.ok({})
-                }
+            if (url.endsWith('/request-pin')) {
+                const {code, email} = config.params;
+                if (code === 'test' && db.user[email]!!) return e.ok({})
                 return e.error()
             } else if (url.endsWith('/login')) {
-                const {email, password} = config.params;
+                const {email, otp} = config.params;
                 const user = db.user[email]
-                if (user != null && password === "123456") {
-                    return e.ok({token: findInDict(db.token, (v: string) => v === email)})
-                }
+                if (user != null && otp === "123456") return e.ok({data: {token: findInDict(db.token, (v: string) => v === email)}})
                 return e.error()
             }
             if (!config.headers) return e.error();
             const token = config.headers.Authorization;
             const user = db.token[token]
             if (user == null) return e.error();
-            if (db.user[user].userId.startsWith("faulty")) e = new FaultyExecutor(e);
+            if (db.user[user].id.startsWith("faulty")) e = new FaultyExecutor(e);
 
             if (url.endsWith('/logout')) {
                 resetFakeDB()
                 e.ok({})
             } else if (url.endsWith('/user')) {
-                e.ok(db.user[user])
-            } else if (url.endsWith('/consumer')) {
-                e.ok(db.consumer[user])
-            } else if (url.endsWith('/processedconsumption')) {
-                e.ok(Object.keys(db.processedConsumption[user]))
-            } else if (url.includes('/processedconsumption/')) {
-                const index = url.substring(url.lastIndexOf('/') + 1)
-                e.ok(db.processedConsumption[user][index])
+                e.ok({data: db.user[user]})
+            } else if (url.endsWith('/consumers')) {
+                e.ok({data: db.consumer[user]})
             } else if (url.endsWith('/predictions')) {
-                e.ok(Object.keys(db.predictions[user]))
+                e.ok({
+                    data: Object.keys(db.predictions[user]).map(date => ({
+                            validated: db.predictions[user][date].validated,
+                            date: date
+                        })
+                    )
+                })
             } else if (url.includes('/predictions/')) {
+                const date = url.substring(url.lastIndexOf('/') + 1)
+                const prediction = db.predictions[user][date];
+                console.log(db.predictions[user])
+                if (!prediction) return e.error({status: 404, statusText: 'Not found'})
+                e.ok({data: prediction})
+            } else if (url.includes('/available-energy/')) {
+                e.ok({data: [0, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.4, 0.5, 0.6, 0.7, 0.8, 1, 1, 0.8, 0.6, 0.6, 0.4, 0.3, 0.5, 0.7, 0.3, 0, 0]})
+            } else if (url.includes('/well-being/')) {
                 const index = url.substring(url.lastIndexOf('/') + 1)
-                e.ok(db.predictions[user][index] ?? [])
-            } else if (url.includes('/thermostat')) {
-                e.ok(db.thermostats[user])
-            } else if (url.includes('/mood/')) {
-                const index = url.substring(url.lastIndexOf('/') + 1)
-                e.ok(db.mood[user][index] ?? {x: 5, y: 5})
+                const mood = db.mood[user][index]
+                if (!mood) return e.error({status: 404})
+                e.ok({data: mood})
+            } else if (url.endsWith('/tasks')) {
+                e.ok<{ data: TaskModel }>({
+                    data: {
+                        todoPrediction: true,
+                        todoVerifyPrediction: true,
+                        todoUpload: true,
+                        todoWellBeing: true
+                    }
+                })
             } else {
                 e.error()
             }
@@ -122,30 +105,21 @@ class FakeBackend implements Backend {
 
             if (!config.headers) return e.error();
             const token = config.headers.Authorization;
-            const user = db.token[token]
-            if (user == null) return e.error()
-            if (db.user[user].userId.startsWith("faulty")) e = new FaultyExecutor(e);
+            const user = db.token[token];
+            if (user == null) return e.error();
+            if (db.user[user].id.startsWith("faulty")) e = new FaultyExecutor(e);
+            if (url.endsWith('/consumptions')) {
+                e.ok({});
+            } else if (url.startsWith('/well-being')) {
+                const date = new Date().toISOString().slice(0, 10);
+                db.mood[user][date] = data.data;
+                saveFakeDB(db);
 
-            if (url.endsWith('/consumer')) {
-                const {consumer_name} = config.params;
-                if (consumer_name == null) return e.error();
-                db.consumer[user].push({
-                    consumerId: uuidv4(),
-                    owner: '0',
-                    customName: consumer_name,
-                    type: 'misc',
-                    active: true
-                } as ConsumerModel);
-                saveFakeDB(db)
-                return e.ok({});
+                e.ok({})
             }
-            if (url.endsWith('/consumption')) {
-                return e.ok({});
-            }
-
-            return e.error();
+            e.error();
         })
-        if (url.endsWith('/consumption')) return delayedPromise(promise, 3000);
+        if (url.endsWith('/consumptions')) return delayedPromise(promise, 3000);
         return delayedPromise(promise);
     }
 
@@ -158,46 +132,53 @@ class FakeBackend implements Backend {
             const token = config.headers.Authorization;
             const user = db.token[token]
             if (user == null) return e.error()
-            if (db.user[user].userId.startsWith("faulty")) e = new FaultyExecutor(e);
+            if (db.user[user].id.startsWith("faulty")) e = new FaultyExecutor(e);
 
             const id = url.split('/').pop()
             if (id == null) return e.error()
 
-            if (url.startsWith('/consumer')) {
-                const {consumer_name, consumer_active} = config.params;
-                meldArrayElement(db.consumer[user],
-                    (c: ConsumerModel) => c.consumerId.toString() === id.toString(),
-                    {customName: consumer_name, active: consumer_active}
-                )
-                saveFakeDB(db);
-
-                return e.ok({})
-            } else if (url.startsWith('/predictions')) {
+            if (url.startsWith('/predictions')) {
                 const date = url.substring(url.lastIndexOf('/') + 1)
-                db.predictions[user][date] = data['predictions'];
+                db.predictions[user][date] = {validated: true, data: data.data};
                 saveFakeDB(db);
 
-                return e.ok({})
-            } else if (url.startsWith('/mood')) {
-                const date = url.substring(url.lastIndexOf('/') + 1)
-                db.mood[user][date] = data['mood'];
-                saveFakeDB(db);
-
-                return e.ok({})
-            } else if (url.startsWith('/thermostat')) {
-                db.thermostats[user] = data['data'];
-                saveFakeDB(db);
-
-                return e.ok({})
+                e.ok({})
+            } else {
+                e.error()
             }
+        })
+        return delayedPromise(promise);
+    }
 
-            e.error()
+    patch<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: AxiosRequestConfig<any>): Promise<R> {
+        const promise = new Promise<R>((resolve, reject) => {
+            let e: Executor = new DefaultExecutor(resolve, reject);
+            console.log(`FAKEBACKEND PATCH Fake backend call to ${url}`, 'config:', config, 'data:', data)
+            if (!config?.headers) return e.error();
+            const db = getFakeDB();
+            const token = config.headers.Authorization;
+            const user = db.token[token]
+            if (user == null) return e.error()
+            if (db.user[user].id.startsWith("faulty")) e = new FaultyExecutor(e);
+
+            const id = url.split('/').pop()
+            if (id == null) return e.error()
+
+            if (url.startsWith('/consumers')) {
+                const {active} = data.data;
+                meldArrayElement<ConsumerModel>(db.consumer[user], c => c.id.toString() === id.toString(), {active: active})
+                saveFakeDB(db);
+
+                e.ok({})
+            } else {
+                e.error()
+            }
         })
         return delayedPromise(promise);
     }
 }
 
-function meldArrayElement(array: any, elementMatcher: any, changes: any) {
+function meldArrayElement<T>(array: Array<T>, elementMatcher: (value: T) => boolean, changes: any) {
     const consumerIndex = array.findIndex(elementMatcher)
     array[consumerIndex] = {...array[consumerIndex], ...changes}
 }

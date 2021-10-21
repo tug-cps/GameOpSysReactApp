@@ -66,11 +66,7 @@ function Consumers(props: Props) {
                 <Paper variant="outlined">
                     <List>
                         {consumers.map((it) =>
-                            <ConsumerCard
-                                key={it.consumerId}
-                                consumer={it}
-                                clickActive={applyChangeActive}
-                            />
+                            <ConsumerCard key={it.id} consumer={it} clickActive={applyChangeActive}/>
                         )}
                     </List>
                 </Paper>

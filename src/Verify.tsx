@@ -28,7 +28,7 @@ const StyledContainer = styled('div')({
 })
 
 function Verify(props: Props) {
-    const [password, setPassword] = useState<string>('')
+    const [otp, setOtp] = useState<string>('')
     const [error, setError] = useSnackBar()
     const {t} = useTranslation();
     const location = useLocation<{ email: string }>();
@@ -40,13 +40,15 @@ function Verify(props: Props) {
     const handleSubmit = useCallback((e: React.FormEvent) => {
         e.preventDefault();
         setProgress(true);
-        backendService.login(email, password)
-            .then(() => history.push('/'), setError)
+        backendService.login(email, otp)
+            .then(() => history.push('/'), reason => {
+                setError(reason);
+                setProgress(false)
+            })
             .catch(console.log)
-            .finally(() => setProgress(false))
-    }, [backendService, email, history, password, setError]);
+    }, [backendService, email, history, otp, setError]);
 
-    const handleChange = useCallback(e => setPassword(e.target.value), []);
+    const handleChange = useCallback(e => setOtp(e.target.value), []);
 
     if (!email) return <Redirect to={'/'}/>
     return (
@@ -63,7 +65,7 @@ function Verify(props: Props) {
                             label="Pin"
                             variant="outlined"
                             margin="normal"
-                            value={password}
+                            value={otp}
                             onChange={handleChange}
                             required
                             fullWidth/>

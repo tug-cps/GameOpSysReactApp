@@ -1,10 +1,11 @@
+import {ShowChartOutlined} from "@mui/icons-material";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {Container, Grid, Paper, useTheme} from "@mui/material";
 import {blue, green, red, yellow} from "@mui/material/colors";
 import {ChartData, ChartOptions} from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {isPast, isValid} from "date-fns";
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Bar, Pie} from "react-chartjs-2";
 import {useTranslation} from "react-i18next";
 import {Redirect, useLocation} from "react-router-dom";
@@ -122,6 +123,7 @@ function Feedback(props: PrivateRouteProps) {
     const {Track} = useDefaultTracking({page: 'Feedback'});
     const {t} = useTranslation()
     const [infoProps, openInfo] = useInfoDialog();
+    const [openBehavior, setOpenBehavior] = useState(false);
     const query = new URLSearchParams(useLocation().search);
     const date = query.get("date")!;
     const dateParsed = useParsedDate(date);
@@ -137,11 +139,17 @@ function Feedback(props: PrivateRouteProps) {
         setAppBar({
             title: t('card_behavior_full_title', {date: dateParsed}),
             showBackButton: true,
-            children: () => <ResponsiveIconButton icon={<InfoOutlined/>} onClick={openInfo} description={t('info')}/>
+            children: () => <>
+                <ResponsiveIconButton icon={<InfoOutlined/>} onClick={openInfo} description={t('info')}/>
+                <ResponsiveIconButton description={t('card_behavior_title')}
+                                      icon={<ShowChartOutlined/>}
+                                      onClick={() => setOpenBehavior(true)}/>
+            </>
         })
     }, [dateParsed, t, setAppBar, openInfo])
 
     if (!validDate) return <Redirect to={'/'}/>
+    if (openBehavior) return <Redirect to={'/pastbehavior?date=' + date}/>
 
     return <Track>
         <Container maxWidth="lg" sx={{paddingTop: 1}}>

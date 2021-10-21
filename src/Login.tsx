@@ -29,11 +29,6 @@ interface Props {
     backendService: BackendService
 }
 
-interface State {
-    shared_password: string;
-    email: string;
-}
-
 const StyledGrid = styled(Grid)({
     margin: 2,
     padding: 8,
@@ -65,7 +60,8 @@ function ChangeLanguageDialog(props: {
 }
 
 function Login(props: Props) {
-    const [state, setState] = useState<State>({shared_password: '', email: ''});
+    const [personalCode, setPersonalCode] = useState('');
+    const [email, setEmail] = useState('');
     const [error, setError] = useSnackBar();
     const {t} = useTranslation();
     const history = useHistory();
@@ -77,11 +73,10 @@ function Login(props: Props) {
     const handleSubmit = useCallback((e: React.FormEvent) => {
         e.preventDefault();
         setProgress(true);
-        backendService.requestPin(state.shared_password, state.email)
-            .then(() => history.push('/verify', {email: state.email}))
+        backendService.requestPin(personalCode, email)
+            .then(() => history.push('/verify', {email: email}), () => setProgress(false))
             .catch(setError)
-            .finally(() => setProgress(false))
-    }, [backendService, history, setError, state.email, state.shared_password]);
+    }, [backendService, history, setError, email, personalCode]);
 
     const InfoContent = () => {
         const infoText = t('info_personal_code', {returnObjects: true}) as string[];
@@ -89,7 +84,7 @@ function Login(props: Props) {
     }
 
     return (
-        (<>
+        <>
             <Container maxWidth="lg">
                 <Box sx={{display: 'flex', alignItems: 'center', height: '100vh'}}>
                     <Grid container spacing={2}>
@@ -109,8 +104,8 @@ function Login(props: Props) {
                                     label={t('login_email_address')}
                                     variant="outlined"
                                     margin="normal"
-                                    value={state.email}
-                                    onChange={(e) => setState({...state, email: e.target.value})}
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
                                     required
                                     fullWidth
                                 />
@@ -120,8 +115,8 @@ function Login(props: Props) {
                                     label={t('login_shared_password')}
                                     variant="outlined"
                                     margin="normal"
-                                    value={state.shared_password}
-                                    onChange={(e) => setState({...state, shared_password: e.target.value})}
+                                    value={personalCode}
+                                    onChange={e => setPersonalCode(e.target.value)}
                                     required
                                     fullWidth
                                     InputProps={{
@@ -156,8 +151,8 @@ function Login(props: Props) {
             <ChangeLanguageDialog {...langDialogProps}/>
             <InfoDialog title={t('info')} content={<InfoContent/>} {...infoProps}/>
             <AlertSnackbar {...error} />
-        </>)
-    );
+        </>
+    )
 }
 
 export default Login;

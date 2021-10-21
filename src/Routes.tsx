@@ -10,13 +10,13 @@ import Home from "./Home";
 import LoadingPage from "./LoadingPage";
 import Login from "./Login";
 import Logout from "./Logout";
-import Mood from "./Mood";
 import Page404 from "./Page404";
 import PastBehavior from "./PastBehavior";
 import BackendService from "./service/BackendService";
 import Upload from "./Upload";
 import User from "./User";
 import Verify from "./Verify";
+import WellBeing from "./WellBeing";
 
 export function PublicRouter(props: { backendService: BackendService }) {
     return (
@@ -34,7 +34,7 @@ export function LoadingRouter(props: { backendService: BackendService, retry: ()
     return (
         <Switch>
             <Route path="/logout"><Logout {...props}/></Route>,
-            <Route><LoadingPage retry={props.retry}/></Route>,
+            <Route><LoadingPage {...props}/></Route>,
         </Switch>
     )
 }
@@ -51,7 +51,7 @@ export function PrivateRouter(props: PrivateRouteProps) {
         consumers: () => <Route path="/consumers"><Consumers {...props}/></Route>,
         behavior: () => <Route path="/behavior"><Behavior {...props}/></Route>,
         pastbehavior: () => <Route path="/pastbehavior"><PastBehavior {...props}/></Route>,
-        mood: () => <Route path="/mood"><Mood {...props}/></Route>,
+        wellBeing: () => <Route path="/wellBeing"><WellBeing {...props}/></Route>,
         feedback: () => <Route path="/feedback"><Feedback {...props}/></Route>,
         root: () => <Route exact path="/"><Home {...props}/></Route>,
         home: () => <Route exact path={`${process.env.PUBLIC_URL}/`}><Home {...props}/></Route>,
@@ -64,7 +64,7 @@ export function PrivateRouter(props: PrivateRouteProps) {
         paths.archive(),
         paths.consumers(),
         paths.behavior(),
-        paths.mood(),
+        paths.wellBeing(),
         paths.pastbehavior(),
         paths.feedback()
     ]
