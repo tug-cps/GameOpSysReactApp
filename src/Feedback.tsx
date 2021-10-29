@@ -1,6 +1,6 @@
 import {ShowChartOutlined} from "@mui/icons-material";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
-import {Container, Grid, LinearProgress, Paper, useTheme} from "@mui/material";
+import {Container, DialogContentText, Grid, LinearProgress, Paper, useTheme} from "@mui/material";
 import {blue, green, red, yellow} from "@mui/material/colors";
 import {ChartData, ChartOptions} from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -12,7 +12,7 @@ import {Redirect, useLocation} from "react-router-dom";
 import {PrivateRouteProps} from "./App";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useParsedDate} from "./common/Date";
-import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
+import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import ResponsiveIconButton from "./common/ResponsiveIconButton";
 import RetryMessage from "./common/RetryMessage";
 import useDefaultTracking from "./common/Tracking";
@@ -21,28 +21,30 @@ import {FeedbackModel} from "./service/Model";
 
 const useBarChartData: (data: { self: number, others: number }) => ChartData = (data) => {
     const theme = useTheme();
+    const {t} = useTranslation();
     return useMemo(() => ({
-        labels: ['Stromverbrauch'],
+        labels: [t('feedback_energy_consumption')],
         datasets: [
             {
-                label: 'Ihr Stromverbrauch',
+                label: t('feedback_my_energy_consumption'),
                 data: [data.self],
                 backgroundColor: red["800"],
                 borderColor: theme.palette.background.paper,
             },
             {
-                label: 'Durchschnittlicher Stromverbrauch der anderen',
+                label: t('feedback_other_energy_consumption'),
                 data: [data.others],
                 backgroundColor: blue["800"],
                 borderColor: theme.palette.background.paper,
             },
         ],
-    }), [theme, data.self, data.others]);
+    }), [theme, data.self, data.others, t]);
 };
 const usePieChartData: (data: { high: number, med: number, low: number }) => ChartData = (data) => {
     const theme = useTheme();
+    const {t} = useTranslation();
     return useMemo(() => ({
-        labels: ['Viel Strom', 'Durchschnittlicher Strom', 'Wenig Strom'],
+        labels: [t('feedback_high_energy'), t('feedback_med_energy'), t('feedback_low_energy')],
         datasets: [
             {
                 data: [data.high, data.med, data.low].map(v => v * 100),
@@ -50,7 +52,7 @@ const usePieChartData: (data: { high: number, med: number, low: number }) => Cha
                 borderColor: theme.palette.background.paper,
             },
         ],
-    }), [theme, data.high, data.med, data.low]);
+    }), [theme, data.high, data.med, data.low, t]);
 }
 
 const useBarChartOptions: () => ChartOptions = () => {
@@ -170,6 +172,11 @@ function Feedback(props: PrivateRouteProps) {
     if (!validDate) return <Redirect to={'/'}/>
     if (openBehavior) return <Redirect to={'/pastbehavior?date=' + date}/>
 
+    const InfoContent = () => {
+        const infoText = t('info_feedback', {returnObjects: true}) as string[]
+        return <>{infoText.map(text => <DialogContentText paragraph children={text}/>)}</>
+    }
+
     return <Track>
         {progress && <LinearProgress/>}
         {failed && <RetryMessage retry={initialLoad}/>}
@@ -190,7 +197,7 @@ function Feedback(props: PrivateRouteProps) {
         </Container>
         }
         <AlertSnackbar {...error}/>
-        <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
+        <InfoDialog title={t('info')} content={<InfoContent/>} {...infoProps} />
     </Track>
 }
 
