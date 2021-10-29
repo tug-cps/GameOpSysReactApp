@@ -38,3 +38,15 @@ export interface TaskModel {
     todoWellBeing: boolean
     todoVerifyPrediction: boolean
 }
+
+export interface FeedbackModel {
+    totalUsage: {
+        self: number,
+        others: number
+    },
+    relativeUsage: {
+        high: number,
+        med: number,
+        low: number
+    }
+}

@@ -3,6 +3,7 @@ import {BehaviorSubject, map, Observable} from "rxjs";
 import {Backend} from "./Backend";
 import {
     ConsumerModel,
+    FeedbackModel,
     LoginResponse,
     PredictionDateEntry,
     PredictionModel,
@@ -114,6 +115,12 @@ class BackendService {
     postWellBeing(wellBeing: WellBeingModel): Promise<AxiosResponse> {
         return this.backend
             .post('/well-being', {data: wellBeing}, this.addAuth());
+    }
+
+    getFeedback(date: string): Promise<FeedbackModel> {
+        return this.backend
+            .get<{ data: FeedbackModel }>("/feedback/" + date, this.addAuth())
+            .then(unpack)
     }
 
     postConsumption(file: File) {
