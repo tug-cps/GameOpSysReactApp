@@ -23,7 +23,7 @@ interface ColorModeCtx {
 }
 
 const backendService = new BackendService(Config.backend);
-export const UserContext = React.createContext<UserModel>({userId: '', email: '', type: '', location: ''});
+export const UserContext = React.createContext<UserModel>({id: '', email: '', type: '', location: ''});
 export const ColorModeContext = React.createContext<ColorModeCtx>({
     mode: undefined,
     toggleColorMode: (state: ColorMode) => {
@@ -64,7 +64,7 @@ function App() {
         } else {
             backendService.getUser()
                 .then(setUser, setError)
-                .catch(console.error);
+                .catch(console.error)
         }
     }, [isLoggedIn, setError, retry])
 

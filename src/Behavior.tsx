@@ -19,7 +19,9 @@ import {Prompt} from 'react-router-dom';
 import {PrivateRouteProps} from "./App";
 import BehaviorDragSelect, {CellState, Row} from "./behavior/BehaviorDragSelect"
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {consumerLookup, translate} from "./common/ConsumerTools";
+import colorGradient from "./common/ColorGradient";
+import {consumerLookup} from "./common/ConsumerTools";
+import handle404 from "./common/Handle404";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import ResponsiveIconButton from "./common/ResponsiveIconButton";
 import RetryMessage from "./common/RetryMessage";
@@ -28,11 +30,11 @@ import {useSnackBar} from "./common/UseSnackBar";
 
 const formatTime = (v: number) => v < 10 ? '0' + v : '' + v
 const hours = Array.from(Array(24).keys()).map(v => formatTime(v));
-const colors = ['lightgreen', 'yellow', 'red']
-const energyAvailable = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0].map(v => colors[v])
 
+const today = new Date();
 const date = new Date();
-const isoDate = new Date().toISOString().slice(0, 10)
+date.setDate(today.getDate() + 1)
+const isoDate = date.toISOString().slice(0, 10)
 
 interface Props extends PrivateRouteProps {
 }
@@ -44,6 +46,7 @@ interface ExtendedRow extends Row {
 function Behavior(props: Props) {
     const {Track} = useDefaultTracking({page: 'Behavior'});
     const [rows, setRows] = useState<ExtendedRow[]>();
+    const [availableEnergy, setAvailableEnergy] = useState<string[]>();
     const [progress, setProgress] = useState(true);
     const [modified, setModified] = useState(false);
     const [error, setError] = useSnackBar();
@@ -55,35 +58,38 @@ function Behavior(props: Props) {
 
     const initialLoad = useCallback(() => {
         setProgress(true);
-        Promise.all([backendService.getConsumers(), backendService.getPrediction(isoDate)])
-            .then(([consumers, predictions]) => {
-                const cellStates = consumers
-                    .filter((c) => c.active)
-                    .map((c) => {
-                        const consumerType = consumerLookup(c.type);
-                        return {
-                            header: (
-                                <Tooltip title={translate(c.name, c.customName)} enterTouchDelay={0}>
-                                    <Avatar
-                                        variant="rounded"
-                                        sx={{width: 30, height: 30, backgroundColor: consumerType.color}}
-                                    >
-                                        {consumerType.icon}
-                                    </Avatar>
-                                </Tooltip>
-                            ),
-                            consumerId: c.consumerId,
-                            cellStates: predictions.find((p) => p.consumerId === c.consumerId)?.data ?? hours.map(() => 0),
-                            colorSelected: consumerType.color,
-                            colorBeingSelected: consumerType.colorAlt
-                        }
-                    });
-                setRows(cellStates);
-                setModified(false);
-            }, setError)
+        Promise.all([
+            backendService.getConsumers(),
+            handle404(backendService.getPrediction(isoDate), () => ({validated: false, data: []})),
+            backendService.getAvailableEnergy(isoDate)
+        ]).then(([consumers, predictions, energy]) => {
+            const cellStates = consumers
+                .filter((c) => c.active)
+                .map((c) => {
+                    const {color, colorAlt, tKey, icon} = consumerLookup(c.type);
+                    return {
+                        header: (
+                            <Tooltip title={<>{t(tKey)}</>} enterTouchDelay={0}>
+                                <Avatar
+                                    variant="rounded"
+                                    sx={{width: 30, height: 30, backgroundColor: color}}
+                                    children={icon}
+                                />
+                            </Tooltip>
+                        ),
+                        consumerId: c.id,
+                        cellStates: predictions.data.find((p) => p.consumerId === c.id)?.data ?? hours.map(() => 0),
+                        colorSelected: color,
+                        colorBeingSelected: colorAlt
+                    }
+                });
+            setAvailableEnergy(energy?.map(colorGradient) ?? [])
+            setRows(cellStates);
+            setModified(false);
+        }, setError)
             .catch(console.log)
             .finally(() => setProgress(false));
-    }, [backendService, setError]);
+    }, [t, backendService, setError]);
 
     useEffect(initialLoad, [initialLoad]);
 
@@ -139,11 +145,13 @@ function Behavior(props: Props) {
                                 <TableCell variant="head" sx={{border: 0}}/>
                                 {hours.map((value) => <TableCell align="center">{String(value)}⁰⁰</TableCell>)}
                             </TableRow>
+                            {availableEnergy &&
                             <TableRow>
                                 <TableCell sx={{border: 0}}/>
-                                {energyAvailable.map((v) => <TableCell
+                                {availableEnergy.map((v) => <TableCell
                                     sx={{border: 0, backgroundColor: v, top: "37px"}}/>)}
                             </TableRow>
+                            }
                         </TableHead>
                         <TableBody>
                             <BehaviorDragSelect rows={rows} onChange={handleChange}/>

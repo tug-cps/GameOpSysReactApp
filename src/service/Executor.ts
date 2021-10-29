@@ -1,14 +1,14 @@
 export interface Executor {
-    ok(data: {}): void
+    ok<T>(data: T): void
 
-    error(): void
+    error(response?: {status: number, statusText?: string}): void
 }
 
 export class DefaultExecutor<R> implements Executor {
     constructor(private resolve: (value: (PromiseLike<R> | R)) => void, private reject: (reason?: any) => void) {
     }
 
-    ok(data: {}) {
+    ok<T>(data: T) {
         console.log("FAKEBACKEND Resolving call with OK", data)
         this.resolve({
             data: data,
@@ -20,13 +20,13 @@ export class DefaultExecutor<R> implements Executor {
         } as any)
     }
 
-    error() {
+    error(response?: {status: number, statusText?: string}) {
         console.log("FAKEBACKEND Resolving call with Error")
         this.reject({
             response: {
                 data: {},
-                status: 400,
-                statusText: "BAD REQUEST",
+                status: response?.status ?? 400,
+                statusText: response?.statusText ?? "BAD REQUEST",
                 headers: {},
                 config: {},
                 request: {}
@@ -39,11 +39,11 @@ export class FaultyExecutor implements Executor {
     constructor(private executor: Executor) {
     }
 
-    ok(data: {}): void {
+    ok<T>(data: T): void {
         if (Math.random() > 0.6) this.executor.ok(data); else this.executor.error();
     }
 
-    error() {
-        this.executor.error();
+    error(response?: {status: number, statusText?: string}) {
+        this.executor.error(response);
     }
 }

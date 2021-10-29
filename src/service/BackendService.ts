@@ -1,10 +1,18 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {BehaviorSubject, map, Observable} from "rxjs";
 import {Backend} from "./Backend";
-import {ConsumerModel, LoginResponse, MoodModel, UserModel, UserPredictionModel} from "./Model";
+import {
+    ConsumerModel,
+    LoginResponse,
+    PredictionDateEntry,
+    PredictionModel,
+    TaskModel,
+    UserModel,
+    WellBeingModel
+} from "./Model";
 
-function unpack<T>(response: AxiosResponse<T>): T {
-    return response.data;
+function unpack<T>(response: AxiosResponse<{ data: T }>): T {
+    return response.data.data;
 }
 
 class BackendService {
@@ -20,26 +28,25 @@ class BackendService {
 
         window.addEventListener('storage', () => {
             const token = localStorage.getItem("token");
-            if (token !== this.accessToken.value) {
-                this.accessToken.next(token)
-            }
+            if (token !== this.accessToken.value) this.accessToken.next(token)
         })
     }
 
     isLoggedIn(): Observable<boolean> {
-        return this.isLoggedInObservable
+        return this.isLoggedInObservable;
     }
 
-    requestPin(sharedPassword: string, email: string) {
+    requestPin(personalCode: string, email: string) {
         return this.backend
-            .get('/request_pin', {params: {'shared_password': sharedPassword, 'email': email}});
+            .get('/request-pin', {params: {'code': personalCode, 'email': email}});
     }
 
-    login(email: string, password: string) {
+    login(email: string, otp: string) {
         return this.backend
-            .get<LoginResponse>('/login', {params: {'email': email, 'password': password}})
+            .get<{ data: LoginResponse }>('/login', {params: {'email': email, 'otp': otp}})
+            .then(unpack)
             .then((response) => {
-                const {token} = response.data;
+                const {token} = response;
                 localStorage.setItem("token", token);
                 this.accessToken.next(token)
             });
@@ -49,57 +56,64 @@ class BackendService {
         localStorage.removeItem("token");
         return this.backend
             .get('/logout', this.addAuth())
-            .finally(() => this.accessToken.next(null))
+            .finally(() => this.accessToken.next(null));
     }
 
     getUser(): Promise<UserModel> {
         return this.backend
-            .get<UserModel>('/user', this.addAuth())
+            .get<{ data: UserModel }>('/user', this.addAuth())
             .then(unpack);
     }
 
     getConsumers(): Promise<ConsumerModel[]> {
         return this.backend
-            .get<ConsumerModel[]>('/consumer', this.addAuth())
+            .get<{ data: ConsumerModel[] }>('/consumers', this.addAuth())
             .then(unpack);
     }
 
     putConsumer(consumer: ConsumerModel) {
         return this.backend
-            .put('/consumer/' + consumer.consumerId, null, this.addAuth({
-                params: {
-                    consumer_name: consumer.customName,
-                    consumer_active: consumer.active
-                }
-            }))
+            .patch('/consumers/' + consumer.id, {data: {active: consumer.active}}, this.addAuth());
     }
 
-    getPredictions(): Promise<string[]> {
+    getAvailableEnergy(date: string): Promise<number[]> {
         return this.backend
-            .get<string[]>('/predictions', this.addAuth())
+            .get<{ data: number[] }>('/available-energy/' + date, this.addAuth())
             .then(unpack);
     }
 
-    getPrediction(date: string): Promise<UserPredictionModel[]> {
+    getTasks(): Promise<TaskModel> {
         return this.backend
-            .get<UserPredictionModel[]>('/predictions/' + date, this.addAuth())
-            .then(unpack)
+            .get<{ data: TaskModel }>('/tasks', this.addAuth())
+            .then(unpack);
     }
 
-    putPrediction(date: string, predictions: UserPredictionModel[]): Promise<AxiosResponse> {
+    getPredictions(): Promise<PredictionDateEntry[]> {
         return this.backend
-            .put('/predictions/' + date, {predictions: predictions}, this.addAuth())
+            .get<{ data: PredictionDateEntry[] }>('/predictions', this.addAuth())
+            .then(unpack);
     }
 
-    putMood(date: string, mood: MoodModel): Promise<AxiosResponse> {
+    getPrediction(date: string): Promise<{ validated: boolean, data: PredictionModel[] }> {
         return this.backend
-            .put('/mood/' + date, {mood: mood}, this.addAuth())
+            .get<{ data: { validated: boolean, data: PredictionModel[] } }>('/predictions/' + date, this.addAuth())
+            .then(unpack);
     }
 
-    getMood(date: string): Promise<MoodModel> {
+    putPrediction(date: string, predictions: PredictionModel[]): Promise<AxiosResponse> {
         return this.backend
-            .get('/mood/' + date, this.addAuth())
-            .then(unpack)
+            .put('/predictions/' + date, {data: predictions}, this.addAuth());
+    }
+
+    getWellBeing(date: string): Promise<WellBeingModel> {
+        return this.backend
+            .get<{ data: WellBeingModel }>('/well-being/' + date, this.addAuth())
+            .then(unpack);
+    }
+
+    postWellBeing(wellBeing: WellBeingModel): Promise<AxiosResponse> {
+        return this.backend
+            .post('/well-being', {data: wellBeing}, this.addAuth());
     }
 
     postConsumption(file: File) {
@@ -107,18 +121,18 @@ class BackendService {
         const formData = new FormData();
         formData.append("upfile", file, file.name)
         return {
-            promise: this.backend.post('/consumption', formData, this.addAuth({cancelToken: source.token})),
+            promise: this.backend.post('/consumptions', formData, this.addAuth({cancelToken: source.token})),
             cancelToken: source
         }
     }
 
     postTracking(data: any): Promise<AxiosResponse> {
         return this.backend
-            .post("/tracking", JSON.stringify(data), {})
+            .post("/tracking", {data: data}, {});
     }
 
     private addAuth(config?: AxiosRequestConfig): AxiosRequestConfig {
-        return {...config, headers: {Authorization: `${this.accessToken.value}`}}
+        return {...config, headers: {Authorization: `${this.accessToken.value}`}};
     }
 }
 

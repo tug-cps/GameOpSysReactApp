@@ -40,11 +40,11 @@
   "dialog_button_delete": "Löschen",
   "dialog_button_rename": "Umbenennen",
   "changes_saved": "Änderungen gespeichert",
-  "card_mood_title": "Wohlbefinden",
-  "card_mood_subtitle": "Aktuelles Wohlbefinden mitteilen",
+  "card_well_being_title": "Wohlbefinden",
+  "card_well_being_subtitle": "Aktuelles Wohlbefinden mitteilen",
   "save": "Speichern",
-  "mood_please_select_mood_student": "Bitte wählen Sie Ihr aktuelles Wohlbefinden im Studentenzimmer aus",
-  "mood_please_select_mood_homeowner": "Bitte wählen Sie Ihr aktuelles Wohlbefinden in der Wohnung aus",
+  "well_being_please_select_well_being_student": "Bitte wählen Sie Ihr aktuelles Wohlbefinden im Studentenzimmer aus",
+  "well_being_please_select_well_being_homeowner": "Bitte wählen Sie Ihr aktuelles Wohlbefinden in der Wohnung aus",
   "mood_very_uncomfortable": "Sehr unangenehm",
   "mood_very_comfortable": "Sehr angenehm",
   "mood_very_cold": "Sehr kalt",
@@ -89,8 +89,8 @@
   "home_item_results": "Persönliche Ergebnisse",
   "no": "nein",
   "yes": "ja",
-  "mood_question_home": "Sind Sie derzeit zu Hause?",
-  "mood_come_back_later": "Bitte versuchen Sie es später wieder",
+  "well_being_question_home": "Sind Sie derzeit zu Hause?",
+  "well_being_come_back_later": "Bitte versuchen Sie es später wieder",
   "go_back": "zurück",
   "info_archive": "Wählen Sie hier bitte jene Tage aus, für die Sie Ihre Vorhersage des Stromverbrauchs noch nicht korrigiert haben und überarbeiten Sie im sich öffnenden Fenster Ihren Stromverbrauch für den entsprechenden Tag!",
   "info_past_behavior": [
@@ -116,7 +116,7 @@
     "* Sonstiges (mittlerer Verbrauch): xxxx",
     "* Sonstiges (niedriger Verbrauch): xxx"
   ],
-  "info_mood": [
+  "info_well_being": [
     "Bitte geben Sie hier an, wie Sie das Klima in Ihrem Zimmer/Ihrer Wohnung gerade empfinden. Überlegen Sie, ist Ihnen das Klima im Zimmer/in der Wohnung (un)angenehm und empfinden Sie es eher als kalt oder heiß?",
     "Tragen Sie bitte Ihre Empfindung in das Koordinatensystem ein. Wenn Sie es zum Beispiel gerade sehr heiß und sehr angenehm empfinden, dann schieben Sie bitte den grünen Punkt mit dem Cursor in die rechte obere Ecke. Wenn Sie zum Beispiel das Klima als sehr kalt und sehr unangenehm empfinden, dann schieben Sie bitte den grünen Punkt mit dem Cursor in die linke untere Ecke.",
     "Sobald Sie den grünen Punkt entsprechend Ihrer Empfindung verschoben haben, speichern Sie bitte die Empfindung, indem Sie auf „Speichern“ klicken."
@@ -157,5 +157,21 @@
   "cancel": "Abbrechen",
   "file_upload_success": "Datei erfolgreich hochgeladen",
   "network_operators": "Netzbetreiber",
-  "error_please_retry": "Etwas ist schief gelaufen, bitte versuchen Sie es erneut!"
+  "error_please_retry": "Etwas ist schief gelaufen, bitte versuchen Sie es erneut!",
+  "consumer_type_laundry": "Wäsche",
+  "consumer_type_cooking": "Kochen",
+  "consumer_type_dishes": "Spülen",
+  "consumer_type_hygiene": "Hygiene",
+  "consumer_type_entertainment": "Unterhaltung",
+  "consumer_type_wellness": "Wellness",
+  "consumer_type_homeoffice": "Home-Office",
+  "consumer_type_emobility": "E-Mobilität",
+  "consumer_type_temperature": "Stromheizung/-kühlung",
+  "consumer_type_high": "Sonstiges (hoher Verbrauch)",
+  "consumer_type_med": "Sonstiges (mittlerer Verbrauch)",
+  "consumer_type_low": "Sonstiges (niedriger Verbrauch)",
+  "home_well_done_title": "Gut gemacht!",
+  "home_well_done_subtitle": "Alle Aufgaben sind derzeit erledigt",
+  "archive_already_done": "Bereits erledigt",
+  "archive_please_check": "Bitte überpüfen"
 }

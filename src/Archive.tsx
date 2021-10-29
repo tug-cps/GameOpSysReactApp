@@ -11,21 +11,22 @@ import ResponsiveIconButton from "./common/ResponsiveIconButton";
 import RetryMessage from "./common/RetryMessage";
 import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
+import {PredictionDateEntry} from "./service/Model";
 
 function Archive(props: PrivateRouteProps) {
     const {Track} = useDefaultTracking({page: 'Archive'});
     const [infoProps, openInfo] = useInfoDialog();
-    const [dates, setDates] = useState<string[]>();
+    const [entries, setEntries] = useState<PredictionDateEntry[]>();
     const [progress, setProgress] = useState(true);
     const {t} = useTranslation();
     const [error, setError] = useSnackBar();
     const {backendService, setAppBar} = props;
-    const failed = !progress && !dates;
+    const failed = !progress && !entries;
 
     const initialLoad = useCallback(() => {
         setProgress(true);
         backendService.getPredictions()
-            .then(setDates, setError)
+            .then(setEntries, setError)
             .catch(console.log)
             .finally(() => setProgress(false))
     }, [backendService, setError])
@@ -48,19 +49,19 @@ function Archive(props: PrivateRouteProps) {
         <Track>
             {progress && <LinearProgress/>}
             {failed && <RetryMessage retry={initialLoad}/>}
-            {dates &&
+            {entries &&
             <Container maxWidth="sm" sx={{pt: 1}}>
                 <Stack spacing={1}>
-                    {dates.map((date, index) => {
-                            const parsedDate = parse(date, 'yyyy-MM-dd', new Date())
-                            const done = !!index;
+                    {entries.map(entry => {
+                            const parsedDate = parse(entry.date, 'yyyy-MM-dd', new Date())
+                            const done = entry.validated;
                             return <DestinationCard
-                                to={`/pastbehavior?date=${date}`}
+                                to={`/pastbehavior?date=${entry.date}`}
                                 icon={done ? CheckCircleOutlined : RadioButtonUncheckedOutlined}
                                 title={t('archive_entry_date', {date: parsedDate})}
-                                subtitle={done ? 'Bereits erledigt' : 'Bitte überpüfen'}
+                                subtitle={t(done ? t('archive_already_done') : t('archive_please_check'))}
                                 done={done}
-                                secondaryTo={(done && `/feedback?date=${date}`) || undefined}
+                                secondaryTo={(done && `/feedback?date=${entry.date}`) || undefined}
                                 secondaryIcon={(done && BarChartOutlined) || undefined}
                             />
                         }

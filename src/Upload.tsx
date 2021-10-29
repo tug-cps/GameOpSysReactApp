@@ -57,11 +57,8 @@ function Upload(props: Props) {
         if (progress) return;
         const {promise, cancelToken} = backendService.postConsumption(file);
         setCancelToken(cancelToken);
-        promise
-            .then(() => {
-                setSuccess(t('file_upload_success'));
-                setCancelToken(undefined)
-            }, setError)
+        promise.then(() => setSuccess(t('file_upload_success')), setError)
+            .finally(() => setCancelToken(undefined))
             .catch(console.log);
     }, [progress, backendService, setSuccess, setError, t])
 

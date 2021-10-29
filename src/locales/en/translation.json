@@ -40,11 +40,11 @@
   "confirm_dialog_title": "Confirm delete",
   "dialog_button_rename": "Rename",
   "changes_saved": "Changes Saved",
-  "card_mood_title": "Well-being",
-  "card_mood_subtitle": "Send your current well-being",
+  "card_well_being_title": "Well-being",
+  "card_well_being_subtitle": "Send your current well-being",
   "save": "Save",
-  "mood_please_select_mood_student": "Please select your current well-being in your student room",
-  "mood_please_select_mood_homeowner": "Please select your current well-being in your apartment",
+  "well_being_please_select_well_being_student": "Please select your current well-being in your student room",
+  "well_being_please_select_well_being_homeowner": "Please select your current well-being in your apartment",
   "mood_very_uncomfortable": "very uncomfortable",
   "mood_very_comfortable": "very comfortable",
   "mood_very_cold": "very cold",
@@ -90,8 +90,8 @@
   "home_item_results": "Individual results",
   "no": "no",
   "yes": "yes",
-  "mood_question_home": "Are you currently at home?",
-  "mood_come_back_later": "Please come back later",
+  "well_being_question_home": "Are you currently at home?",
+  "well_being_come_back_later": "Please come back later",
   "go_back": "go back",
   "info_archive": "Please select the days for which you have not yet corrected your forecast of electricity consumption and revise your electricity consumption for the respective day in the open window!",
   "info_past_behavior": [
@@ -116,7 +116,7 @@
     "* Other (average consumption): xxxx",
     "* Other (low consumption): xxx"
   ],
-  "info_mood": [
+  "info_well_being": [
     "Please indicate here how you feel about the climate in your student room/apartment at the moment. Think about it, is the climate in the student room/apartment (un)pleasant for you and do you perceive it as cold or hot?",
     "Please enter your sensation in the coordinate system. For example, if you find it very hot and very pleasant at the moment, please move the green dot to the top right corner with the cursor. For example, if you find the climate very cold and very uncomfortable, then please move the green dot to the lower left corner with the cursor.",
     "As soon as you have moved the green dot according to your sensation, please save the sensation by clicking on \"Save\"."
@@ -155,5 +155,21 @@
   "cancel": "Cancel",
   "file_upload_success": "File successfully uploaded",
   "network_operators": "Network operators",
-  "error_please_retry": "Something went wrong, please retry!"
+  "error_please_retry": "Something went wrong, please retry!",
+  "consumer_type_laundry": "Laundry",
+  "consumer_type_cooking": "Cooking",
+  "consumer_type_dishes": "Dishes",
+  "consumer_type_hygiene": "Hygiene",
+  "consumer_type_entertainment": "Entertainment",
+  "consumer_type_wellness": "Wellness",
+  "consumer_type_homeoffice": "Home office",
+  "consumer_type_emobility": "E-Mobility",
+  "consumer_type_temperature": "Air conditioning",
+  "consumer_type_high": "Miscellaneous high",
+  "consumer_type_med": "Miscellaneous medium",
+  "consumer_type_low": "Miscellaneous low",
+  "home_well_done_title": "Well done!",
+  "home_well_done_subtitle": "You finished all your tasks",
+  "archive_already_done": "Already done",
+  "archive_please_check": "Please check"
 }

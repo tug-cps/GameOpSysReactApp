@@ -26,34 +26,30 @@ const destinations = {
     user: {title: 'card_user_title', subtitle: 'card_user_subtitle', icon: SettingsOutlined, to: '/user'},
     power: {title: 'card_power_title', subtitle: 'card_power_subtitle', icon: ShowChart, to: '/power'},
     archive: {title: 'card_archive_title', subtitle: 'card_archive_subtitle', icon: History, to: '/archive'},
-    mood: {title: 'card_mood_title', subtitle: 'card_mood_subtitle', icon: Mood, to: '/mood'},
+    mood: {title: 'card_well_being_title', subtitle: 'card_well_being_subtitle', icon: Mood, to: '/wellBeing'},
 }
 
 export function useBottomBarDestinations(): Destination[] {
     const user = useContext(UserContext)
     switch (user.type) {
-        case "management":
-            return [destinations.home, destinations.upload, destinations.user];
         case "student":
             return [destinations.home, destinations.behavior, destinations.user];
         case "homeowner":
             return [destinations.home, destinations.upload, destinations.behavior, destinations.user];
         default:
-            return [];
+            return [destinations.home, destinations.user];
     }
 }
 
 export function useNavDrawerDestinations(): Destination[] {
     const user = useContext(UserContext)
     switch (user.type) {
-        case "management":
-            return [destinations.home, destinations.upload, destinations.user];
         case "student":
             return [destinations.home, destinations.behavior, destinations.user];
         case "homeowner":
             return [destinations.home, destinations.upload, destinations.behavior, destinations.user];
         default:
-            return [];
+            return [destinations.home, destinations.user];
     }
 }
 

@@ -9,43 +9,96 @@ import Power from "@mui/icons-material/Power";
 import Restaurant from "@mui/icons-material/Restaurant";
 import Spa from "@mui/icons-material/Spa";
 import {amber, blue, green, pink, purple, red, teal} from "@mui/material/colors";
-import i18next from "i18next";
-import {TranslatedString} from "../service/Model";
-
-export function translate(str: TranslatedString | undefined, override: string | undefined): string {
-    if (override && override !== '') return override;
-    if (!str) return ''
-
-    const lang = i18next.language
-    if (lang === 'de') return str.de;
-    return str.en;
-}
 
 const shadeDefault = 500;
 const shadeAlt = 400;
 
-const consumers: any = {
-    laundry: {icon: <LocalLaundryService/>, color: blue[shadeDefault], colorAlt: blue[shadeAlt]},
-    cooking: {icon: <Restaurant/>, color: pink[shadeDefault], colorAlt: pink[shadeAlt]},
-    dishes: {icon: <FreeBreakfast/>, color: purple[shadeDefault], colorAlt: purple[shadeAlt]},
-    hygiene: {icon: <Bathtub/>, color: blue[shadeDefault], colorAlt: blue[shadeAlt]},
-    entertainment: {icon: <Movie/>, color: teal[shadeDefault], colorAlt: teal[shadeAlt]},
-    wellness: {icon: <Spa/>, color: green[shadeDefault], colorAlt: green[shadeAlt]},
-    homeoffice: {icon: <Computer/>, color: red[shadeDefault], colorAlt: red[shadeAlt]},
-    emobility: {icon: <Power/>, color: blue[shadeDefault], colorAlt: blue[shadeAlt]},
-    temperature: {icon: <AcUnit/>, color: pink[shadeDefault], colorAlt: pink[shadeAlt]},
-    high: {icon: <Help/>, color: red[shadeDefault], colorAlt: red[shadeAlt]},
-    med: {icon: <Help/>, color: amber[shadeDefault], colorAlt: amber[shadeAlt]},
-    low: {icon: <Help/>, color: green[shadeDefault], colorAlt: green[shadeAlt]},
-    unknown: {icon: <Help/>, color: purple[shadeDefault], colorAlt: purple[shadeAlt]}
+interface Consumer {
+    icon: JSX.Element
+    tKey: string
+    color: string
+    colorAlt: string
 }
 
-export const consumerLookup = (type: string) => type in consumers ? consumers[type] : consumers.unknown
-
-export function backgroundColor(type: string) {
-    return type in consumers ? consumers[type].color : "#0ff";
+const consumers: { [index: string]: Consumer } = {
+    laundry: {
+        icon: <LocalLaundryService/>,
+        tKey: 'consumer_type_laundry',
+        color: blue[shadeDefault],
+        colorAlt: blue[shadeAlt]
+    },
+    cooking: {
+        icon: <Restaurant/>,
+        tKey: 'consumer_type_cooking',
+        color: pink[shadeDefault],
+        colorAlt: pink[shadeAlt]
+    },
+    dishes: {
+        icon: <FreeBreakfast/>,
+        tKey: 'consumer_type_dishes',
+        color: purple[shadeDefault],
+        colorAlt: purple[shadeAlt]
+    },
+    hygiene: {
+        icon: <Bathtub/>,
+        tKey: 'consumer_type_hygiene',
+        color: blue[shadeDefault],
+        colorAlt: blue[shadeAlt]
+    },
+    entertainment: {
+        icon: <Movie/>,
+        tKey: 'consumer_type_entertainment',
+        color: teal[shadeDefault],
+        colorAlt: teal[shadeAlt]
+    },
+    wellness: {
+        icon: <Spa/>,
+        tKey: 'consumer_type_wellness',
+        color: green[shadeDefault],
+        colorAlt: green[shadeAlt]
+    },
+    homeoffice: {
+        icon: <Computer/>,
+        tKey: 'consumer_type_homeoffice',
+        color: red[shadeDefault],
+        colorAlt: red[shadeAlt]
+    },
+    emobility: {
+        icon: <Power/>,
+        tKey: 'consumer_type_emobility',
+        color: blue[shadeDefault],
+        colorAlt: blue[shadeAlt]
+    },
+    temperature: {
+        icon: <AcUnit/>,
+        tKey: 'consumer_type_temperature',
+        color: pink[shadeDefault],
+        colorAlt: pink[shadeAlt]
+    },
+    high: {
+        icon: <Help/>,
+        tKey: 'consumer_type_high',
+        color: red[shadeDefault],
+        colorAlt: red[shadeAlt]
+    },
+    med: {
+        icon: <Help/>,
+        tKey: 'consumer_type_med',
+        color: amber[shadeDefault],
+        colorAlt: amber[shadeAlt]
+    },
+    low: {
+        icon: <Help/>,
+        tKey: 'consumer_type_low',
+        color: green[shadeDefault],
+        colorAlt: green[shadeAlt]
+    },
+    unknown: {
+        icon: <Help/>,
+        tKey: 'consumer_type_unknown',
+        color: purple[shadeDefault],
+        colorAlt: purple[shadeAlt]
+    }
 }
 
-export function iconLookup(type: string): JSX.Element {
-    return type in consumers ? consumers[type].icon : <Help/>
-}
+export const consumerLookup = (type: string): Consumer => type in consumers ? consumers[type] : consumers.unknown
