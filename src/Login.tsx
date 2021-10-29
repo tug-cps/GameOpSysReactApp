@@ -1,4 +1,5 @@
 import {InfoOutlined, LanguageOutlined} from "@mui/icons-material";
+import {LoadingButton} from "@mui/lab";
 import {
     Avatar,
     Box,
@@ -8,6 +9,7 @@ import {
     Grid,
     IconButton,
     InputAdornment,
+    Link,
     List,
     ListItemButton,
     ListItemText,
@@ -19,11 +21,11 @@ import React, {useCallback, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {useHistory} from 'react-router-dom';
 import {AlertSnackbar} from "./common/AlertSnackbar";
-import {useSnackBar} from "./common/UseSnackBar";
-import BackendService from "./service/BackendService";
-import {LoadingButton} from "@mui/lab";
 import {InfoDialog, useInfoDialog} from "./common/InfoDialog";
 import {ResponsiveDialog} from "./common/ResponsiveDialog";
+import {useSnackBar} from "./common/UseSnackBar";
+import BackendService from "./service/BackendService";
+
 
 interface Props {
     backendService: BackendService
@@ -83,16 +85,29 @@ function Login(props: Props) {
         return <>{infoText.map(text => <DialogContentText children={text}/>)}</>
     }
 
+    const InfoLogin = () => {
+        const text = t('info_login', {returnObjects: true}) as string[]
+        const link = t('info_login_link')
+        return <>
+            {text.map(v => v ? <Typography>{v}</Typography> : <Box py={1}/>)}
+            <Link component="a" href={link} children={link}/>
+        </>
+    }
+
     return (
         <>
-            <Container maxWidth="lg">
-                <Box sx={{display: 'flex', alignItems: 'center', height: '100vh'}}>
+            <Container maxWidth="lg" sx={{pt: 5}}>
+                <Box>
                     <Grid container spacing={2}>
                         <StyledGrid item xs={12} md>
                             <Typography paragraph component="h1" variant="h2">ANSERS</Typography>
                             <Typography component="h2" variant="h5">{t('login_welcome')}</Typography>
+                            <Box pt={8}>
+                                <InfoLogin/>
+
+                            </Box>
                         </StyledGrid>
-                        <StyledGrid item xs={12} md>
+                        <StyledGrid item xs={12} md sx={{minHeight: 400}}>
                             <Avatar sx={{margin: '1px', backgroundColor: 'secondary.main'}}/>
                             <Typography component="h1" variant="h5">{t('login_sign_in')}</Typography>
                             <form onSubmit={handleSubmit}>

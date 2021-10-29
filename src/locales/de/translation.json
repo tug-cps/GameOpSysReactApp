@@ -170,6 +170,13 @@
     "Das gelbe Kreissegment gibt an, wie viel Prozent Ihres Stromverbrauchs für Zeiten vorhergesagt wurde, als durchschnittlich viel Strom zur Verfügung stand und erneuerbare Energiequellen etwas Strom produziert haben.",
     "Das rote Kreissegment gibt an, wie viel Prozent Ihres Stromverbrauchs für Zeiten vorhergesagt wurde, als wenig Strom zur Verfügung stand und erneuerbare Energiequellen keinen oder nur sehr wenig Strom produziert haben."
   ],
+  "info_login": [
+    "Auf dieser Seite gelangen Sie zur ANSERS App!",
+    "Mit der ANSERS App können Sie Ihren Stromverbrauch vorhersagen und mit anderen TeilnehmerInnen vergleichen.",
+    "",
+    "Sollten Sie Unterstützung bei der App benötigen können Sie sich per E-Mail (eva.hofmann@uni-graz.at) oder Telefon (+43 316 380 8510) an Eva Hofmann wenden! Für weitere Informationen zum Projekt ANSERS besuchen Sie bitte die Website"
+  ],
+  "info_login_link": "https://psychologie.uni-graz.at/de/sozialpsychologie/forschung/ansers/",
   "change_language": "Sprache wählen",
   "page_not_found": "Seite nicht gefunden",
   "cancel": "Abbrechen",
