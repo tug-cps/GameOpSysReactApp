@@ -54,10 +54,12 @@ class BackendService {
     }
 
     logout(): Promise<any> {
-        localStorage.removeItem("token");
         return this.backend
             .get('/logout', this.addAuth())
-            .finally(() => this.accessToken.next(null));
+            .finally(() => {
+                localStorage.removeItem("token");
+                this.accessToken.next(null)
+            });
     }
 
     getUser(): Promise<UserModel> {
