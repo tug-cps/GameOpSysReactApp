@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/GameOpSysReactApp/static/css/main.875059cf.chunk.css",
-    "main.js": "/GameOpSysReactApp/static/js/main.da639d79.chunk.js",
-    "main.js.map": "/GameOpSysReactApp/static/js/main.da639d79.chunk.js.map",
+    "main.js": "/GameOpSysReactApp/static/js/main.ffc02cab.chunk.js",
+    "main.js.map": "/GameOpSysReactApp/static/js/main.ffc02cab.chunk.js.map",
     "runtime-main.js": "/GameOpSysReactApp/static/js/runtime-main.c1787394.js",
     "runtime-main.js.map": "/GameOpSysReactApp/static/js/runtime-main.c1787394.js.map",
     "static/js/2.8e4a1b32.chunk.js": "/GameOpSysReactApp/static/js/2.8e4a1b32.chunk.js",
@@ -23,6 +23,6 @@
     "static/js/runtime-main.c1787394.js",
     "static/js/2.8e4a1b32.chunk.js",
     "static/css/main.875059cf.chunk.css",
-    "static/js/main.da639d79.chunk.js"
+    "static/js/main.ffc02cab.chunk.js"
   ]
 }
