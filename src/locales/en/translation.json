@@ -93,7 +93,11 @@
   "well_being_question_home": "Are you currently at home?",
   "well_being_come_back_later": "Please come back later",
   "go_back": "go back",
-  "info_archive": "Please select the days for which you have not yet corrected your forecast of electricity consumption and revise your electricity consumption for the respective day in the open window!",
+  "info_archive": [
+    "Please select the days for which you have not yet corrected your forecast of electricity consumption (marked orange) and revise your electricity consumption for the respective day in the open window!",
+    "You can always see the electricity consumption of the last few days; The days that you have already edited are marked in green, the days that you have not yet edited are marked in orange.",
+    "To the right of each day marked in green, you will find a symbol with three bars. If you click/tap on this symbol, you will see how much electricity consumption you have predicted compared to other participants in the residential unit for that day and whether you have predicted electricity consumption when electricity was particularly available, i.e. when solar power or electricity from wind power was generated at that time."
+  ],
   "info_past_behavior": [
     "Please remember, when did you actually use electricity for how long that day?",
     "Go through category by category; for example, when did you cook that day? Does the specified time match your actual time you were cooking on that day? Have you actually cooked that long?",
@@ -112,26 +116,29 @@
     "* Charging e-mobility: e-car, e-bike, e-scooter, etc.",
     "* Electric heating/cooling: electric heating, air conditioning, room air conditioner, fan, etc.",
     "* Wellness: sauna, whirlpool, steam bath, infrared cabin, massage chair, etc.",
-    "* Other (high consumption): xxx",
-    "* Other (average consumption): xxxx",
-    "* Other (low consumption): xxx"
+    "* Other (high consumption): Aquarium lighting, etc.",
+    "* Other (average consumption): Dehumidifier, electric lawn mower, exterior lighting, etc.",
+    "* Other (low consumption): Model train, etc."
+  ],
+  "info_past_behavior_2": [
+    "After you have saved your changes, you will find out in a new window on the one hand what your predicted electricity consumption for this day was in relation to other participants in your residential unit on that day, and on the other hand, whether you predicted electricity consumption when electricity was particularly available that is when solar power or electricity from wind power was generated at that time."
   ],
   "info_well_being": [
-    "Please indicate here how you feel about the climate in your student room/apartment at the moment. Think about it, is the climate in the student room/apartment (un)pleasant for you and do you perceive it as cold or hot?",
+    "Please indicate here how you feel about the climate in your home at the moment. Think about it, is the climate in your home (un)pleasant for you and do you perceive it as cold or hot?",
     "Please enter your sensation in the coordinate system. For example, if you find it very hot and very pleasant at the moment, please move the green dot to the top right corner with the cursor. For example, if you find the climate very cold and very uncomfortable, then please move the green dot to the lower left corner with the cursor.",
     "As soon as you have moved the green dot according to your sensation, please save the sensation by clicking on \"Save\"."
   ],
-  "info_settings": "You can check your settings here (e-mail address, dormitory / residential complex) and change them ((not) display electrical appliances according to categories, language, brightness of screen). To make changes, just click or tap on the appropriate field!",
+  "info_settings": "You can check your settings here (e-mail address, housing unit) and change them ((not) display electrical appliances according to categories, language, brightness of screen). To make changes, just click or tap on the appropriate field!",
   "info_upload": [
     "Please upload your electricity consumption over the last few months here!",
-    "To do this, please select your network operator or energy provider under \"1. Download most recent data\" and then log in to the network operator/energy provider's website with your login data!",
+    "To do this, please select your network operator under \"1. Download most recent data\" and then log in to the network operator/energy provider's website with your login data!",
     "Download the electricity consumption data for the last three months at 15-minute intervals if possible!",
     "Save the file which you receive on your device!",
     "Then upload this file in the app by clicking or tapping on the “Upload” Button in \"Upload” at “2. Upload your consumption\". Select the file in the window that appears and upload it!"
   ],
   "info_consumers": [
     "You can hide different categories for electrical appliances here. These categories then no longer appear for the forecast of electricity consumption and also no longer for the older predictions. This makes it easier for you to enter the expected electricity consumption and to correct older predictions.",
-    "Before you hide categories, please think about which categories you will never use in your dormitory/apartment. For example, if you never use wellness equipment such as a sauna, whirlpool, steam bath, infrared cabin, massage chair, etc., then click or tap on the eye symbol next to the Wellness category to hide the category.",
+    "Before you hide categories, please think about which categories you will never use in your home. For example, if you never use wellness equipment such as a sauna, whirlpool, steam bath, infrared cabin, massage chair, etc., then click or tap on the eye symbol next to the Wellness category to hide the category.",
     "The following electricity-consuming appliances are assigned to the respective categories:"
   ],
   "info_behavior": [
@@ -149,6 +156,17 @@
     "4 First letter of your place of birth",
     "Example: UR01V",
     "Erika Musterfrau; born on February 1st, 2003 in Vienna"
+  ],
+  "info_feedback": [
+    "On this page, you can find, on the one hand, what your predicted electricity consumption for this day was in relation to other participants in your residential unit on that day, and on the other hand, whether you predicted electricity consumption when electricity was particularly available, i.e. when solar power or electricity from wind power was generated at that time.",
+    "You can see the ratio of your predicted electricity consumption to the other participants in your residential unit with the two bars. The right bar represents the average predicted electricity consumption of the other participants in kilowatt hours (kWh) for this day. The left bar corresponds to your predicted electricity consumption for this day in kWh.",
+    "If your bar is colored green, then you have predicted less electricity consumption than the other participants.",
+    "If your bar is colored yellow, then you have predicted about the same amount of electricity consumption as the other participants.",
+    "If your bar is colored red, you have predicted more electricity consumption than the other participants.",
+    "You can see from the circle whether you predicted electricity consumption when electricity was particularly available.",
+    "The green segment of the circle shows what percentage of your electricity consumption was predicted for times when there was a lot of electricity available and when renewable energy sources were well producing electricity.",
+    "The yellow segment of the circle shows what percentage of your electricity consumption was predicted for times when there was an average amount of electricity available and when renewable energy sources produced some electricity.",
+    "The red segment of the circle indicates the percentage of your electricity consumption that was predicted for times when there was little electricity available and renewable energy sources produced little or no electricity."
   ],
   "change_language": "Change Language",
   "page_not_found": "Page not found",
@@ -171,5 +189,11 @@
   "home_well_done_title": "Well done!",
   "home_well_done_subtitle": "You finished all your tasks",
   "archive_already_done": "Already done",
-  "archive_please_check": "Please check"
+  "archive_please_check": "Please check",
+  "feedback_energy_consumption": "Energy consumption",
+  "feedback_my_energy_consumption": "Your energy consumption",
+  "feedback_other_energy_consumption": "Average energy consumption of others",
+  "feedback_high_energy": "High energy",
+  "feedback_med_energy": "Average energy",
+  "feedback_low_energy": "Low energy"
 }

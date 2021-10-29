@@ -45,6 +45,11 @@ function Archive(props: PrivateRouteProps) {
         });
     }, [t, setAppBar, openInfo])
 
+    const InfoContent = () => {
+        const infoText = t('info_archive', {returnObjects: true}) as string[]
+        return <>{infoText.map(text => <DialogContentText paragraph children={text}/>)}</>
+    }
+
     return (
         <Track>
             {progress && <LinearProgress/>}
@@ -69,7 +74,7 @@ function Archive(props: PrivateRouteProps) {
                 </Stack>
             </Container>
             }
-            <InfoDialog title={t('info')} content={<DialogContentText children={t('info_archive')}/>} {...infoProps}/>
+            <InfoDialog title={t('info')} content={<InfoContent/>} {...infoProps}/>
             <AlertSnackbar {...error} />
         </Track>
     )

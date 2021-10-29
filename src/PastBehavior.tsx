@@ -146,9 +146,11 @@ function PastBehavior(props: Props) {
     const InfoContent = () => {
         const infoText = t('info_past_behavior', {returnObjects: true}) as string[]
         const infoConsumers = t('consumer_help', {returnObjects: true}) as string[]
+        const infoText2 = t('consumer_help', {returnObjects: true}) as string[]
         return <>
             {infoText.map(text => <DialogContentText paragraph children={text}/>)}
             {infoConsumers.map(text => <DialogContentText children={text}/>)}
+            {infoText2.map(text => <DialogContentText paragraph children={text}/>)}
         </>
     }
 

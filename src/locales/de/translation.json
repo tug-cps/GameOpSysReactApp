@@ -92,7 +92,11 @@
   "well_being_question_home": "Sind Sie derzeit zu Hause?",
   "well_being_come_back_later": "Bitte versuchen Sie es später wieder",
   "go_back": "zurück",
-  "info_archive": "Wählen Sie hier bitte jene Tage aus, für die Sie Ihre Vorhersage des Stromverbrauchs noch nicht korrigiert haben und überarbeiten Sie im sich öffnenden Fenster Ihren Stromverbrauch für den entsprechenden Tag!",
+  "info_archive": [
+    "Wählen Sie hier bitte jene Tage aus, für die Sie Ihre Vorhersage des Stromverbrauchs noch nicht korrigiert haben (orange markiert) und überarbeiten Sie im sich öffnenden Fenster Ihren Stromverbrauch für den entsprechenden Tag!",
+    "Sie können immer den Stromverbrauch der letzten Tage einsehen; dabei sind jene Tage, die Sie bereits bearbeitet haben, grün markiert, jene Tage, die Sie noch nicht bearbeitet haben, orange markiert.",
+    "Rechts neben jedem grün markierten Tag finden Sie ein Symbol mit drei Balken. Wenn Sie auf dieses Symbol klicken/tippen, dann erscheint für diesen Tag, wie viel Stromverbrauch Sie im Vergleich zu anderen Teilnehmenden in der Wohneinheit vorhergesagt haben und ob Sie Stromverbrauch dann vorhergesagt haben, als Strom gerade besonders zur Verfügung stand, das heißt, als Solarstrom bzw. Strom aus Windkraft zu dieser Zeit erzeugt wurde."
+  ],
   "info_past_behavior": [
     "Bitte erinnern Sie sich, wann haben Sie an diesem Tag tatsächlich wie lange Strom verbraucht?",
     "Gehen Sie Kategorie für Kategorie durch; wann haben Sie an diesem Tag zum Beispiel gekocht? Stimmt die angegebene Uhrzeit mit Ihrer tatsächlichen Kochzeit an diesem Tag überein? Haben Sie tatsächlich so lange gekocht?",
@@ -101,6 +105,9 @@
     "Gehen Sie so Kategorie für Kategorie durch und tragen Sie so den korrekten Stromverbrauch für diesen Tag ein! Am Schluss speichern Sie bitte Ihre Eingabe, indem Sie auf „Speichern“ klicken.",
     "Der Name jeder Kategorie erscheint, wenn Sie mit dem Cursor über die Kategorie fahren.",
     "Folgende stromverbrauchenden Geräte sind den jeweiligen Kategorien zugeordnet:"
+  ],
+  "info_past_behavior_2": [
+    "Nachdem Sie Ihre Veränderungen gespeichert haben, erfahren Sie in einem neuen Fenster, wie Ihr vorhergesagter Stromverbrauch für diesen Tag im Verhältnis zu anderen Teilnehmenden in Ihrer Wohneinheit an diesem Tag war, und andererseits ob Sie Stromverbrauch dann vorhergesagt haben, als Strom gerade besonders zur Verfügung stand, das heißt, als Solarstrom bzw. Strom aus Windkraft zu dieser Zeit erzeugt wurde."
   ],
   "consumer_help": [
     "* Wäsche: Waschmaschine, Wäschetrockner, Bügeleisen, etc.",
@@ -112,26 +119,26 @@
     "* Laden E-Mobilität: E-Auto, E-Bike, E-Scooter, etc.",
     "* Stromheizung/- Kühlung: Stromheizung, Klimaanlage, Raumklimagerät, Ventilator, etc.",
     "* Wellness: Sauna, Whirlpool, Dampfbad, Infrarotkabine, Massagesessel, etc.",
-    "* Sonstiges (hoher Verbrauch): xxx",
-    "* Sonstiges (mittlerer Verbrauch): xxxx",
-    "* Sonstiges (niedriger Verbrauch): xxx"
+    "* Sonstiges (hoher Verbrauch): Aquariumsbeleuchtung, etc.",
+    "* Sonstiges (mittlerer Verbrauch): Luftentfeuchter, Elektrorasenmäher, Außenbeleuchtung, etc.",
+    "* Sonstiges (niedriger Verbrauch): Modelleisenbahn, etc."
   ],
   "info_well_being": [
-    "Bitte geben Sie hier an, wie Sie das Klima in Ihrem Zimmer/Ihrer Wohnung gerade empfinden. Überlegen Sie, ist Ihnen das Klima im Zimmer/in der Wohnung (un)angenehm und empfinden Sie es eher als kalt oder heiß?",
+    "Bitte geben Sie hier an, wie Sie das Klima zu Hause gerade empfinden. Überlegen Sie, ist Ihnen das Klima zu Hause (un)angenehm und empfinden Sie es eher als kalt oder heiß?",
     "Tragen Sie bitte Ihre Empfindung in das Koordinatensystem ein. Wenn Sie es zum Beispiel gerade sehr heiß und sehr angenehm empfinden, dann schieben Sie bitte den grünen Punkt mit dem Cursor in die rechte obere Ecke. Wenn Sie zum Beispiel das Klima als sehr kalt und sehr unangenehm empfinden, dann schieben Sie bitte den grünen Punkt mit dem Cursor in die linke untere Ecke.",
     "Sobald Sie den grünen Punkt entsprechend Ihrer Empfindung verschoben haben, speichern Sie bitte die Empfindung, indem Sie auf „Speichern“ klicken."
   ],
-  "info_settings": "Hier können Sie Ihre Einstellungen überprüfen (E-Mail-Adresse, Studentenheim/Wohnhausanlage), und verändern (Elektrogeräte nach Kategorien anzeigen oder nicht anzeigen lassen, Sprache, Bildschirmhelligkeit). Um Veränderungen vorzunehmen, klicken bzw. tippen Sie einfach auf das entsprechende Feld!",
+  "info_settings": "Hier können Sie Ihre Einstellungen überprüfen (E-Mail-Adresse, Wohneinheit), und verändern (Elektrogeräte nach Kategorien anzeigen oder nicht anzeigen lassen, Sprache, Bildschirmhelligkeit). Um Veränderungen vorzunehmen, klicken bzw. tippen Sie einfach auf das entsprechende Feld!",
   "info_upload": [
     "Laden Sie bitte hier Ihren Stromverbrauch der letzten Monate hoch!",
-    "Wählen Sie bitte hierfür unter „1. Stromverbrauch herunterladen“ Ihren Stromnetzbetreiber bzw. Stromerzeuger aus und loggen Sie sich dann auf der Seite des Stromnetzbetreibers/Erzeugers mit Ihren Zugangsdaten ein!",
+    "Wählen Sie bitte hierfür unter „1. Stromverbrauch herunterladen“ Ihren Stromnetzbetreiber aus und loggen Sie sich dann auf der Seite des Stromnetzbetreibers mit Ihren Zugangsdaten ein!",
     "Laden Sie die Stromverbrauchsdaten für die letzte drei Monate möglichst in 15-Minuten-Abständen herunter!",
     "Speichern Sie die Datei, die Sie erhalten, auf Ihrem Gerät!",
     "Laden Sie dann diese Datei in der App hoch, indem Sie in der unter dem Punkt „Hochladen“ und „2. Stromverbrauch hochladen“ auf den Button „Hochladen“ klicken bzw. tippen. Wählen Sie die Datei im erscheinenden Fenster aus und laden Sie sie hoch!"
   ],
   "info_consumers": [
     "Sie können hier verschiedene Kategorien für Elektrogeräte verstecken. Diese Kategorien erscheinen dann nicht mehr für die Vorhersage des Stromverbrauchs und auch nicht mehr bei den älteren Vorhersagen. Dies erleichtert Ihnen das Eintragen des voraussichtlichen Stromverbrauchs und das Korrigieren älterer Vorhersagen.",
-    "Bevor Sie Kategorien verstecken, überlegen Sie bitte, welche Kategorien Sie niemals in Ihrem Studentenheim/Ihrer Wohnung nutzen. Sollten Sie zum Beispiel niemals Wellness-Geräte wie Sauna, Whirlpool, Dampfbad, Infrarotkabine, Massagesessel, etc. verwenden, dann klicken bzw. tippen Sie auf das Auge-Symbol neben der Kategorie Wellness, um die Kategorie zu verstecken.",
+    "Bevor Sie Kategorien verstecken, überlegen Sie bitte, welche Kategorien Sie niemals zu Hause nutzen. Sollten Sie zum Beispiel niemals Wellness-Geräte wie Sauna, Whirlpool, Dampfbad, Infrarotkabine, Massagesessel, etc. verwenden, dann klicken bzw. tippen Sie auf das Auge-Symbol neben der Kategorie Wellness, um die Kategorie zu verstecken.",
     "Folgende stromverbrauchenden Geräte sind den jeweiligen Kategorien zugeordnet:"
   ],
   "info_behavior": [
@@ -151,6 +158,17 @@
     "4. Stelle: Erster Buchstabe des eigenen Geburtsortes",
     "Beispiel: UR01W",
     "Erika Musterfrau; geboren am 01.02.2003 in Wien"
+  ],
+  "info_feedback": [
+    "Auf dieser Seite, sehen Sie einerseits, wie Ihr vorhergesagter Stromverbrauch für diesen Tag im Verhältnis zu anderen Teilnehmenden in Ihrer Wohneinheit an diesem Tag war, und andererseits ob Sie Stromverbrauch dann vorhergesagt haben, als Strom gerade besonders zur Verfügung stand, das heißt, als Solarstrom bzw. Strom aus Windkraft zu dieser Zeit erzeugt wurde.",
+    "Das Verhältnis Ihres vorhergesagten Stromverbrauchs zu den anderen Teilnehmenden in Ihrer Wohneinheit sehen Sie an den beiden Balken. Der rechte Balken stellt jeweils den durchschnittlichen vorhergesagten Stromverbrauch der andren Teilnehmenden in Kilowattstunden (kWh) für diesen Tag dar. Der linke Balken entspricht Ihrem vorhergesagten Stromverbrauch für diesen Tag in kWh.",
+    "Ist Ihr Balken grün gefärbt, dann haben Sie weniger Stromverbrauch vorhergesagt als die anderen Teilnehmenden.",
+    "Ist Ihr Balken gelb gefärbt, dann haben Sie etwa gleich viel Stromverbrauch vorhergesagt wie die anderen Teilnehmenden.",
+    "Ist Ihr Balken rot gefärbt, dann haben Sie mehr Stromverbrauch vorhergesagt als die anderen Teilnehmenden.",
+    "Ob Sie Stromverbrauch vorhergesagt haben, als besonders Strom gerade zur Verfügung stand, sehen Sie an dem Kreis.",
+    "Das grüne Kreissegment gibt an, wie viel Prozent Ihres Stromverbrauchs für Zeiten vorhergesagt wurde, als viel Strom zur Verfügung stand und erneuerbare Energiequellen gerade gut Strom produziert haben.",
+    "Das gelbe Kreissegment gibt an, wie viel Prozent Ihres Stromverbrauchs für Zeiten vorhergesagt wurde, als durchschnittlich viel Strom zur Verfügung stand und erneuerbare Energiequellen etwas Strom produziert haben.",
+    "Das rote Kreissegment gibt an, wie viel Prozent Ihres Stromverbrauchs für Zeiten vorhergesagt wurde, als wenig Strom zur Verfügung stand und erneuerbare Energiequellen keinen oder nur sehr wenig Strom produziert haben."
   ],
   "change_language": "Sprache wählen",
   "page_not_found": "Seite nicht gefunden",
@@ -173,5 +191,11 @@
   "home_well_done_title": "Gut gemacht!",
   "home_well_done_subtitle": "Alle Aufgaben sind derzeit erledigt",
   "archive_already_done": "Bereits erledigt",
-  "archive_please_check": "Bitte überpüfen"
+  "archive_please_check": "Bitte überpüfen",
+  "feedback_energy_consumption": "Stromverbrauch",
+  "feedback_my_energy_consumption": "Ihr Stromverbrauch",
+  "feedback_other_energy_consumption": "Durchschnittlicher Stromverbrauch der anderen",
+  "feedback_high_energy": "Viel Strom",
+  "feedback_med_energy": "Durchschnittlicher Strom",
+  "feedback_low_energy": "Wenig Strom"
 }
