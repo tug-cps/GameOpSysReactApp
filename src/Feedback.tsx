@@ -1,52 +1,56 @@
 import {ShowChartOutlined} from "@mui/icons-material";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
-import {Container, Grid, Paper, useTheme} from "@mui/material";
+import {Container, Grid, LinearProgress, Paper, useTheme} from "@mui/material";
 import {blue, green, red, yellow} from "@mui/material/colors";
 import {ChartData, ChartOptions} from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {isPast, isValid} from "date-fns";
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Bar, Pie} from "react-chartjs-2";
 import {useTranslation} from "react-i18next";
 import {Redirect, useLocation} from "react-router-dom";
 import {PrivateRouteProps} from "./App";
+import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useParsedDate} from "./common/Date";
 import {InfoDialog, Lorem, useInfoDialog} from "./common/InfoDialog";
 import ResponsiveIconButton from "./common/ResponsiveIconButton";
+import RetryMessage from "./common/RetryMessage";
 import useDefaultTracking from "./common/Tracking";
+import {useSnackBar} from "./common/UseSnackBar";
+import {FeedbackModel} from "./service/Model";
 
-const useBarChartData: () => ChartData = () => {
+const useBarChartData: (data: { self: number, others: number }) => ChartData = (data) => {
     const theme = useTheme();
     return useMemo(() => ({
         labels: ['Stromverbrauch'],
         datasets: [
             {
                 label: 'Ihr Stromverbrauch',
-                data: [4],
+                data: [data.self],
                 backgroundColor: red["800"],
                 borderColor: theme.palette.background.paper,
             },
             {
                 label: 'Durchschnittlicher Stromverbrauch der anderen',
-                data: [3.6],
+                data: [data.others],
                 backgroundColor: blue["800"],
                 borderColor: theme.palette.background.paper,
             },
         ],
-    }), [theme]);
+    }), [theme, data.self, data.others]);
 };
-const usePieChartData: () => ChartData = () => {
+const usePieChartData: (data: { high: number, med: number, low: number }) => ChartData = (data) => {
     const theme = useTheme();
     return useMemo(() => ({
         labels: ['Viel Strom', 'Durchschnittlicher Strom', 'Wenig Strom'],
         datasets: [
             {
-                data: [40, 35, 25],
+                data: [data.high, data.med, data.low].map(v => v * 100),
                 backgroundColor: [green["800"], yellow["800"], red["800"]],
                 borderColor: theme.palette.background.paper,
             },
         ],
-    }), [theme]);
+    }), [theme, data.high, data.med, data.low]);
 }
 
 const useBarChartOptions: () => ChartOptions = () => {
@@ -128,12 +132,27 @@ function Feedback(props: PrivateRouteProps) {
     const date = query.get("date")!;
     const dateParsed = useParsedDate(date);
     const validDate = isValid(dateParsed) && isPast(dateParsed);
-    const {setAppBar} = props;
+    const {setAppBar, backendService} = props;
 
-    const barChartData = useBarChartData();
+    const [feedback, setFeedback] = useState<FeedbackModel>()
+    const [progress, setProgress] = useState(true);
+    const [error, setError] = useSnackBar();
+
+    const barChartData = useBarChartData(feedback?.totalUsage ?? {self: 0, others: 0});
     const barChartOptions = useBarChartOptions();
-    const pieChartData = usePieChartData();
+    const pieChartData = usePieChartData(feedback?.relativeUsage ?? {high: 0, med: 0, low: 0});
     const pieChartOptions = usePieChartOptions();
+    const failed = !progress && !feedback;
+
+    const initialLoad = useCallback(() => {
+        if (!validDate) return;
+        backendService.getFeedback(date)
+            .then(setFeedback, setError)
+            .catch(console.log)
+            .finally(() => setProgress(false));
+    }, [backendService, validDate, date, setError]);
+
+    useEffect(initialLoad, [initialLoad])
 
     useEffect(() => {
         setAppBar({
@@ -152,6 +171,9 @@ function Feedback(props: PrivateRouteProps) {
     if (openBehavior) return <Redirect to={'/pastbehavior?date=' + date}/>
 
     return <Track>
+        {progress && <LinearProgress/>}
+        {failed && <RetryMessage retry={initialLoad}/>}
+        {feedback &&
         <Container maxWidth="lg" sx={{paddingTop: 1}}>
             <Grid container spacing={1}>
                 <Grid item xs={12} md={6}>
@@ -166,6 +188,8 @@ function Feedback(props: PrivateRouteProps) {
                 </Grid>
             </Grid>
         </Container>
+        }
+        <AlertSnackbar {...error}/>
         <InfoDialog title={t('info')} content={<Lorem/>} {...infoProps} />
     </Track>
 }

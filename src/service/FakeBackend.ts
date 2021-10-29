@@ -2,7 +2,7 @@ import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {Backend} from "./Backend";
 import {DefaultExecutor, Executor, FaultyExecutor} from "./Executor";
 import {getFakeDB, resetFakeDB, saveFakeDB} from "./FakeDB";
-import {ConsumerModel, TaskModel} from "./Model";
+import {ConsumerModel, FeedbackModel, TaskModel} from "./Model";
 
 function findInDict(dict: any, matcher: (value: any) => boolean): any {
     for (let key in dict) {
@@ -13,7 +13,7 @@ function findInDict(dict: any, matcher: (value: any) => boolean): any {
     return null;
 }
 
-const defaultDelay = 30;
+const defaultDelay = 50;
 
 function delayedPromise<T>(promise: Promise<T>, delay = defaultDelay): Promise<T> {
     return promise
@@ -81,6 +81,20 @@ class FakeBackend implements Backend {
                         todoVerifyPrediction: true,
                         todoUpload: true,
                         todoWellBeing: true
+                    }
+                })
+            } else if (url.includes('/feedback/')) {
+                e.ok<{ data: FeedbackModel }>({
+                    data: {
+                        totalUsage: {
+                            self: 4,
+                            others: 3.6
+                        },
+                        relativeUsage: {
+                            high: 0.25,
+                            med: 0.35,
+                            low: 0.4
+                        }
                     }
                 })
             } else {
