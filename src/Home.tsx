@@ -58,6 +58,7 @@ function Home(props: PrivateRouteProps) {
     }, [tasks, user]);
 
     useEffect(initialLoad, [initialLoad]);
+    console.log(tasks)
 
     return (
         <Track>
@@ -84,6 +85,16 @@ function Home(props: PrivateRouteProps) {
                         />
                     )}
                 </Stack>
+                }
+                {tasks && !tasks.todoVerifyPrediction &&
+                    <Box pt={10}>
+                        <DestinationCard
+                            {...destinations.archive}
+                            title={t(destinations.archive.title)}
+                            subtitle={t(destinations.archive.subtitle)}
+                            done={true}
+                        />
+                    </Box>
                 }
             </Container>
             }
