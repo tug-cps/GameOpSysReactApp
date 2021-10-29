@@ -18,13 +18,9 @@ interface Props {
 }
 
 const StyledContainer = styled('div')({
-    margin: 2,
-    padding: 8,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
     alignItems: 'center',
-    height: '100vh'
 })
 
 function Verify(props: Props) {
@@ -53,7 +49,7 @@ function Verify(props: Props) {
     if (!email) return <Redirect to={'/'}/>
     return (
         (<>
-            <Container component="main" maxWidth="sm">
+            <Container component="main" maxWidth="sm" sx={{pt: 5}}>
                 <StyledContainer>
                     <Avatar sx={{margin: '1px', backgroundColor: 'secondary.main'}}/>
                     <Typography component="h1" variant="h5">{t('verify_title')}</Typography>

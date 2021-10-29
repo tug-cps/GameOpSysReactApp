@@ -195,5 +195,12 @@
   "feedback_other_energy_consumption": "Average energy consumption of others",
   "feedback_high_energy": "High energy",
   "feedback_med_energy": "Average energy",
-  "feedback_low_energy": "Low energy"
+  "feedback_low_energy": "Low energy",
+  "info_login": [
+    "This page takes you to the ANSERS app!",
+    "With the ANSERS app you can predict your electricity consumption and compare it with other participants.",
+    "",
+    "For support with the app, please contact Eva Hofmann by e-mail (eva.hofmann@uni-graz.at) or phone (+43 316 380 8510)! For more information on the ANSERS project, please visit the website"
+  ],
+  "info_login_link": "https://psychologie.uni-graz.at/en/social-psychology/research-projects/ansers/"
 }
