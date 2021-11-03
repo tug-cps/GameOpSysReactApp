@@ -54,7 +54,6 @@ const usePieChartData: (data: { high: number, med: number, low: number }) => Cha
         ],
     }), [theme, data.high, data.med, data.low, t]);
 }
-
 const useBarChartOptions: () => ChartOptions = () => {
     const theme = useTheme();
     return useMemo(() => ({
@@ -91,7 +90,7 @@ const useBarChartOptions: () => ChartOptions = () => {
                     family: theme.typography.fontFamily,
                     size: 20,
                 },
-                formatter: value => value + " kWh"
+                formatter: value => value.toFixed(1) + " kWh"
             }
         }
     }), [theme]);
@@ -119,7 +118,7 @@ const usePieChartOptions: () => ChartOptions = () => {
                     family: theme.typography.fontFamily,
                     size: 20,
                 },
-                formatter: (value, context) => value + "%"
+                formatter: value => value.toFixed(1) + "%"
             }
         }
     }), [theme]);
