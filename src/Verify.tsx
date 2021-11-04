@@ -1,3 +1,4 @@
+import {LoadingButton} from "@mui/lab";
 import {Avatar, Container, TextField, Typography} from "@mui/material";
 import {styled} from '@mui/system';
 import React, {useCallback, useState} from 'react';
@@ -6,7 +7,6 @@ import {Redirect, useHistory, useLocation} from "react-router-dom";
 import {AlertSnackbar} from "./common/AlertSnackbar";
 import {useSnackBar} from "./common/UseSnackBar";
 import BackendService from "./service/BackendService";
-import {LoadingButton} from "@mui/lab";
 
 const Form = styled('form')({
     width: '100%',
@@ -49,10 +49,12 @@ function Verify(props: Props) {
     if (!email) return <Redirect to={'/'}/>
     return (
         (<>
-            <Container component="main" maxWidth="sm" sx={{pt: 5}}>
+            <Container component="main" maxWidth="sm" sx={{pt: 8}}>
+                <Typography variant="h4" paragraph>{t('verify_we_sent_a_pin', {mail: email})}</Typography>
+                <Typography variant="h5" paragraph>{t('verify_please_check_your_email')}</Typography>
                 <StyledContainer>
                     <Avatar sx={{margin: '1px', backgroundColor: 'secondary.main'}}/>
-                    <Typography component="h1" variant="h5">{t('verify_title')}</Typography>
+                    <Typography paragraph component="h1" variant="h5">{t('verify_title')}</Typography>
                     <Form onSubmit={handleSubmit}>
                         <TextField
                             disabled={progress}
