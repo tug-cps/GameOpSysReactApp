@@ -5,7 +5,7 @@ object-assign
 */
 
 /*!
- * Chart.js v3.5.1
+ * Chart.js v3.6.0
  * https://www.chartjs.org
  * (c) 2021 Chart.js Contributors
  * Released under the MIT License
@@ -26,7 +26,7 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
-/** @license MUI v5.0.1
+/** @license MUI v5.0.2
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
