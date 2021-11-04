@@ -1,9 +1,9 @@
-import {ChartData, ChartOptions} from "chart.js";
-import {useTranslation} from "react-i18next";
-import {useMemo} from "react";
 import {useTheme} from "@mui/material";
+import {ChartData, ChartOptions} from "chart.js";
+import {useMemo} from "react";
+import {useTranslation} from "react-i18next";
 
-export const useData: (x: number, y: number) => ChartData = (x, y) => {
+export const useData: (x: number, y: number) => ChartData<"bubble"> = (x, y) => {
     const theme = useTheme();
     return useMemo(() => ({
         datasets: [{
@@ -17,7 +17,7 @@ export const useData: (x: number, y: number) => ChartData = (x, y) => {
         }]
     }), [theme, x, y]);
 }
-export const useOptions: (onChange: (value: { x: number, y: number }) => void) => ChartOptions = (onChange) => {
+export const useOptions: (onChange: (value: { x: number, y: number }) => void) => ChartOptions<"bubble"> = (onChange) => {
     const {t} = useTranslation();
     return useMemo(() => ({
         maintainAspectRatio: true,

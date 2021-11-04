@@ -58,7 +58,6 @@ function Home(props: PrivateRouteProps) {
     }, [tasks, user]);
 
     useEffect(initialLoad, [initialLoad]);
-    console.log(tasks)
 
     return (
         <Track>
