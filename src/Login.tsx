@@ -76,11 +76,16 @@ function Login(props: Props) {
         e.preventDefault();
         setProgress(true);
         backendService.requestPin(personalCode, email)
-            .then(() => history.push('/verify', {email: email}), () => setProgress(false))
-            .catch(setError)
+            .then(
+                () => history.push('/verify', {email: email}),
+                (e) => {
+                    setError(e);
+                    setProgress(false);
+                })
+            .catch()
     }, [backendService, history, setError, email, personalCode]);
 
-    const InfoContent = () => {
+    const InfoDialogContent = () => {
         const infoText = t('info_personal_code', {returnObjects: true}) as string[];
         return <>{infoText.map(text => <DialogContentText children={text}/>)}</>
     }
@@ -94,6 +99,11 @@ function Login(props: Props) {
         </>
     }
 
+    const InfoPersonalCode = () => {
+        const infoText = t('info_personal_code', {returnObjects: true}) as string[];
+        return <>{infoText.map(text => <Typography children={text}/>)}</>
+    }
+
     return (
         <>
             <Container maxWidth="lg" sx={{pt: 5}}>
@@ -104,7 +114,10 @@ function Login(props: Props) {
                             <Typography component="h2" variant="h5">{t('login_welcome')}</Typography>
                             <Box pt={8}>
                                 <InfoLogin/>
-
+                                <Box py={2}/>
+                                <Typography>{t('info_login2')}</Typography>
+                                <Box py={2}/>
+                                <InfoPersonalCode/>
                             </Box>
                         </StyledGrid>
                         <StyledGrid item xs={12} md sx={{minHeight: 400}}>
@@ -150,21 +163,20 @@ function Login(props: Props) {
                                     color="primary"
                                     sx={{marginTop: 1}}
                                     loading={progress}
-                                >
-                                    {t('login_submit')}
-                                </LoadingButton>
+                                    children={t('login_submit')}
+                                />
                             </form>
                         </StyledGrid>
                     </Grid>
                 </Box>
             </Container>
-            <Fab title={t('change_language')}
+            <Fab variant="extended"
+                 title={t('change_language')}
                  color="primary"
                  size="medium"
-                 onClick={openLangDialog}
-                 children={<LanguageOutlined/>}/>
+                 onClick={openLangDialog}><LanguageOutlined sx={{mr: 1}}/>ENG / DEU</Fab>
             <ChangeLanguageDialog {...langDialogProps}/>
-            <InfoDialog title={t('info')} content={<InfoContent/>} {...infoProps}/>
+            <InfoDialog title={t('info')} content={<InfoDialogContent/>} {...infoProps}/>
             <AlertSnackbar {...error} />
         </>
     )

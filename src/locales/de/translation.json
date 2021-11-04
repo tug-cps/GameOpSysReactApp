@@ -176,6 +176,7 @@
     "",
     "Sollten Sie Unterstützung bei der App benötigen können Sie sich per E-Mail (eva.hofmann@uni-graz.at) oder Telefon (+43 316 380 8510) an Eva Hofmann wenden! Für weitere Informationen zum Projekt ANSERS besuchen Sie bitte die Website"
   ],
+  "info_login2": "Sollten Sie nach der Eingabe nicht zur nächsten Seite weitergeleitet werden, tun Sie bitte folgendes:\n(1) Evtl. haben Sie die Daten irrtümlich falsch eingegeben. Bitte geben Sie die Daten erneut ein und versuchen Sie sich nochmals anzumelden!\n(2) Ihre Daten sind evtl. von uns noch nicht in die App eintragen worden. Bitte benachrichtigen Sie Herrn Thomas Schwengler thomas.schwengler@tugraz.at\nund senden Sie ihm Ihre E-Mail-Adresse, Ihren Personencode und den Namen des Studentenheims/der Wohnhausanlage inkl. Adresse, in der Sie leben! Vielen Dank!",
   "info_login_link": "https://psychologie.uni-graz.at/de/sozialpsychologie/forschung/ansers/",
   "change_language": "Sprache wählen",
   "page_not_found": "Seite nicht gefunden",
@@ -204,5 +205,7 @@
   "feedback_other_energy_consumption": "Durchschnittlicher Stromverbrauch der anderen",
   "feedback_high_energy": "Viel Strom",
   "feedback_med_energy": "Durchschnittlicher Strom",
-  "feedback_low_energy": "Wenig Strom"
+  "feedback_low_energy": "Wenig Strom",
+  "verify_we_sent_a_pin": "Wir haben einen Pin an {{mail}} versendet!",
+  "verify_please_check_your_email": "Bitte überprüfen Sie Ihren E-Mail-Account, geben Sie den Pin ein und klicken Sie auf Anmelden. Der Pin ist 5 Minuten gültig."
 }
