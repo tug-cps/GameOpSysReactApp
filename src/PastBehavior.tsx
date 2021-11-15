@@ -165,18 +165,20 @@ function PastBehavior(props: Props) {
                     <Table stickyHeader size="small" sx={{userSelect: "none", borderCollapse: "collapse"}}>
                         <TableHead>
                             <TableRow>
-                                <TableCell variant="head"/>
-                                {hours.map((value) => <TableCell align="center">{String(value)}⁰⁰</TableCell>)}
+                                <TableCell variant="head" sx={{border: 0}}/>
+                                {hours.map((value) =>
+                                    <TableCell align="center" sx={{border: 0}}>{String(value)}⁰⁰</TableCell>)}
                             </TableRow>
                             {availableEnergy &&
                             <TableRow>
-                                <TableCell/>
-                                {availableEnergy.map((v) => <TableCell sx={{backgroundColor: v, top: "37px"}}/>)}
+                                <TableCell variant="head" sx={{border: 0}}/>
+                                {availableEnergy.map((v) =>
+                                    <TableCell sx={{border: 0, backgroundColor: v, top: "37px"}}/>)}
                             </TableRow>
                             }
                         </TableHead>
                         <TableBody>
-                            <BehaviorDragSelect rows={rows} onChange={handleChange}/>
+                            <BehaviorDragSelect rows={rows} onChange={handleChange} readonly={validated}/>
                         </TableBody>
                     </Table>
                 </TableContainer>

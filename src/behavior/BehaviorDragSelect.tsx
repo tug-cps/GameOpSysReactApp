@@ -17,6 +17,7 @@ export interface Row {
 interface Props {
     onChange: (value: CellState[][]) => void
     rows: Row[]
+    readonly?: boolean
 }
 
 interface State {
@@ -77,6 +78,7 @@ class BehaviorDragSelect extends React.Component<Props, State> {
     }
 
     handleTouchStartCell = (e: any) => {
+        if (this.props.readonly) return;
         const {selectionStarted} = this.state;
         if (selectionStarted || !isValidEvent(e)) return;
 
