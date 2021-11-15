@@ -205,5 +205,5 @@
   "info_login_link": "https://psychologie.uni-graz.at/en/social-psychology/research-projects/ansers/",
   "info_login2": "If you are not being forwarded to the next page, please follow these steps:\n (1) You may have entered the data incorrectly by mistake. Please re-enter the data and try to log in again!\n (2) We may not have entered your data in the app yet. Please inform Mr. Thomas Schwengler thomas.schwengler@tugraz.at and send him your email address, your personal code and the name of your dormitory / residential complex including the address! Thank you very much!",
   "verify_we_sent_a_pin": "We sent a pin to {{mail}}!",
-  "verify_please_check_your_email": "Please check your email, enter the pin and click login. The pin will expire in 5 minutes."
+  "verify_please_check_your_email": "Please check your email, enter the pin and click login. The pin will expire in 15 minutes."
 }
