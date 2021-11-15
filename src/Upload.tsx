@@ -1,4 +1,4 @@
-import {ArrowForward, ElectricalServicesOutlined} from "@mui/icons-material";
+import {ElectricalServicesOutlined, LaunchOutlined} from "@mui/icons-material";
 import CloudUploadOutlined from "@mui/icons-material/CloudUploadOutlined";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {LoadingButton} from "@mui/lab";
@@ -35,8 +35,6 @@ const Input = styled('input')({
 });
 
 const operators = [
-    {name: 'Energienetze Steiermark', link: 'https://portal.e-netze.at/'},
-    {name: 'Kelag', link: 'https://services.kelag.at/ISS/Services.aspx'},
     {name: 'Stromnetz Graz', link: 'https://webportal.stromnetz-graz.at/'},
 ]
 
@@ -98,7 +96,7 @@ function Upload(props: Props) {
                                     <ListItemButton key={item.name} component="a" href={item.link} target="_blank">
                                         <ListItemAvatar><ElectricalServicesOutlined/></ListItemAvatar>
                                         <ListItemText primary={item.name}/>
-                                        <ListItemIcon><ArrowForward/></ListItemIcon>
+                                        <ListItemIcon><LaunchOutlined/></ListItemIcon>
                                     </ListItemButton>)
                                 }
                             </List>
