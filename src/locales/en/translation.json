@@ -116,9 +116,9 @@
     "* Charging e-mobility: e-car, e-bike, e-scooter, etc.",
     "* Electric heating/cooling: electric heating, air conditioning, room air conditioner, fan, etc.",
     "* Wellness: sauna, whirlpool, steam bath, infrared cabin, massage chair, etc.",
-    "* Other (high consumption): Aquarium lighting, etc.",
-    "* Other (average consumption): Dehumidifier, electric lawn mower, exterior lighting, etc.",
-    "* Other (low consumption): Model train, etc."
+    "* Other (high consumption, above approx. 200 Watt): Aquarium lighting, etc.",
+    "* Other (average consumption, above approx. 20 Watt): Dehumidifier, exterior lighting, etc.",
+    "* Other (low consumption, below 20 Watt): Model train, etc."
   ],
   "info_past_behavior_2": [
     "After you have saved your changes, you will find out in a new window on the one hand what your predicted electricity consumption for this day was in relation to other participants in your residential unit on that day, and on the other hand, whether you predicted electricity consumption when electricity was particularly available that is when solar power or electricity from wind power was generated at that time."
