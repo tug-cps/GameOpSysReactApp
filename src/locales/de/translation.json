@@ -119,9 +119,9 @@
     "* Laden E-Mobilität: E-Auto, E-Bike, E-Scooter, etc.",
     "* Stromheizung/- Kühlung: Stromheizung, Klimaanlage, Raumklimagerät, Ventilator, etc.",
     "* Wellness: Sauna, Whirlpool, Dampfbad, Infrarotkabine, Massagesessel, etc.",
-    "* Sonstiges (hoher Verbrauch): Aquariumsbeleuchtung, etc.",
-    "* Sonstiges (mittlerer Verbrauch): Luftentfeuchter, Elektrorasenmäher, Außenbeleuchtung, etc.",
-    "* Sonstiges (niedriger Verbrauch): Modelleisenbahn, etc."
+    "* Sonstiges (hoher Verbrauch, ab ca. 200 Watt): Aquariumsbeleuchtung, etc.",
+    "* Sonstiges (mittlerer Verbrauch, ab ca. 20 Watt): Luftentfeuchter, Außenbeleuchtung, etc.",
+    "* Sonstiges (niedriger Verbrauch, unter 20 Watt): Modelleisenbahn, etc."
   ],
   "info_well_being": [
     "Bitte geben Sie hier an, wie Sie das Klima zu Hause gerade empfinden. Überlegen Sie, ist Ihnen das Klima zu Hause (un)angenehm und empfinden Sie es eher als kalt oder heiß?",
