@@ -207,5 +207,5 @@
   "feedback_med_energy": "Durchschnittlicher Strom",
   "feedback_low_energy": "Wenig Strom",
   "verify_we_sent_a_pin": "Wir haben einen Pin an {{mail}} versendet!",
-  "verify_please_check_your_email": "Bitte überprüfen Sie Ihren E-Mail-Account, geben Sie den Pin ein und klicken Sie auf Anmelden. Der Pin ist 5 Minuten gültig."
+  "verify_please_check_your_email": "Bitte überprüfen Sie Ihren E-Mail-Account, geben Sie den Pin ein und klicken Sie auf Anmelden. Der Pin ist 15 Minuten gültig."
 }
