@@ -27,7 +27,10 @@ export const useOptions: (onChange: (value: { x: number, y: number }) => void) =
                 alignToPixels: true,
                 max: 10,
                 min: 0,
-                ticks: {display: false},
+                ticks: {
+                    stepSize: 1,
+                    display: true
+                },
                 grid: {display: false},
                 title: {
                     display: true,
@@ -38,7 +41,10 @@ export const useOptions: (onChange: (value: { x: number, y: number }) => void) =
                 alignToPixels: true,
                 max: 10,
                 min: 0,
-                ticks: {display: false},
+                ticks: {
+                    stepSize: 1,
+                    display: true
+                },
                 grid: {display: false},
                 title: {
                     display: true,
