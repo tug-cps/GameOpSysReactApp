@@ -1,5 +1,0 @@
-ansers_nginx:
-  container_name: ansers_nginx
-  build: .
-  ports:
-    - "8080:80"
