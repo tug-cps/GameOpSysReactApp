@@ -2,6 +2,7 @@ import {BarChartOutlined, CheckCircleOutlined} from "@mui/icons-material";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {
     Avatar,
+    CircularProgress,
     Container,
     DialogContentText,
     LinearProgress,
@@ -124,6 +125,10 @@ function PastBehavior(props: Props) {
             title: t('card_behavior_full_title', {date: dateParsed}),
             children: () => <>
                 <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
+                {validated === undefined &&
+                <ResponsiveIconButton description={t('loading')}
+                                      icon={<CircularProgress variant="indeterminate" size="small" color="inherit"/>}/>
+                }
                 {validated !== undefined && !validated &&
                 <ResponsiveIconButton requiresAttention={modified}
                                       description={t('save')}
