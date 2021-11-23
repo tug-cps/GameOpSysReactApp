@@ -35,7 +35,6 @@ function Home(props: PrivateRouteProps) {
     useEffect(() => {
         setAppBar({
             title: t('home_title'),
-            showBackButton: false,
             children: () => <></>
         })
     }, [t, setAppBar])

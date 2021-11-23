@@ -1,11 +1,9 @@
-import ArrowBack from "@mui/icons-material/ArrowBack";
 import {
     AppBar,
     Box,
     Divider,
     Drawer,
     Hidden,
-    IconButton,
     LinearProgress,
     ListItemIcon,
     Slide,
@@ -19,7 +17,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import React from "react";
 import {useTranslation} from "react-i18next";
-import {Link as RouterLink, useHistory} from "react-router-dom";
+import {Link as RouterLink} from "react-router-dom";
 import {useNavDrawerDestinations} from "./Destinations";
 
 const drawerWidth = 240;
@@ -68,25 +66,14 @@ export function Root(props: React.PropsWithChildren<{}>) {
 
 const sx = {ml: {sm: `${drawerWidth}px`}, width: {sm: `calc(100% - ${drawerWidth}px)`}};
 
-export function DefaultAppBar(props: React.PropsWithChildren<Props> & { hideBackButton?: boolean }) {
+export function DefaultAppBar(props: React.PropsWithChildren<Props>) {
     const {title} = props;
     const trigger = useScrollTrigger();
 
-    const history = useHistory();
     return (
         <Slide appear={false} direction="down" in={!trigger}>
             <AppBar sx={sx}>
                 <Toolbar>
-                    {!props.hideBackButton &&
-                    <IconButton
-                        color="inherit"
-                        edge="start"
-                        sx={{marginRight: 2}}
-                        onClick={history.goBack}
-                        size="large"
-                        children={<ArrowBack/>}
-                    />
-                    }
                     <Typography color="inherit" variant="h6">{title}</Typography>
                     <Box mx="auto"/>
                     {props.children}

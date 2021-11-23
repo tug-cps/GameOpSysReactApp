@@ -69,7 +69,6 @@ function Upload(props: Props) {
 
     useEffect(() => setAppBar({
         title: t('card_upload_title'),
-        showBackButton: false,
         children: () => <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
     }), [t, setAppBar, openInfo])
 
