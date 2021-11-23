@@ -36,7 +36,6 @@ function Archive(props: PrivateRouteProps) {
     useEffect(() => {
         setAppBar({
             title: t('card_archive_title'),
-            showBackButton: true,
             children: () => <ResponsiveIconButton
                 description={t('info')}
                 icon={<InfoOutlined/>}

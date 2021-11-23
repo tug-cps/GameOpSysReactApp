@@ -111,7 +111,6 @@ function Behavior(props: Props) {
     useEffect(() => {
         setAppBar({
             title: t('card_behavior_full_title', {date: date}),
-            showBackButton: false,
             children: () => <>
                 <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
                 <ResponsiveIconButton requiresAttention={modified}

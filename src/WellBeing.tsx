@@ -62,7 +62,6 @@ function WellBeing(props: PrivateRouteProps) {
     useEffect(() => {
         setAppBar({
             title: t('card_well_being_title'),
-            showBackButton: true,
             children: () => {
                 if (panel !== "1") return <></>
                 return <>

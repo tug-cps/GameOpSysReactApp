@@ -44,7 +44,6 @@ function Consumers(props: Props) {
 
     useEffect(() => setAppBar({
         title: t('edit_consumers'),
-        showBackButton: true,
         children: () => <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
     }), [t, setAppBar, openInfo])
 

@@ -122,7 +122,6 @@ function PastBehavior(props: Props) {
     useEffect(() => {
         validDate && setAppBar({
             title: t('card_behavior_full_title', {date: dateParsed}),
-            showBackButton: true,
             children: () => <>
                 <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
                 {validated !== undefined && !validated &&

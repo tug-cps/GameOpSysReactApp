@@ -32,7 +32,6 @@ export const ColorModeContext = React.createContext<ColorModeCtx>({
 
 export interface AppBarProps {
     title: string,
-    showBackButton: boolean,
     children: () => JSX.Element
 }
 
@@ -68,7 +67,7 @@ function App() {
         }
     }, [isLoggedIn, setError, retry])
 
-    const [appBar, setAppBar] = useState<AppBarProps>({title: "", showBackButton: false, children: () => <></>});
+    const [appBar, setAppBar] = useState<AppBarProps>({title: "", children: () => <></>});
 
     return (
         <ThemeProvider theme={theme}>
@@ -82,9 +81,7 @@ function App() {
                         <UserContext.Provider value={user}>
                             <Track>
                                 <Root>
-                                    <DefaultAppBar title={appBar.title}
-                                                   hideBackButton={!appBar.showBackButton}
-                                                   children={appBar.children()}/>
+                                    <DefaultAppBar title={appBar.title} children={appBar.children()}/>
                                     <DefaultDrawer/>
                                     <Content>
                                         <LocalizationProvider dateAdapter={AdapterDateFns}>

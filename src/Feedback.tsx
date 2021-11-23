@@ -158,7 +158,6 @@ function Feedback(props: PrivateRouteProps) {
     useEffect(() => {
         setAppBar({
             title: t('card_behavior_full_title', {date: dateParsed}),
-            showBackButton: true,
             children: () => <>
                 <ResponsiveIconButton icon={<InfoOutlined/>} onClick={openInfo} description={t('info')}/>
                 <ResponsiveIconButton description={t('card_behavior_title')}

@@ -126,7 +126,6 @@ function User(props: Props) {
     useEffect(() => {
         setAppBar({
             title: t('card_user_title'),
-            showBackButton: false,
             children: () =>
                 <>
                     <ResponsiveIconButton description={t('info')} icon={<InfoOutlined/>} onClick={openInfo}/>
