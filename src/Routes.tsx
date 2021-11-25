@@ -1,6 +1,6 @@
 import {LinearProgress} from "@mui/material";
 import React, {useContext} from "react";
-import {Route, Switch} from "react-router-dom";
+import {Redirect, Route, Switch} from "react-router-dom";
 import {PrivateRouteProps, UserContext} from "./App";
 import Archive from "./Archive";
 import Behavior from "./Behavior";
@@ -25,7 +25,7 @@ export function PublicRouter(props: { backendService: BackendService }) {
             <Route exact path="/login"><Login {...props}/></Route>
             <Route exact path="/"><Login {...props}/></Route>
             <Route exact path={`${process.env.PUBLIC_URL}/`}><Login {...props}/></Route>
-            <Route><Page404/></Route>
+            <Route><Redirect to='/'/></Route>
         </Switch>
     )
 }
