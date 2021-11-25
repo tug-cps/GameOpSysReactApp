@@ -30,7 +30,7 @@ function Verify(props: Props) {
     const location = useLocation<{ email: string }>();
     const history = useHistory();
     const [progress, setProgress] = useState(false);
-    const {email} = location.state;
+    const email = location.state?.email;
     const {backendService} = props;
 
     const handleSubmit = useCallback((e: React.FormEvent) => {
