@@ -2,11 +2,12 @@ import {ShowChartOutlined} from "@mui/icons-material";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {Container, DialogContentText, Grid, LinearProgress, Paper, useTheme} from "@mui/material";
 import {blue, green, red, yellow} from "@mui/material/colors";
-import {ChartData, ChartOptions, Plugin as ChartPlugin} from "chart.js";
+import {ChartOptions} from "chart.js";
+import 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {isPast, isValid} from "date-fns";
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Bar, Pie} from "react-chartjs-2";
+import {Chart} from "react-chartjs-2";
 import {useTranslation} from "react-i18next";
 import {Redirect, useLocation} from "react-router-dom";
 import {PrivateRouteProps} from "./App";
@@ -19,7 +20,7 @@ import useDefaultTracking from "./common/Tracking";
 import {useSnackBar} from "./common/UseSnackBar";
 import {FeedbackModel} from "./service/Model";
 
-const useBarChartData: (data: { self: number, others: number }) => ChartData<"bar"> = (data) => {
+const useBarChartData = (data: { self: number, others: number }) => {
     const theme = useTheme();
     const {t} = useTranslation();
     return useMemo(() => ({
@@ -40,7 +41,7 @@ const useBarChartData: (data: { self: number, others: number }) => ChartData<"ba
         ],
     }), [theme, data.self, data.others, t]);
 };
-const usePieChartData: (data: { high: number, med: number, low: number }) => ChartData<"pie"> = (data) => {
+const usePieChartData = (data: { high: number, med: number, low: number }) => {
     const theme = useTheme();
     const {t} = useTranslation();
     return useMemo(() => ({
@@ -183,16 +184,21 @@ function Feedback(props: PrivateRouteProps) {
             <Grid container spacing={1}>
                 <Grid item xs={12} md={6}>
                     <Paper variant="outlined" sx={{p: 2, height: "100%", display: "flex", alignItems: "flex-end"}}>
-                        <Bar plugins={[ChartDataLabels as ChartPlugin<"bar">]}
-                             data={barChartData}
-                             options={barChartOptions} height={300}/>
+                        <Chart
+                            type='bar'
+                            plugins={[ChartDataLabels]}
+                            data={barChartData}
+                            options={barChartOptions}
+                            height={300}/>
                     </Paper>
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Paper variant="outlined" sx={{p: 2, height: "100%", display: "flex", alignItems: "flex-end"}}>
-                        <Pie plugins={[ChartDataLabels as ChartPlugin<"pie">]}
-                             data={pieChartData}
-                             options={pieChartOptions}/>
+                        <Chart
+                            type='pie'
+                            plugins={[ChartDataLabels]}
+                            data={pieChartData}
+                            options={pieChartOptions}/>
                     </Paper>
                 </Grid>
             </Grid>
