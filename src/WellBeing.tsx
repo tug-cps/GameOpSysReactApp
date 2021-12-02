@@ -2,9 +2,10 @@ import {CheckCircleOutlined} from "@mui/icons-material";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import {TabContext, TabPanel} from "@mui/lab";
 import {Box, Button, Container, DialogContentText, LinearProgress, Paper, Stack, Typography} from "@mui/material";
+import 'chart.js/auto';
 import 'chartjs-plugin-dragdata';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {Bubble} from "react-chartjs-2";
+import {Chart} from "react-chartjs-2";
 import {useTranslation} from "react-i18next";
 import {Link as RouterLink, Prompt} from "react-router-dom";
 import {PrivateRouteProps, UserContext} from "./App";
@@ -105,7 +106,13 @@ function WellBeing(props: PrivateRouteProps) {
                 <TabPanel value="1">
                     <Typography variant="h5" align="center" paragraph>{t(titleKey)}</Typography>
                     <Paper variant="outlined" sx={{p: 2}}>
-                        <Bubble data={data} options={options} height={100} width={100}/>
+                        <Chart
+                            type='bubble'
+                            data={data}
+                            options={options}
+                            height={100}
+                            width={100}
+                        />
                     </Paper>
                 </TabPanel>
                 <TabPanel value="2">

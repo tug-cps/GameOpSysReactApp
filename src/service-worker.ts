@@ -41,6 +41,11 @@ registerRoute(
       return false;
     }
 
+    // Skip backend paths
+    if (url.pathname.startsWith('/v2') || url.pathname.startsWith('/admin')) {
+      return false;
+    }
+
     // If this looks like a URL for a resource, because it contains
     // a file extension, skip.
     if (url.pathname.match(fileExtensionRegexp)) {
