@@ -64,7 +64,6 @@ class FakeBackend implements Backend {
             } else if (url.includes('/predictions/')) {
                 const date = url.substring(url.lastIndexOf('/') + 1)
                 const prediction = db.predictions[user][date];
-                console.log(db.predictions[user])
                 if (!prediction) return e.error({status: 404, statusText: 'Not found'})
                 e.ok({data: prediction})
             } else if (url.includes('/available-energy/')) {

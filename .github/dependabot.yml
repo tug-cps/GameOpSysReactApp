@@ -11,4 +11,7 @@ updates:
       # Ignore 5.0 major release of history package
       - dependency-name: "history"
         versions: ["5.x"]
+      # Ignore 6.0 react router upgrade until https://reactrouter.com/docs/en/v6/upgrading/v5#prompt-is-not-currently-supported is resolved
+      - dependency-name: "react-router-dom"
+        versions: [ "6.x" ]
     open-pull-requests-limit: 1
