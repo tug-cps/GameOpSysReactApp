@@ -67,7 +67,7 @@ class FakeBackend implements Backend {
                 if (!prediction) return e.error({status: 404, statusText: 'Not found'})
                 e.ok({data: prediction})
             } else if (url.includes('/available-energy/')) {
-                e.ok({data: [0, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.4, 0.5, 0.6, 0.7, 0.8, 1, 1, 0.8, 0.6, 0.6, 0.4, 0.3, 0.5, 0.7, 0.3, 0, 0]})
+                e.ok({data: [0, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.4, 0.5, 0.6, 0.7, 0.8, 1, 1, 0.8, 0.6, 0.6, 0.4, 0.3, 0.5, 0.7, 0.3, 0, 0].map(v => 1 - v)})
             } else if (url.includes('/well-being/')) {
                 const index = url.substring(url.lastIndexOf('/') + 1)
                 const mood = db.mood[user][index]
@@ -86,8 +86,8 @@ class FakeBackend implements Backend {
                 e.ok<{ data: FeedbackModel }>({
                     data: {
                         totalUsage: {
-                            self: 4,
-                            others: 3.6
+                            self: 4 * Math.random(),
+                            others: 4 * Math.random()
                         },
                         relativeUsage: {
                             high: 0.25,
