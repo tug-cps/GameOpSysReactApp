@@ -22,7 +22,8 @@ jobs:
             ${{ runner.os }}-node-
       - run: |
           sed -i 's|"homepage": "."|"homepage": "https://tug-cps.github.io/GameOpSysReactApp/"|' package.json
-          echo "REACT_APP_BUILD_SHA='${{ env.GITHUB_SHA }}'" >> .env.production
+          echo "REACT_APP_BUILD_DATE='`date -Is`'" >> .env.production
+          echo "REACT_APP_BUILD_SHA='$GITHUB_SHA'" >> .env.production
       - run: npm ci
       - run: npm run build:local
       - uses: peaceiris/actions-gh-pages@v3
