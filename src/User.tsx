@@ -150,7 +150,12 @@ function User(props: Props) {
                         <ColorModeInfo/>
                     </List>
                 </Paper>
-                {process.env.REACT_APP_BUILD_SHA && <Typography>{process.env.REACT_APP_BUILD_SHA}</Typography>}
+                {process.env.REACT_APP_BUILD_SHA &&
+                    <Typography sx={{py: 2}} textAlign="end">
+                        Internal build
+                        #{process.env.NODE_ENV}.{process.env.REACT_APP_BUILD_SHA}.{process.env.REACT_APP_BUILD_DATE}
+                    </Typography>
+                }
             </Container>
             <InfoDialog title={t('info')} content={<DialogContentText children={t('info_settings')}/>} {...infoProps}/>
             <AlertSnackbar {...error}/>
