@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/GameOpSysReactApp/static/css/main.e6c13ad2.css",
-    "main.js": "/GameOpSysReactApp/static/js/main.c4c0af3e.js",
+    "main.js": "/GameOpSysReactApp/static/js/main.2a86cdc4.js",
     "static/js/168.2835328f.chunk.js": "/GameOpSysReactApp/static/js/168.2835328f.chunk.js",
     "static/js/996.41803a3b.chunk.js": "/GameOpSysReactApp/static/js/996.41803a3b.chunk.js",
     "static/js/787.0f2ef0d9.chunk.js": "/GameOpSysReactApp/static/js/787.0f2ef0d9.chunk.js",
     "service-worker.js": "/GameOpSysReactApp/service-worker.js",
     "index.html": "/GameOpSysReactApp/index.html",
     "main.e6c13ad2.css.map": "/GameOpSysReactApp/static/css/main.e6c13ad2.css.map",
-    "main.c4c0af3e.js.map": "/GameOpSysReactApp/static/js/main.c4c0af3e.js.map",
+    "main.2a86cdc4.js.map": "/GameOpSysReactApp/static/js/main.2a86cdc4.js.map",
     "787.0f2ef0d9.chunk.js.map": "/GameOpSysReactApp/static/js/787.0f2ef0d9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.c4c0af3e.js"
+    "static/js/main.2a86cdc4.js"
   ]
 }
